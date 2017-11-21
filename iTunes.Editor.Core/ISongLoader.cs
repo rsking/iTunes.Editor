@@ -16,13 +16,13 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="input">The input value.</param>
         /// <returns>The tag information.</returns>
-        System.Collections.Generic.IEnumerable<SmallTagInformation> GetTagInformation(string input);
+        System.Collections.Generic.IEnumerable<SongInformation> GetTagInformation(string input);
 
         /// <summary>
         /// Gets the tag information.
         /// </summary>
         /// <param name="input">The input value.</param>
         /// <returns>The task to get the tag information.</returns>
-        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<SmallTagInformation>> GetTagInformationAsync(string input);
+        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<SongInformation>> GetTagInformationAsync(string input);
     }
 }

@@ -57,6 +57,30 @@ namespace ITunes.Editor
                 });
             });
 
+            app.Command("composer", configuration =>
+            {
+                configuration.Description = "Gets the composers for a specific song/artist";
+                configuration.HelpOption("-h|--help");
+                var artistArgument = configuration.Argument("artist", "The artist");
+                var songArgument = configuration.Argument("song", "The song");
+                var providerOption = configuration.Option("-p|--provider <provider>", "The type of provider", Microsoft.Extensions.CommandLineUtils.CommandOptionType.SingleValue);
+                configuration.OnExecute(async () =>
+                {
+                    var program = new Program();
+                    program.Configure();
+
+                    var composerProvider = program.kernel.Get<IComposerProvider>(providerOption.Value());
+                    var tagInformation = new SongInformation(songArgument.Value, artistArgument.Value, artistArgument.Value, null, null, null);
+
+                    foreach (var composer in await composerProvider.GetComposersAsync(tagInformation).ConfigureAwait(false))
+                    {
+                        Console.WriteLine(composer);
+                    }
+
+                    return 0;
+                });
+            });
+
             return app.Execute(args);
         }
 

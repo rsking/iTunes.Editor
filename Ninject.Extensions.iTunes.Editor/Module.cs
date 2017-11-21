@@ -21,6 +21,8 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ISongLoader>().To<FolderSongLoader>().Named("folder");
             this.Bind<ISongLoader>().To<IPodSongLoader>().Named("ipod");
             this.Bind<ISongLoader>().To<PListSongLoader>().Named("plist");
+
+            this.Bind<IComposerProvider>().To<ApraAmcosComposerProvider>().Named("apra_amcos");
         }
     }
 }

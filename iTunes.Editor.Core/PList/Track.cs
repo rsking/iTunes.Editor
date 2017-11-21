@@ -189,10 +189,10 @@ namespace ITunes.Editor.PList
         public string Location => (string)this.dict["Location"];
 
         /// <summary>
-        /// Converts a <see cref="TagLib.File"/> to a <see cref="SmallTagInformation"/>.
+        /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
         /// </summary>
         /// <param name="track">The track to convert.</param>
-        public static explicit operator SmallTagInformation(Track track)
+        public static explicit operator SongInformation(Track track)
         {
             var uri = new Uri(track.Location);
             var path = System.IO.Path.GetFullPath(
@@ -201,7 +201,7 @@ namespace ITunes.Editor.PList
                     ? uri.AbsolutePath.Substring(1)
                     : uri.AbsolutePath));
 
-            return new SmallTagInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
+            return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
         }
     }
 }

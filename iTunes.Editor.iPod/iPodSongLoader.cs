@@ -15,7 +15,7 @@ namespace ITunes.Editor.IPod
     public class IPodSongLoader : ISongLoader
     {
         /// <inheritdoc />
-        public IEnumerable<SmallTagInformation> GetTagInformation(string input)
+        public IEnumerable<SongInformation> GetTagInformation(string input)
         {
             // see if this has the requisit parts
             var directory = new System.IO.DirectoryInfo(input);
@@ -40,12 +40,12 @@ namespace ITunes.Editor.IPod
             {
                 var track = trackDatabase.Tracks[i];
 
-                yield return new SmallTagInformation(track.Title, track.Artist, track.SortArtist, track.Album, track.FileName, (int)track.Rating);
+                yield return new SongInformation(track.Title, track.Artist, track.SortArtist, track.Album, track.FileName, (int)track.Rating);
             }
         }
 
         /// <inheritdoc />
-        public System.Threading.Tasks.Task<IEnumerable<SmallTagInformation>> GetTagInformationAsync(string input)
+        public System.Threading.Tasks.Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
         {
             return System.Threading.Tasks.Task.Run(() => this.GetTagInformation(input));
         }

@@ -16,7 +16,7 @@ namespace ITunes.Editor
     public class FolderSongLoader : ISongLoader
     {
         /// <inheritdoc />
-        public IEnumerable<SmallTagInformation> GetTagInformation(string input)
+        public IEnumerable<SongInformation> GetTagInformation(string input)
         {
             var directoryInfo = new System.IO.DirectoryInfo(input);
             if (!directoryInfo.Exists)
@@ -28,11 +28,11 @@ namespace ITunes.Editor
             return directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
                 .Select(_ => TagLibHelper.GetFile(_.FullName))
                 .Where(_ => _ != null)
-                .Cast<SmallTagInformation>();
+                .Cast<SongInformation>();
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<SmallTagInformation>> GetTagInformationAsync(string input)
+        public Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
         {
             return Task.Run(() => this.GetTagInformation(input));
         }

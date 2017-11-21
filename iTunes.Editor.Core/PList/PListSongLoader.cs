@@ -16,7 +16,7 @@ namespace ITunes.Editor.PList
     public class PListSongLoader : ISongLoader
     {
         /// <inheritdoc />
-        public IEnumerable<SmallTagInformation> GetTagInformation(string input)
+        public IEnumerable<SongInformation> GetTagInformation(string input)
         {
             PList plist;
             using (var stream = System.IO.File.OpenRead(input))
@@ -32,11 +32,11 @@ namespace ITunes.Editor.PList
                 return null;
             }
 
-            return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Cast<SmallTagInformation>();
+            return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Cast<SongInformation>();
         }
 
         /// <inheritdoc />
-        public System.Threading.Tasks.Task<IEnumerable<SmallTagInformation>> GetTagInformationAsync(string input)
+        public System.Threading.Tasks.Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
         {
             return System.Threading.Tasks.Task.Run(() => this.GetTagInformation(input));
         }
