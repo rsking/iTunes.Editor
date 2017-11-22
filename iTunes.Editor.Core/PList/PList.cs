@@ -18,7 +18,7 @@ namespace ITunes.Editor.PList
     /// Represents a PList.
     /// </summary>
     [XmlRoot(PListElementName)]
-    internal class PList : IDictionary<string, object>, IXmlSerializable
+    public class PList : IDictionary<string, object>, IXmlSerializable
     {
         private const string ArrayElementName = "array";
 

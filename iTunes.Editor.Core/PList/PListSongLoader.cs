@@ -32,7 +32,7 @@ namespace ITunes.Editor.PList
                 return null;
             }
 
-            return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Cast<SongInformation>();
+            return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Select(_ => (SongInformation)_);
         }
 
         /// <inheritdoc />

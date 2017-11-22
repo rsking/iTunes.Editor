@@ -6,16 +6,12 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="SoapHttpClient" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -81,6 +81,28 @@ namespace ITunes.Editor
                 });
             });
 
+            app.Command("lyrics", configuration =>
+            {
+                configuration.Description = "Gets the lyrics for a specific song/artist";
+                configuration.HelpOption("-h|--help");
+                var artistArgument = configuration.Argument("artist", "The artist");
+                var songArgument = configuration.Argument("song", "The song");
+                var providerOption = configuration.Option("-p|--provider <provider>", "The type of provider", Microsoft.Extensions.CommandLineUtils.CommandOptionType.SingleValue);
+                configuration.OnExecute(async () =>
+                {
+                    var program = new Program();
+                    program.Configure();
+
+                    var lyricsProvider = program.kernel.Get<ILyricsProvider>(providerOption.Value());
+                    var tagInformation = new SongInformation(songArgument.Value, artistArgument.Value, artistArgument.Value, null, null, null);
+
+                    var lyrics = await lyricsProvider.GetLyricsAsync(tagInformation).ConfigureAwait(false);
+                    Console.WriteLine(lyrics);
+
+                    return 0;
+                });
+            });
+
             return app.Execute(args);
         }
 

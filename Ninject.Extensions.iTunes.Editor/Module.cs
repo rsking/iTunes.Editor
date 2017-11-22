@@ -8,6 +8,7 @@ namespace Ninject.Extensions.ITunes.Editor
 {
     using global::ITunes.Editor;
     using global::ITunes.Editor.IPod;
+    using global::ITunes.Editor.Lyrics.Wikia;
     using global::ITunes.Editor.PList;
 
     /// <summary>
@@ -23,6 +24,8 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ISongLoader>().To<PListSongLoader>().Named("plist");
 
             this.Bind<IComposerProvider>().To<ApraAmcosComposerProvider>().Named("apra_amcos");
+
+            this.Bind<ILyricsProvider>().To<WikiaLyricsProvider>().Named("wikia");
         }
     }
 }
