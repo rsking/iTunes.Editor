@@ -26,6 +26,8 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<IComposerProvider>().To<ApraAmcosComposerProvider>().Named("apra_amcos");
 
             this.Bind<ILyricsProvider>().To<WikiaLyricsProvider>().Named("wikia");
+
+            this.Bind<IUpdateComposerService>().To<UpdateComposerService>();
         }
     }
 }

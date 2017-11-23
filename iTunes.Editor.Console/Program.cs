@@ -4,114 +4,220 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleType", Justification = "Reviewed.")]
+
 namespace ITunes.Editor
 {
     using System;
-    using System.Reflection;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using McMaster.Extensions.CommandLineUtils;
     using Ninject;
 
     /// <summary>
     /// The program class.
     /// </summary>
-    internal class Program
+    [Command]
+    [VersionOption("--version", "1.0.0")]
+    [Subcommand("list", typeof(ListCommand))]
+    [Subcommand("composer", typeof(ComposerCommand))]
+    [Subcommand("lyrics", typeof(LyricsCommand))]
+    [Subcommand("update", typeof(UpdateCommand))]
+    internal class Program : CommandBase
     {
         /// <summary>
-        /// The Ninject kernel.
+        /// Gets the Ninject kernel.
         /// </summary>
-        private IKernel kernel;
+        internal IKernel Kernel { get; } = new StandardKernel();
 
         /// <summary>
         /// The main entry point.
         /// </summary>
         /// <param name="args">The command-line arguments.</param>
         /// <returns>The return code.</returns>
-        private static int Main(string[] args)
-        {
-            var app = new Microsoft.Extensions.CommandLineUtils.CommandLineApplication();
-            app.HelpOption("-h|--help");
-            app.VersionOption(
-                "-v|--version",
-                () => $"{typeof(Program).Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product} {typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}",
-                () => $"{typeof(Program).Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product}{Environment.NewLine}{typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}");
+        private static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
+    }
 
-            app.Command("list", configuration =>
-            {
-                configuration.Description = "Lists the files from the specified input";
-                configuration.HelpOption("-h|--help");
-                var inputArgument = configuration.Argument("input", "The input");
-                var typeOption = configuration.Option("-t|--type <type>", "The type of input", Microsoft.Extensions.CommandLineUtils.CommandOptionType.SingleValue);
-
-                configuration.OnExecute(async () =>
-                {
-                    var program = new Program();
-                    program.Configure();
-
-                    var songLoader = program.kernel.Get<ISongLoader>(typeOption.Value());
-
-                    foreach (var song in await songLoader.GetTagInformationAsync(inputArgument.Value).ConfigureAwait(false))
-                    {
-                        Console.WriteLine(song.Name);
-                    }
-
-                    return 0;
-                });
-            });
-
-            app.Command("composer", configuration =>
-            {
-                configuration.Description = "Gets the composers for a specific song/artist";
-                configuration.HelpOption("-h|--help");
-                var artistArgument = configuration.Argument("artist", "The artist");
-                var songArgument = configuration.Argument("song", "The song");
-                var providerOption = configuration.Option("-p|--provider <provider>", "The type of provider", Microsoft.Extensions.CommandLineUtils.CommandOptionType.SingleValue);
-                configuration.OnExecute(async () =>
-                {
-                    var program = new Program();
-                    program.Configure();
-
-                    var composerProvider = program.kernel.Get<IComposerProvider>(providerOption.Value());
-                    var tagInformation = new SongInformation(songArgument.Value, artistArgument.Value, artistArgument.Value, null, null, null);
-
-                    foreach (var composer in await composerProvider.GetComposersAsync(tagInformation).ConfigureAwait(false))
-                    {
-                        Console.WriteLine(composer);
-                    }
-
-                    return 0;
-                });
-            });
-
-            app.Command("lyrics", configuration =>
-            {
-                configuration.Description = "Gets the lyrics for a specific song/artist";
-                configuration.HelpOption("-h|--help");
-                var artistArgument = configuration.Argument("artist", "The artist");
-                var songArgument = configuration.Argument("song", "The song");
-                var providerOption = configuration.Option("-p|--provider <provider>", "The type of provider", Microsoft.Extensions.CommandLineUtils.CommandOptionType.SingleValue);
-                configuration.OnExecute(async () =>
-                {
-                    var program = new Program();
-                    program.Configure();
-
-                    var lyricsProvider = program.kernel.Get<ILyricsProvider>(providerOption.Value());
-                    var tagInformation = new SongInformation(songArgument.Value, artistArgument.Value, artistArgument.Value, null, null, null);
-
-                    var lyrics = await lyricsProvider.GetLyricsAsync(tagInformation).ConfigureAwait(false);
-                    Console.WriteLine(lyrics);
-
-                    return 0;
-                });
-            });
-
-            return app.Execute(args);
-        }
+    /// <summary>
+    /// The list command.
+    /// </summary>
+    [Command(Description = "Lists the files from the specified input")]
+    internal class ListCommand : CommandBase
+    {
+        /// <summary>
+        /// Gets or sets the input.
+        /// </summary>
+        [Argument(0, Description = "The input", Name = "input")]
+        public string Input { get; set; }
 
         /// <summary>
-        /// Configurs this instance.
+        /// Gets or sets the type.
         /// </summary>
-        private void Configure()
+        [Option("-t|--type <type>", "The type of input", CommandOptionType.SingleValue)]
+        public string Type { get; set; } = "plist";
+
+        private Program Parent { get; }
+
+        /// <inheritdoc/>
+        protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            this.kernel = new StandardKernel();
+            foreach (var song in await this.Parent.Kernel.Get<ISongLoader>(this.Type).GetTagInformationAsync(this.Input).ConfigureAwait(false))
+            {
+                Console.WriteLine(song.Name);
+            }
+
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The composer command.
+    /// </summary>
+    [Command(Description = "Gets the composers for a specific song/artist")]
+    internal class ComposerCommand : CommandBase
+    {
+        /// <summary>
+        /// Gets or sets the artist.
+        /// </summary>
+        [Argument(0, Description = "The artist", Name = "artist")]
+        public string Artist { get; set; }
+
+        /// <summary>
+        /// Gets or sets the song.
+        /// </summary>
+        [Argument(1, Description = "The song", Name = "song")]
+        public string Song { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        [Option("-p|--provider <provider>", "The type of provider", CommandOptionType.SingleValue)]
+        public string Provider { get; set; } = "apra_amcos";
+
+        private Program Parent { get; }
+
+        /// <inheritdoc/>
+        protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            foreach (var composer in await this.Parent.Kernel.Get<IComposerProvider>(this.Provider)
+                .GetComposersAsync(new SongInformation(this.Song, this.Artist, this.Artist, null, null, null))
+                .ConfigureAwait(false))
+            {
+                Console.WriteLine(composer);
+            }
+
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The composer command.
+    /// </summary>
+    [Command(Description = "Gets the lyrics for a specific song/artist")]
+    internal class LyricsCommand : CommandBase
+    {
+        /// <summary>
+        /// Gets or sets the artist.
+        /// </summary>
+        [Argument(0, Description = "The artist", Name = "artist")]
+        public string Artist { get; set; }
+
+        /// <summary>
+        /// Gets or sets the song.
+        /// </summary>
+        [Argument(1, Description = "The song", Name = "song")]
+        public string Song { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        [Option("-p|--provider <provider>", "The type of provider", CommandOptionType.SingleValue)]
+        public string Provider { get; set; } = "wikia";
+
+        private Program Parent { get; }
+
+        /// <inheritdoc/>
+        protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            var lyrics = await this.Parent.Kernel.Get<ILyricsProvider>(this.Provider)
+                .GetLyricsAsync(new SongInformation(this.Song, this.Artist, this.Artist, null, null, null))
+                .ConfigureAwait(false);
+            Console.WriteLine(lyrics);
+
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The update command.
+    /// </summary>
+    [Command(Description = "Updates a specific file")]
+    [Subcommand("composer", typeof(UpdateComposerCommand))]
+    internal class UpdateCommand : CommandBase
+    {
+        /// <summary>
+        /// Gets the accessible parent.
+        /// </summary>
+        internal Program Parent { get; }
+    }
+
+    /// <summary>
+    /// The update command base.
+    /// </summary>
+    internal abstract class UpdateCommandBase : CommandBase
+    {
+        /// <summary>
+        /// Gets or sets the file to update.
+        /// </summary>
+        [Argument(0, "file", "The file")]
+        public string File { get; set; }
+    }
+
+    /// <summary>
+    /// The update composer command.
+    /// </summary>
+    [Command(Description = "Updates the composer in the specific file")]
+    internal class UpdateComposerCommand : UpdateCommandBase
+    {
+        /// <summary>
+        /// Gets or sets a value indicating whether to force the update.
+        /// </summary>
+        [Option("-f|--force", "Whether to force the update", CommandOptionType.NoValue)]
+        public bool Force { get; set; }
+
+        private UpdateCommand Parent { get; }
+
+        /// <inheritdoc/>
+        protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            SongInformation songInformation;
+            using (var file = TagLib.File.Create(this.File))
+            {
+                songInformation = (SongInformation)file;
+            }
+
+            var updateComposerService = this.Parent.Parent.Kernel.Get<IUpdateComposerService>();
+            await updateComposerService.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
+
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The command base.
+    /// </summary>
+    [HelpOption("-h|--help")]
+    internal abstract class CommandBase
+    {
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <returns>The task.</returns>
+        protected virtual Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            return Task.FromResult(0);
         }
     }
 }
