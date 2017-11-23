@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" />
     <PackageReference Include="SoapHttpClient" Version="2.1.0" />
   </ItemGroup>
 
