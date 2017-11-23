@@ -186,7 +186,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the location.
         /// </summary>
-        public string Location => (string)this.dict["Location"];
+        public string Location => this.dict.GetString("Location");
 
         /// <summary>
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
@@ -194,12 +194,16 @@ namespace ITunes.Editor.PList
         /// <param name="track">The track to convert.</param>
         public static explicit operator SongInformation(Track track)
         {
-            var uri = new Uri(track.Location);
-            var path = System.IO.Path.GetFullPath(
-                System.Web.HttpUtility.UrlDecode(
-                    uri.AbsolutePath.StartsWith("/")
-                    ? uri.AbsolutePath.Substring(1)
-                    : uri.AbsolutePath));
+            var path = track.Location;
+            if (path != null)
+            {
+                var uri = new Uri(path);
+                path = System.IO.Path.GetFullPath(
+                    System.Web.HttpUtility.UrlDecode(
+                        uri.AbsolutePath.StartsWith("/")
+                        ? uri.AbsolutePath.Substring(1)
+                        : uri.AbsolutePath));
+            }
 
             return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
         }
