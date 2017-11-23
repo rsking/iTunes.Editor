@@ -19,15 +19,20 @@ namespace Ninject.Extensions.ITunes.Editor
         /// <inheritdoc />
         public override void Load()
         {
+            // Songs
             this.Bind<ISongLoader>().To<FolderSongLoader>().Named("folder");
             this.Bind<ISongLoader>().To<IPodSongLoader>().Named("ipod");
             this.Bind<ISongLoader>().To<PListSongLoader>().Named("plist");
 
+            // Composers
             this.Bind<IComposerProvider>().To<ApraAmcosComposerProvider>().Named("apra_amcos");
 
+            // Lyrics
             this.Bind<ILyricsProvider>().To<WikiaLyricsProvider>().Named("wikia");
 
+            // Services
             this.Bind<IUpdateComposerService>().To<UpdateComposerService>();
+            this.Bind<IUpdateLyricsService>().To<UpdateLyricsService>();
         }
     }
 }

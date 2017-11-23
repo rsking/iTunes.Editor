@@ -62,7 +62,9 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            foreach (var song in await this.Parent.Kernel.Get<ISongLoader>(this.Type).GetTagInformationAsync(this.Input).ConfigureAwait(false))
+            foreach (var song in await this.Parent.Kernel.Get<ISongLoader>(this.Type)
+                .GetTagInformationAsync(this.Input)
+                .ConfigureAwait(false))
             {
                 Console.WriteLine(song.Name);
             }
@@ -197,8 +199,40 @@ namespace ITunes.Editor
                 songInformation = (SongInformation)file;
             }
 
-            var updateComposerService = this.Parent.Parent.Kernel.Get<IUpdateComposerService>();
-            await updateComposerService.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
+            await this.Parent.Parent.Kernel.Get<IUpdateComposerService>()
+                .UpdateAsync(songInformation, this.Force)
+                .ConfigureAwait(false);
+
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The update lyrics command.
+    /// </summary>
+    [Command(Description = "Updates the lyrics in the specific file")]
+    internal class UpdateLyricsCommand : UpdateCommandBase
+    {
+        /// <summary>
+        /// Gets or sets a value indicating whether to force the update.
+        /// </summary>
+        [Option("-f|--force", "Whether to force the update", CommandOptionType.NoValue)]
+        public bool Force { get; set; }
+
+        private UpdateCommand Parent { get; }
+
+        /// <inheritdoc/>
+        protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            SongInformation songInformation;
+            using (var file = TagLib.File.Create(this.File))
+            {
+                songInformation = (SongInformation)file;
+            }
+
+            await this.Parent.Parent.Kernel.Get<IUpdateLyricsService>()
+                .UpdateAsync(songInformation, this.Force)
+                .ConfigureAwait(false);
 
             return 0;
         }
