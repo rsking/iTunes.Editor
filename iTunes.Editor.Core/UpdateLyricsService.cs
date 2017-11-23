@@ -118,9 +118,10 @@ namespace ITunes.Editor
                     this.appleTag.Lyrics = lyrics;
                     this.appleTag.CleanLyrics();
                     this.appleTag.RemoveNoLyrics();
+                    this.appleTag.UpdateRating();
                     this.file.Save();
                 }
-                
+
                 return this.songInformation = (SongInformation)this.file;
             }
 

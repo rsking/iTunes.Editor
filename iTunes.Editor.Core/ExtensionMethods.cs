@@ -19,6 +19,27 @@ namespace ITunes.Editor
 
         private const string HasLyrics = "Has Lyrics";
 
+        private static readonly IEnumerable<string> ExplicitWords = new string[]
+        {
+            "fuck",
+            "f***",
+            "f**k",
+            "cunt",
+            "c***",
+            "c**t",
+            "shit",
+            "s***",
+            "s**t",
+            "dick",
+            "d***",
+            "d**k"
+        };
+        
+        private static readonly TagLib.ByteVector Rating = new TagLib.ByteVector(new byte[] { 114, 116, 110, 103 });
+        private static readonly TagLib.ByteVector ExplicitRatingData = new TagLib.ByteVector(new byte[] { 0x04 });
+        private static readonly TagLib.ByteVector CleanRatingData = new TagLib.ByteVector(new byte[] { 0x02 });
+        private static readonly TagLib.ByteVector UnratedRatingData = new TagLib.ByteVector(new byte[] { 0x00 });
+
         /// <summary>
         /// Cleans the lyrics.
         /// </summary>
@@ -123,6 +144,76 @@ namespace ITunes.Editor
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Updates the explicit value.
+        /// </summary>
+        /// <param name="tag">The tag to update.</param>
+        /// <returns>Returns <see langword="true"/> if the explicit flag is updates; otherwise <see langword="false"/>.</returns>
+        public static bool UpdateRating(this TagLib.Tag tag)
+        {
+            var lyrics = tag.Lyrics;
+            if (string.IsNullOrEmpty(lyrics))
+            {
+                if (tag is TagLib.Mpeg4.AppleTag appleTag)
+                {
+                    return appleTag.SetUnrated();
+                }
+            }
+            else
+            {
+                var @explicit = ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (tag is TagLib.Mpeg4.AppleTag appleTag)
+                {
+                    return @explicit ? appleTag.SetExplicit() : appleTag.SetClean();
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Sets the rating flag to explicit.
+        /// </summary>
+        /// <param name="appleTag">The apple tag.</param>
+        /// <returns>Returns <see langword="true"/> if the explicit flag is updated; otherwise <see langword="false"/>.</returns>
+        public static bool SetExplicit(this TagLib.Mpeg4.AppleTag appleTag)
+        {
+            return appleTag.SetRating(ExplicitRatingData);
+        }
+
+        /// <summary>
+        /// Sets the rating flag to clean.
+        /// </summary>
+        /// <param name="appleTag">The apple tag.</param>
+        /// <returns>Returns <see langword="true"/> if the clean flag is updated; otherwise <see langword="false"/>.</returns>
+        public static bool SetClean(this TagLib.Mpeg4.AppleTag appleTag)
+        {
+            return appleTag.SetRating(CleanRatingData);
+        }
+
+        /// <summary>
+        /// Sets the rating flag to unrated.
+        /// </summary>
+        /// <param name="appleTag">The apple tag.</param>
+        /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
+        public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag)
+        {
+            return appleTag.SetRating(CleanRatingData);
+        }
+
+        private static bool SetRating(this TagLib.Mpeg4.AppleTag appleTag, TagLib.ByteVector rating)
+        {
+            var rtng = appleTag.DataBoxes(Rating);
+            if (rtng.Any(box => box.Data == rating && box.Flags == (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData))
+            {
+                return false;
+            }
+
+            appleTag.SetData(Rating, new[] { new TagLib.Mpeg4.AppleDataBox(rating, (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData) });
+            return true;
         }
 
         private static IEnumerable<string> RemoveMultipleNull(this IEnumerable<string> source)
