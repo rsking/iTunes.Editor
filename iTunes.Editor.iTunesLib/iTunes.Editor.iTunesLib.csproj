@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ITunes.Editor.ITunesLib</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MSBuildRuntimeType)' == 'Core' ">
+    <DefineConstants>$(DefineConstants);NO_ITUNES</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="iTunesLib.dll" Condition=" '$(MSBuildRuntimeType)' != 'Core' ">
+      <Guid>9e93c96f-cf0d-43f6-8ba8-b807a3370712</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>13</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <Private></Private>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+</Project>

@@ -34,11 +34,40 @@ namespace ITunes.Editor
             "d***",
             "d**k"
         };
-        
+
         private static readonly TagLib.ByteVector Rating = new TagLib.ByteVector(new byte[] { 114, 116, 110, 103 });
         private static readonly TagLib.ByteVector ExplicitRatingData = new TagLib.ByteVector(new byte[] { 0x04 });
         private static readonly TagLib.ByteVector CleanRatingData = new TagLib.ByteVector(new byte[] { 0x02 });
         private static readonly TagLib.ByteVector UnratedRatingData = new TagLib.ByteVector(new byte[] { 0x00 });
+
+        /// <summary>
+        /// Returns a value indicating whether the value of this instance is equal to the value of the specified <see cref="DateTime"/> instance, optionally ignoring the <see cref="DateTime.Kind"/> value.
+        /// </summary>
+        /// <param name="dateTime">This date time value.</param>
+        /// <param name="other">The object to compare to this instance.</param>
+        /// <param name="ignoreDateTimeKind">Set to <see langword="true"/> to ignore <see cref="DateTime.Kind"/>.</param>
+        /// <returns><see langword="true"/> if the <paramref name="other"/> parameter equals the value of <paramref name="dateTime"/> instance; otherwise, <see langword="false"/>.</returns>
+        public static bool Equals(this DateTime dateTime, DateTime other, bool ignoreDateTimeKind)
+        {
+            if (ignoreDateTimeKind)
+            {
+                return dateTime.Equals(other);
+            }
+
+            // check to see if these are "null" dates
+            if (dateTime.IsNull() && other.IsNull())
+            {
+                return true;
+            }
+
+            return dateTime.Year == other.Year
+                && dateTime.Month == other.Month
+                && dateTime.Day == other.Day
+                && dateTime.Hour == other.Hour
+                && dateTime.Minute == other.Minute
+                && dateTime.Second == other.Second
+                && dateTime.Millisecond == other.Millisecond;
+        }
 
         /// <summary>
         /// Cleans the lyrics.
@@ -268,6 +297,11 @@ namespace ITunes.Editor
             return line.Length <= 0 || !char.IsLower(line[0])
                 ? line :
                 line.Substring(0, 1).ToUpper() + line.Substring(1);
+        }
+
+        private static bool IsNull(this DateTime dateTime)
+        {
+            return dateTime.Year == 1 || dateTime.Year == 1899;
         }
     }
 }

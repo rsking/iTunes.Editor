@@ -8,6 +8,7 @@ namespace Ninject.Extensions.ITunes.Editor
 {
     using global::ITunes.Editor;
     using global::ITunes.Editor.IPod;
+    using global::ITunes.Editor.ITunesLib;
     using global::ITunes.Editor.Lyrics.Wikia;
     using global::ITunes.Editor.PList;
 
@@ -23,6 +24,7 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ISongLoader>().To<FolderSongLoader>().Named("folder");
             this.Bind<ISongLoader>().To<IPodSongLoader>().Named("ipod");
             this.Bind<ISongLoader>().To<PListSongLoader>().Named("plist");
+            this.Bind<ISongLoader>().To<ITunesSongLoader>().Named("itunes");
 
             // Composers
             this.Bind<IComposerProvider>().To<ApraAmcosComposerProvider>().Named("apra_amcos");
