@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.Wikia"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.iTunesLib", "iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj", "{F40C5C90-2D88-4026-AF64-A069C89C9031}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Core.Tests", "iTunes.Editor.Core.Tests\iTunes.Editor.Core.Tests.csproj", "{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,22 @@ Global
 		{F40C5C90-2D88-4026-AF64-A069C89C9031}.Release|x64.Build.0 = Release|Any CPU
 		{F40C5C90-2D88-4026-AF64-A069C89C9031}.Release|x86.ActiveCfg = Release|Any CPU
 		{F40C5C90-2D88-4026-AF64-A069C89C9031}.Release|x86.Build.0 = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|x64.Build.0 = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Debug|x86.Build.0 = Debug|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|ARM.Build.0 = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|x64.ActiveCfg = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|x64.Build.0 = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|x86.ActiveCfg = Release|Any CPU
+		{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

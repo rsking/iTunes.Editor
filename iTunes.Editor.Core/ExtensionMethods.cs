@@ -76,20 +76,14 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the lyics have been cleaned; otherwise <see langword="false"/>.</returns>
         public static bool CleanLyrics(this TagLib.Tag appleTag)
         {
-            string lyrics = null;
-            if (string.IsNullOrEmpty(appleTag.Lyrics))
-            {
-                lyrics = null;
-            }
-            else
-            {
-                string.Join(
+            var lyrics = string.IsNullOrEmpty(appleTag.Lyrics)
+                ? null
+                : string.Join(
                     Environment.NewLine,
                     appleTag.Lyrics
                         .SplitLines()
                         .Select(line => line.Trim().Capitalize())
                         .RemoveMultipleNull());
-            }
 
             if (lyrics != appleTag.Lyrics)
             {
@@ -263,7 +257,28 @@ namespace ITunes.Editor
         {
             var returnString = new System.Text.StringBuilder();
 
+            // find the first and last actual characters
+            var first = 0;
             for (int i = 0; i < lyrics.Length; i++)
+            {
+                if (!char.IsWhiteSpace(lyrics[i]))
+                {
+                    first = i;
+                    break;
+                }
+            }
+
+            var last = lyrics.Length - 1;
+            for (int i = last; i >= 0; i--)
+            {
+                if (!char.IsWhiteSpace(lyrics[i]))
+                {
+                    last = i;
+                    break;
+                }
+            }
+
+            for (int i = first; i <= last; i++)
             {
                 char character = lyrics[i];
                 switch (character)
@@ -290,6 +305,8 @@ namespace ITunes.Editor
                         break;
                 }
             }
+
+            yield return returnString.ToString();
         }
 
         private static string Capitalize(this string line)
