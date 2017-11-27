@@ -8,6 +8,8 @@ namespace ITunes.Editor
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using Ninject;
 
     /// <summary>
@@ -30,6 +32,9 @@ namespace ITunes.Editor
         protected override void Configure()
         {
             this.container.Bind<Caliburn.Micro.IWindowManager>().To<MetroWindowManager>().InSingletonScope();
+            this.container.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+
+            this.container.Bind<ViewModels.SongsViewModel>().ToSelf();
         }
 
         /// <inheritdoc/>

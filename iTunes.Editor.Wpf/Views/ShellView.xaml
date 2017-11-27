@@ -7,6 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <TextBlock Text="This is the main text" />
+        <Button Grid.Row="1" x:Name="LoadITunes" Content="Load iTunes" />
+        <ContentControl x:Name="Songs" Content="ContentControl" Grid.Column="1" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

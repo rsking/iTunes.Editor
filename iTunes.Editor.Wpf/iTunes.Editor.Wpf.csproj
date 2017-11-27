@@ -26,11 +26,27 @@
     <PackageReference Include="Caliburn.Micro" Version="3.2.0" />
     <PackageReference Include="MahApps.Metro" Version="1.5.0" />
     <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.1.4" />
     <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
+    <ProjectReference Include="..\Ninject.Extensions.iTunes.Editor\Ninject.Extensions.iTunes.Editor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform">
+      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core">
+      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />

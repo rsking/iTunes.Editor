@@ -15,6 +15,7 @@ namespace ITunes.Editor.ITunesLib
     public class ITunesSongLoader : ISongLoader
     {
         /// <inheritdoc />
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is by design, as the iTunes loaded does not need an input.")]
         public IEnumerable<SongInformation> GetTagInformation(string input)
         {
 #if NO_ITUNES

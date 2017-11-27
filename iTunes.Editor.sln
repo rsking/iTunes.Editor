@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.iTunesLib", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Core.Tests", "iTunes.Editor.Core.Tests\iTunes.Editor.Core.Tests.csproj", "{86EE8F7A-BB2E-4DA4-AE24-2CA1C3543CA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.Wpf", "iTunes.Editor.Wpf\iTunes.Editor.Wpf.csproj", "{35A87F50-944F-4F67-8C21-CCFA5ED40F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Wpf", "iTunes.Editor.Wpf\iTunes.Editor.Wpf.csproj", "{35A87F50-944F-4F67-8C21-CCFA5ED40F43}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.UI", "iTunes.Editor.UI\iTunes.Editor.UI.csproj", "{06489080-ECBC-45B0-A9C9-E42A8E438112}"
 EndProject
