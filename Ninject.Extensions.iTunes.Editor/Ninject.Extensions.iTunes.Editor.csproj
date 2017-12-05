@@ -21,6 +21,7 @@
     <ProjectReference Include="..\iTunes.Editor.iPod\iTunes.Editor.iPod.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Wikia\iTunes.Editor.Lyrics.Wikia.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
   </ItemGroup>
 
 </Project>

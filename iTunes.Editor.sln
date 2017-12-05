@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Core", "iTunes.Editor.Core\iTunes.Editor.Core.csproj", "{900531F2-E779-40E7-A317-3A258DC47EE5}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Wpf", "iTunes.Editor.Wpf\iTunes.Editor.Wpf.csproj", "{35A87F50-944F-4F67-8C21-CCFA5ED40F43}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.UI", "iTunes.Editor.UI\iTunes.Editor.UI.csproj", "{06489080-ECBC-45B0-A9C9-E42A8E438112}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.MediaInfo", "iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj", "{BCBCC8FD-F917-4C60-A84B-EEA24B341145}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +201,22 @@ Global
 		{06489080-ECBC-45B0-A9C9-E42A8E438112}.Release|x64.Build.0 = Release|Any CPU
 		{06489080-ECBC-45B0-A9C9-E42A8E438112}.Release|x86.ActiveCfg = Release|Any CPU
 		{06489080-ECBC-45B0-A9C9-E42A8E438112}.Release|x86.Build.0 = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|ARM.Build.0 = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|x64.Build.0 = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Debug|x86.Build.0 = Debug|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|ARM.ActiveCfg = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|ARM.Build.0 = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|x64.ActiveCfg = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|x64.Build.0 = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|x86.ActiveCfg = Release|Any CPU
+		{BCBCC8FD-F917-4C60-A84B-EEA24B341145}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

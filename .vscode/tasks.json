@@ -2,12 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "build",
+            "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/iTunes.Editor.Console/iTunes.Editor.Console.csproj"
+                "${workspaceFolder}/iTunes.Editor.sln"
             ],
             "problemMatcher": "$msCompile"
         }

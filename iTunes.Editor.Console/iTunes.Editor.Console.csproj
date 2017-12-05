@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
     <ProjectReference Include="..\Ninject.Extensions.iTunes.Editor\Ninject.Extensions.iTunes.Editor.csproj" />
   </ItemGroup>
 

@@ -8,8 +8,6 @@ namespace ITunes.Editor
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
     using Ninject;
 
     /// <summary>
@@ -39,6 +37,17 @@ namespace ITunes.Editor
 
         /// <inheritdoc/>
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e) => this.DisplayRootViewFor<ViewModels.ShellViewModel>();
+
+        /// <inheritdoc/>
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            if (!this.container.IsDisposed)
+            {
+                this.container.Dispose();
+            }
+
+            base.OnExit(sender, e);
+        }
 
         /// <inheritdoc/>
         protected override object GetInstance(Type service, string key) => string.IsNullOrEmpty(key)

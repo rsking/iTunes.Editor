@@ -23,6 +23,7 @@ namespace ITunes.Editor
     [Subcommand("list", typeof(ListCommand))]
     [Subcommand("composer", typeof(ComposerCommand))]
     [Subcommand("lyrics", typeof(LyricsCommand))]
+    [Subcommand("mediainfo", typeof(MediaInfoCommand))]
     [Subcommand("update", typeof(UpdateCommand))]
     internal class Program : CommandBase
     {
@@ -147,6 +148,30 @@ namespace ITunes.Editor
                 .ConfigureAwait(false);
             Console.WriteLine(lyrics);
 
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The media info command.
+    /// </summary>
+    [Command(Description = "Gets the media info for a specific file")]
+    internal class MediaInfoCommand : CommandBase
+    {
+        /// <summary>
+        /// Gets or sets the file.
+        /// </summary>
+        [Argument(0, Description = "The file to get information for", Name = "file")]
+        public string File { get; set; }
+
+        private Program Parent { get; }
+
+        /// <inheritdoc/>
+        protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
+        {
+            var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider();
+            var mediaInfo = await mediaInfoTagProvider.GetTagAsync(this.File).ConfigureAwait(false);
+            Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
             return 0;
         }
     }
