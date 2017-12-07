@@ -6,9 +6,12 @@
 
 namespace ITunes.Editor.ViewModels
 {
+    using static System.ObservableExtensions;
+
     /// <summary>
     /// The shell view model.
     /// </summary>
+    [PropertyChanged.AddINotifyPropertyChangedInterface]
     internal class ShellViewModel : Caliburn.Micro.IHaveDisplayName
     {
         private readonly IEventAggregator eventAggregator;
@@ -16,31 +19,35 @@ namespace ITunes.Editor.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
         /// </summary>
-        /// <param name="songsViewModel">The songs view model.</param>
+        /// <param name="load">The load view model.</param>
+        /// <param name="songs">The songs view model.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        public ShellViewModel(SongsViewModel songsViewModel, IEventAggregator eventAggregator)
+        public ShellViewModel(Models.ILoad load, Models.ISongs songs, IEventAggregator eventAggregator)
         {
-            this.Songs = songsViewModel;
+            this.Load = load;
+            this.Songs = songs;
             this.eventAggregator = eventAggregator;
+            this.Current = this.Load;
+
+            this.eventAggregator.GetEvent<Models.SongsLoadedEvent>().Subscribe(_ => this.Current = this.Songs);
         }
 
         /// <inheritdoc/>
-        public string DisplayName { get; set; } = "This is the main window";
+        public string DisplayName { get; set; } = Properties.Resources.MainTitle;
+
+        /// <summary>
+        /// Gets the load view model.
+        /// </summary>
+        public Models.ILoad Load { get; }
 
         /// <summary>
         /// Gets the songs view model.
         /// </summary>
-        public SongsViewModel Songs { get; }
+        public Models.ISongs Songs { get; }
 
         /// <summary>
-        /// Loads iTunes
+        /// Gets the current view model.
         /// </summary>
-        /// <returns>The task to load iTunes.</returns>
-        public async System.Threading.Tasks.Task LoadITunesAsync()
-        {
-            var iTunesLoader = Caliburn.Micro.IoC.Get<ISongLoader>("itunes");
-            var evt = new Models.SongsLoadedEvent(await iTunesLoader.GetTagInformationAsync(null).ConfigureAwait(true));
-            this.eventAggregator.Publish(evt);
-        }
+        public object Current { get; private set; }
     }
 }

@@ -14,15 +14,13 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets the tag.
         /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>The tag for <paramref name="input"/>.</returns>
-        TagLib.Tag GetTag(string input);
+        /// <returns>The tag.</returns>
+        TagLib.Tag GetTag();
 
         /// <summary>
         /// Gets the tag asynchronously.
         /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>The tag for <paramref name="input"/>.</returns>
-        System.Threading.Tasks.Task<TagLib.Tag> GetTagAsync(string input);
+        /// <returns>The tag.</returns>
+        System.Threading.Tasks.Task<TagLib.Tag> GetTagAsync();
     }
 }

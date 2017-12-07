@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="FolderSongLoader.cs" company="RossKing">
+// <copyright file="FolderSongsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,20 +8,25 @@ namespace ITunes.Editor
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
-    /// A <see cref="ISongLoader"/> for a folder of files.
+    /// A <see cref="ISongsProvider"/> for a folder of files.
     /// </summary>
-    public class FolderSongLoader : ISongLoader
+    public class FolderSongsProvider : SongsProvider, IFolderProvider
     {
         /// <inheritdoc />
-        public IEnumerable<SongInformation> GetTagInformation(string input)
+        public string Folder { get; set; }
+
+        /// <inheritdoc />
+        public override string Name => Properties.Resources.FolderName;
+
+        /// <inheritdoc />
+        public override IEnumerable<SongInformation> GetTagInformation()
         {
-            var directoryInfo = new System.IO.DirectoryInfo(input);
+            var directoryInfo = new System.IO.DirectoryInfo(this.Folder);
             if (!directoryInfo.Exists)
             {
-                throw new System.IO.DirectoryNotFoundException($"Failed to find {input}");
+                throw new System.IO.DirectoryNotFoundException($"Failed to find {this.Folder}");
             }
 
             // get all the files
@@ -29,12 +34,6 @@ namespace ITunes.Editor
                 .Select(_ => TagLibHelper.GetFile(_.FullName))
                 .Where(_ => _ != null)
                 .Cast<SongInformation>();
-        }
-
-        /// <inheritdoc />
-        public Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
-        {
-            return Task.Run(() => this.GetTagInformation(input));
         }
     }
 }

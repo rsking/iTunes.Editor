@@ -22,10 +22,10 @@ namespace Ninject.Extensions.ITunes.Editor
         public override void Load()
         {
             // Songs
-            this.Bind<ISongLoader>().To<FolderSongLoader>().Named("folder");
-            this.Bind<ISongLoader>().To<IPodSongLoader>().Named("ipod");
-            this.Bind<ISongLoader>().To<PListSongLoader>().Named("plist");
-            this.Bind<ISongLoader>().To<ITunesSongLoader>().Named("itunes");
+            this.Bind<ISongsProvider>().To<FolderSongsProvider>().Named("folder");
+            this.Bind<ISongsProvider>().To<IPodSongsProvider>().Named("ipod");
+            this.Bind<ISongsProvider>().To<PListSongsProvider>().Named("plist");
+            this.Bind<ISongsProvider>().To<ITunesSongsProvider>().Named("itunes");
 
             // Tags
             this.Bind<ITagProvider>().To<TagLibTagProvider>().Named("taglib");

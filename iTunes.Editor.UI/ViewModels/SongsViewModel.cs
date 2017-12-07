@@ -12,7 +12,7 @@ namespace ITunes.Editor.ViewModels
     /// The songs view model.
     /// </summary>
     [PropertyChanged.AddINotifyPropertyChangedInterface]
-    public class SongsViewModel
+    public class SongsViewModel : Models.ISongs
     {
         private readonly System.Collections.ObjectModel.ObservableCollection<SongInformation> songs = new System.Collections.ObjectModel.ObservableCollection<SongInformation>();
 

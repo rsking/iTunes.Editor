@@ -16,6 +16,11 @@
   
   <ItemGroup>
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx" Generator="ResXFileCodeGenerator" LastGenOutput="%(Filename).Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +35,8 @@
     <PackageReference Include="Roslynator.Analyzers" Version="1.5.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
     <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
+    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,25 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Views\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
   
 </Project>

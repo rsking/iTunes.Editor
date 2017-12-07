@@ -9,14 +9,17 @@ namespace ITunes.Editor.MediaInfo
     /// <summary>
     /// The MediaInfo <see cref="ITagProvider"/>.
     /// </summary>
-    public class MediaInfoTagProvider : ITagProvider
+    public class MediaInfoTagProvider : TagProvider, IFileProvider
     {
         /// <inheritdoc/>
-        public TagLib.Tag GetTag(string input)
+        public string File { get; set; }
+
+        /// <inheritdoc/>
+        public override TagLib.Tag GetTag()
         {
             var handle = NativeMethods.MediaInfo_New();
             MediaInfoTag mediaTag = null;
-            if (NativeMethods.MediaInfo_Open(handle, input))
+            if (NativeMethods.MediaInfo_Open(handle, this.File))
             {
                 NativeMethods.MediaInfo_Option(handle, "Complete", "0");
                 mediaTag = new MediaInfoTag(System.Runtime.InteropServices.Marshal.PtrToStringUni(NativeMethods.MediaInfo_Inform(handle)));
@@ -26,12 +29,6 @@ namespace ITunes.Editor.MediaInfo
             NativeMethods.MediaInfo_Delete(handle);
 
             return mediaTag;
-        }
-
-        /// <inheritdoc/>
-        public System.Threading.Tasks.Task<TagLib.Tag> GetTagAsync(string input)
-        {
-            return System.Threading.Tasks.Task.Run(() => this.GetTag(input));
         }
     }
 }

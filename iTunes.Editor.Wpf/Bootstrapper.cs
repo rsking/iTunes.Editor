@@ -32,7 +32,12 @@ namespace ITunes.Editor
             this.container.Bind<Caliburn.Micro.IWindowManager>().To<MetroWindowManager>().InSingletonScope();
             this.container.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 
-            this.container.Bind<ViewModels.SongsViewModel>().ToSelf();
+            this.container.Bind<Models.ILoad>().To<ViewModels.LoadViewModel>();
+            this.container.Bind<Models.ISongs>().To<ViewModels.SongsViewModel>();
+
+            // Services
+            this.container.Bind<Services.Contracts.ISelectFolder>().To<Services.SelectFolderDialog>();
+            this.container.Bind<Services.Contracts.IOpenFile>().To<Services.OpenFileDialog>();
         }
 
         /// <inheritdoc/>

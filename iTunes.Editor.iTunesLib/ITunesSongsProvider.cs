@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ITunesSongLoader.cs" company="RossKing">
+// <copyright file="ITunesSongsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -7,16 +7,18 @@
 namespace ITunes.Editor.ITunesLib
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// The iTunes song loader.
     /// </summary>
-    public class ITunesSongLoader : ISongLoader
+    public class ITunesSongsProvider : SongsProvider
     {
         /// <inheritdoc />
+        public override string Name => Properties.Resources.ITunesName;
+
+        /// <inheritdoc />
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is by design, as the iTunes loaded does not need an input.")]
-        public IEnumerable<SongInformation> GetTagInformation(string input)
+        public override IEnumerable<SongInformation> GetTagInformation()
         {
 #if NO_ITUNES
             throw new System.NotImplementedException("Compiled without iTunes support");
@@ -43,12 +45,6 @@ namespace ITunes.Editor.ITunesLib
                 }
             }
 #endif
-        }
-
-        /// <inheritdoc />
-        public Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
-        {
-            return Task.Run(() => this.GetTagInformation(input));
         }
     }
 }

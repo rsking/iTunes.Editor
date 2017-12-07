@@ -63,8 +63,19 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            foreach (var song in await this.Parent.Kernel.Get<ISongLoader>(this.Type)
-                .GetTagInformationAsync(this.Input)
+            var songsProvider = this.Parent.Kernel.Get<ISongsProvider>(this.Type);
+            switch (songsProvider)
+            {
+                case IFolderProvider folderProvider:
+                    folderProvider.Folder = this.Input;
+                    break;
+                case IFileProvider fileProvider:
+                    fileProvider.File = this.Input;
+                    break;
+            }
+
+            foreach (var song in await songsProvider
+                .GetTagInformationAsync()
                 .ConfigureAwait(false))
             {
                 Console.WriteLine(song.Name);
@@ -169,8 +180,8 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider();
-            var mediaInfo = await mediaInfoTagProvider.GetTagAsync(this.File).ConfigureAwait(false);
+            var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider { File = this.File };
+            var mediaInfo = await mediaInfoTagProvider.GetTagAsync().ConfigureAwait(false);
             Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
             return 0;
         }

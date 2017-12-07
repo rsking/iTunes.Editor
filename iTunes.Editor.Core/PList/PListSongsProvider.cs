@@ -1,25 +1,30 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="PListSongLoader.cs" company="RossKing">
+// <copyright file="PListSongsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
 namespace ITunes.Editor.PList
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
-    /// A <see cref="ISongLoader"/> that loads from an Apple plist file.
+    /// A <see cref="ISongsProvider"/> that loads from an Apple plist file.
     /// </summary>
-    public class PListSongLoader : ISongLoader
+    public class PListSongsProvider : SongsProvider, IFileProvider
     {
         /// <inheritdoc />
-        public IEnumerable<SongInformation> GetTagInformation(string input)
+        public string File { get; set; }
+
+        /// <inheritdoc />
+        public override string Name => Properties.Resources.PListName;
+
+        /// <inheritdoc />
+        public override IEnumerable<SongInformation> GetTagInformation()
         {
             PList plist;
-            using (var stream = System.IO.File.OpenRead(input))
+            using (var stream = System.IO.File.OpenRead(this.File))
             {
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
                 plist = serializer.Deserialize(stream) as PList;
@@ -33,12 +38,6 @@ namespace ITunes.Editor.PList
             }
 
             return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Select(_ => (SongInformation)_);
-        }
-
-        /// <inheritdoc />
-        public System.Threading.Tasks.Task<IEnumerable<SongInformation>> GetTagInformationAsync(string input)
-        {
-            return System.Threading.Tasks.Task.Run(() => this.GetTagInformation(input));
         }
     }
 }
