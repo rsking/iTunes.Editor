@@ -181,6 +181,7 @@ namespace ITunes.Editor
     /// </summary>
     [Command(Description = "Updates a specific file")]
     [Subcommand("composer", typeof(UpdateComposerCommand))]
+    [Subcommand("lyrics", typeof(UpdateLyricsCommand))]
     internal class UpdateCommand : CommandBase
     {
         /// <summary>
@@ -218,15 +219,18 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            SongInformation songInformation;
-            using (var file = TagLib.File.Create(this.File))
+            var service = this.Parent.Parent.Kernel.Get<IUpdateComposerService>();
+            foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
-                songInformation = (SongInformation)file;
-            }
+                SongInformation songInformation;
+                using (var tagLibFile = TagLib.File.Create(file))
+                {
+                    songInformation = (SongInformation)tagLibFile;
+                }
 
-            await this.Parent.Parent.Kernel.Get<IUpdateComposerService>()
-                .UpdateAsync(songInformation, this.Force)
-                .ConfigureAwait(false);
+                Console.WriteLine($"Processing {songInformation.Name}");
+                await service.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
+            }
 
             return 0;
         }
@@ -249,15 +253,18 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            SongInformation songInformation;
-            using (var file = TagLib.File.Create(this.File))
+            var service = this.Parent.Parent.Kernel.Get<IUpdateLyricsService>();
+            foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
-                songInformation = (SongInformation)file;
-            }
+                SongInformation songInformation;
+                using (var tagLibFile = TagLib.File.Create(file))
+                {
+                    songInformation = (SongInformation)tagLibFile;
+                }
 
-            await this.Parent.Parent.Kernel.Get<IUpdateLyricsService>()
-                .UpdateAsync(songInformation, this.Force)
-                .ConfigureAwait(false);
+                Console.WriteLine($"Processing {songInformation.Name}");
+                await service.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
+            }
 
             return 0;
         }
