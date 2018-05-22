@@ -21,10 +21,7 @@ namespace ITunes.Editor
         /// Initializes a new instance of the <see cref="UpdateComposerService"/> class.
         /// </summary>
         /// <param name="providers">The providers.</param>
-        public UpdateComposerService(IEnumerable<IComposerProvider> providers)
-        {
-            this.providers = providers;
-        }
+        public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers;
 
         /// <inheritdoc />
         public SongInformation Update(SongInformation songInformation, bool force = false)
@@ -76,6 +73,8 @@ namespace ITunes.Editor
         {
             private readonly TagLib.Tag appleTag;
 
+            private TagLib.File.IFileAbstraction fileAbstraction;
+
             private TagLib.File file;
 
             private SongInformation songInformation;
@@ -83,17 +82,22 @@ namespace ITunes.Editor
             public Updater(SongInformation songInformation)
             {
                 this.songInformation = songInformation;
-                this.file = TagLib.File.Create(songInformation.Name);
-                if (this.file != null)
+                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name);
+                this.file = TagLib.File.Create(this.fileAbstraction);
+                if (this.file == null)
+                {
+                    if (this.fileAbstraction is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+                else
                 {
                     this.appleTag = this.file.GetTag(TagLib.TagTypes.Apple);
                 }
             }
 
-            public bool ShouldUpdate(bool force)
-            {
-                return this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
-            }
+            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
 
             public SongInformation Update(IEnumerable<Name> composers)
             {
@@ -114,6 +118,13 @@ namespace ITunes.Editor
             {
                 this.file?.Dispose();
                 this.file = null;
+                
+                if (this.fileAbstraction is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+
+                this.fileAbstraction = null;
             }
         }
     }

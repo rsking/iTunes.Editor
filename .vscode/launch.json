@@ -5,15 +5,35 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
-            "preLaunchTask": "build",
+            "name": "Load XML",
+            "preLaunchTask": "Build Console",
+            "type": "coreclr",
+            "request": "launch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.0/iTunes.Editor.Console.dll",
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
             "args": [
                 "list",
                 "C:\\Users\\rskin\\Music\\iTunes\\iTunes Music Library.xml",
                 "--type",
                 "plist"
+            ],
+            "cwd": "${workspaceFolder}/iTunes.Editor.Console",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Get Lyrics",
+            "preLaunchTask": "Build Console",
+            "type": "coreclr",
+            "request": "launch",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
+            "args": [
+                "lyrics",
+                "Pink Floyd",
+                "Comfortably Numb"
             ],
             "cwd": "${workspaceFolder}/iTunes.Editor.Console",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window

@@ -234,9 +234,12 @@ namespace ITunes.Editor
             foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
                 SongInformation songInformation;
-                using (var tagLibFile = TagLib.File.Create(file))
+                using (var fileAbstraction = new LocalFileAbstraction(file))
                 {
-                    songInformation = (SongInformation)tagLibFile;
+                    using (var tagLibFile = TagLib.File.Create(fileAbstraction))
+                    {
+                        songInformation = (SongInformation)tagLibFile;
+                    }
                 }
 
                 Console.WriteLine($"Processing {songInformation.Name}");
@@ -268,9 +271,12 @@ namespace ITunes.Editor
             foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
                 SongInformation songInformation;
-                using (var tagLibFile = TagLib.File.Create(file))
+                using (var fileAbstraction = new LocalFileAbstraction(file))
                 {
-                    songInformation = (SongInformation)tagLibFile;
+                    using (var tagLibFile = TagLib.File.Create(fileAbstraction))
+                    {
+                        songInformation = (SongInformation)tagLibFile;
+                    }
                 }
 
                 Console.WriteLine($"Processing {songInformation.Name}");
@@ -292,9 +298,6 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="app">The application.</param>
         /// <returns>The task.</returns>
-        protected virtual Task<int> OnExecuteAsync(CommandLineApplication app)
-        {
-            return Task.FromResult(0);
-        }
+        protected virtual Task<int> OnExecuteAsync(CommandLineApplication app) => Task.FromResult(0);
     }
 }

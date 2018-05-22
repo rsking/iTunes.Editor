@@ -35,20 +35,14 @@ namespace ITunes.Editor
         /// </summary>
         /// <typeparam name="TEvent">The type of event.</typeparam>
         /// <returns>The event as an <see cref="System.IObservable{T}"/> sequence.</returns>
-        public System.IObservable<TEvent> GetEvent<TEvent>()
-        {
-            return System.Reactive.Linq.Observable.AsObservable(System.Reactive.Linq.Observable.OfType<TEvent>(this.subject));
-        }
+        public System.IObservable<TEvent> GetEvent<TEvent>() => System.Reactive.Linq.Observable.AsObservable(System.Reactive.Linq.Observable.OfType<TEvent>(this.subject));
 
         /// <summary>
         /// Publishes the event.
         /// </summary>
         /// <typeparam name="TEvent">The event to publish.</typeparam>
         /// <param name="sampleEvent">The sample event.</param>
-        public void Publish<TEvent>(TEvent sampleEvent)
-        {
-            this.subject.OnNext(sampleEvent);
-        }
+        public void Publish<TEvent>(TEvent sampleEvent) => this.subject.OnNext(sampleEvent);
 
         /// <summary>
         /// Disposes unmanaged, and optionally managed, resources used by this <see cref="IEventAggregator"/>

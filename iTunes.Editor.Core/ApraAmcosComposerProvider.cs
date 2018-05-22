@@ -48,10 +48,7 @@ namespace ITunes.Editor
         }
 
         /// <inheritdoc />
-        public System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation)
-        {
-            return this.GetComposersAsync(tagInformation).Result;
-        }
+        public System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation) => this.GetComposersAsync(tagInformation).Result;
 
         /// <inheritdoc />
         public async Task<System.Collections.Generic.IEnumerable<Name>> GetComposersAsync(SongInformation tagInformation)

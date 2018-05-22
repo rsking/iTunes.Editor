@@ -49,9 +49,6 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/></returns>
-        public System.Threading.Tasks.Task<string> GetSelectedPathAsync(string path = "")
-        {
-            return System.Threading.Tasks.Task.FromResult(this.GetSelectedPath(path));
-        }
+        public System.Threading.Tasks.Task<string> GetSelectedPathAsync(string path = "") => System.Threading.Tasks.Task.FromResult(this.GetSelectedPath(path));
     }
 }

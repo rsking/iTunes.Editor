@@ -202,30 +202,21 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the explicit flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetExplicit(this TagLib.Mpeg4.AppleTag appleTag)
-        {
-            return appleTag.SetRating(ExplicitRatingData);
-        }
+        public static bool SetExplicit(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(ExplicitRatingData);
 
         /// <summary>
         /// Sets the rating flag to clean.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the clean flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetClean(this TagLib.Mpeg4.AppleTag appleTag)
-        {
-            return appleTag.SetRating(CleanRatingData);
-        }
+        public static bool SetClean(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(CleanRatingData);
 
         /// <summary>
         /// Sets the rating flag to unrated.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag)
-        {
-            return appleTag.SetRating(CleanRatingData);
-        }
+        public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(UnratedRatingData);
 
         private static bool SetRating(this TagLib.Mpeg4.AppleTag appleTag, TagLib.ByteVector rating)
         {
@@ -316,9 +307,6 @@ namespace ITunes.Editor
                 line.Substring(0, 1).ToUpper() + line.Substring(1);
         }
 
-        private static bool IsNull(this DateTime dateTime)
-        {
-            return dateTime.Year == 1 || dateTime.Year == 1899;
-        }
+        private static bool IsNull(this DateTime dateTime) => dateTime.Year == 1 || dateTime.Year == 1899;
     }
 }

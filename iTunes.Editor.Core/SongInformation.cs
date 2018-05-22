@@ -80,14 +80,11 @@ namespace ITunes.Editor
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
         /// </summary>
         /// <param name="file">The file to convert.</param>
-        public static explicit operator SongInformation(TagLib.File file)
-        {
-            return new SongInformation(
-                file.Tag.Title,
-                file.Tag.Performers,
-                file.Tag.PerformersSort ?? file.Tag.Performers,
-                file.Tag.Album,
-                file.Name);
-        }
+        public static explicit operator SongInformation(TagLib.File file) => new SongInformation(
+            file.Tag.Title,
+            file.Tag.Performers,
+            file.Tag.PerformersSort ?? file.Tag.Performers,
+            file.Tag.Album,
+            file.Name);
     }
 }

@@ -76,6 +76,8 @@ namespace ITunes.Editor
 
             private readonly TagLib.Mpeg4.AppleTag appleTag;
 
+            private TagLib.File.IFileAbstraction fileAbstraction;
+
             private TagLib.File file;
 
             private SongInformation songInformation;
@@ -83,17 +85,24 @@ namespace ITunes.Editor
             public Updater(SongInformation songInformation)
             {
                 this.songInformation = songInformation;
-                this.file = TagLib.File.Create(songInformation.Name);
-                if (this.file != null)
+                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name);
+                this.file = TagLib.File.Create(this.fileAbstraction);
+                if (this.file == null)
+                {
+                    if (this.fileAbstraction is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+
+                    this.fileAbstraction = null;
+                }
+                else
                 {
                     this.appleTag = this.file.GetTag(TagLib.TagTypes.Apple) as TagLib.Mpeg4.AppleTag;
                 }
             }
 
-            public bool ShouldUpdate(bool force)
-            {
-                return this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
-            }
+            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force); 
 
             public SongInformation Update(string lyrics = null)
             {
@@ -141,6 +150,13 @@ namespace ITunes.Editor
             {
                 this.file?.Dispose();
                 this.file = null;
+                
+                if (this.fileAbstraction is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+
+                this.fileAbstraction = null;
             }
         }
     }

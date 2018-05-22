@@ -19,21 +19,31 @@ namespace ITunes.Editor
         public static TagLib.File GetFile(string path)
         {
             TagLib.File file = null;
+            TagLib.File.IFileAbstraction fileAbstraction = default;
 
             try
             {
-                file = TagLib.File.Create(path);
+                fileAbstraction = new LocalFileAbstraction(path);
+                file = TagLib.File.Create(fileAbstraction);
             }
             catch (TagLib.UnsupportedFormatException)
             {
                 // ignore the error
+            }
+            finally
+            {
+                if (file == null && fileAbstraction is System.IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
 
             if (file == null)
             {
                 try
                 {
-                    file = new TagLib.Mpeg4.File(path);
+                    fileAbstraction = new LocalFileAbstraction(path);
+                    file = new TagLib.Mpeg4.File(fileAbstraction);
                 }
                 catch (TagLib.CorruptFileException)
                 {
@@ -42,6 +52,13 @@ namespace ITunes.Editor
                 catch (TagLib.UnsupportedFormatException)
                 {
                     // ignore the error
+                }
+                finally
+                {
+                    if (file == null && fileAbstraction is System.IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
                 }
             }
 
