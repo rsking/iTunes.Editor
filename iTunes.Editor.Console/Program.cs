@@ -46,11 +46,17 @@ namespace ITunes.Editor
     [Command(Description = "Lists the files from the specified input")]
     internal class ListCommand : CommandBase
     {
+        private string input;
+        
         /// <summary>
         /// Gets or sets the input.
         /// </summary>
         [Argument(0, Description = "The input", Name = "input")]
-        public string Input { get; set; }
+        public string Input 
+        {
+             get => this.input;
+             set => this.input = value.Expand();
+        }
 
         /// <summary>
         /// Gets or sets the type.
@@ -169,11 +175,17 @@ namespace ITunes.Editor
     [Command(Description = "Gets the media info for a specific file")]
     internal class MediaInfoCommand : CommandBase
     {
+        private string file;
+
         /// <summary>
         /// Gets or sets the file.
         /// </summary>
         [Argument(0, Description = "The file to get information for", Name = "file")]
-        public string File { get; set; }
+        public string File 
+        {
+             get => this.file;
+             set => this.file = value.Expand();
+        }
 
         private Program Parent { get; }
 
@@ -206,11 +218,17 @@ namespace ITunes.Editor
     /// </summary>
     internal abstract class UpdateCommandBase : CommandBase
     {
+        private string file;
+
         /// <summary>
         /// Gets or sets the file to update.
         /// </summary>
         [Argument(0, "file", "The file")]
-        public string File { get; set; }
+        public string File 
+        {
+             get => this.file;
+             set => this.file = value.Expand();
+        }
     }
 
     /// <summary>

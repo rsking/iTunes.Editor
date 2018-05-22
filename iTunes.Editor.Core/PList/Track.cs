@@ -23,10 +23,7 @@ namespace ITunes.Editor.PList
         /// Initializes a new instance of the <see cref="Track"/> class.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
-        public Track(IDictionary<string, object> dict)
-        {
-            this.dict = dict;
-        }
+        public Track(IDictionary<string, object> dict) => this.dict = dict;
 
         /// <summary>
         /// Gets the ID.

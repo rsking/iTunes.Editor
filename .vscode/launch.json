@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
             "args": [
                 "list",
-                "C:\\Users\\rskin\\Music\\iTunes\\iTunes Music Library.xml",
+                "%USERPROFILE%\\Music\\iTunes\\iTunes Music Library.xml",
                 "--type",
                 "plist"
             ],
