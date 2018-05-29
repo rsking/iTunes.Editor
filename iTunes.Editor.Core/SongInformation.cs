@@ -86,5 +86,21 @@ namespace ITunes.Editor
             file.Tag.PerformersSort ?? file.Tag.Performers,
             file.Tag.Album,
             file.Name);
+
+        /// <summary>
+        /// Creates a new <see cref="SongInformation" /> from a file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The song information.</returns>
+        public static SongInformation FromFile(string path)
+        {
+            using (var fileAbstraction = new LocalFileAbstraction(path))
+            {
+                using (var tagLibFile = TagLib.File.Create(fileAbstraction))
+                {
+                    return (SongInformation)tagLibFile;
+                }
+            }
+        }
     }
 }
