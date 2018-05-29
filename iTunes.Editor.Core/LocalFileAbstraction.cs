@@ -20,7 +20,7 @@ namespace ITunes.Editor
         /// <param name="openForWrite">Set to <see langword="true"/> to open for writing.</param>
         public LocalFileAbstraction(string path, bool openForWrite = false)
         {
-            this.Name = System.IO.Path.GetFileName(path);
+            this.Name = path;
             this.ReadStream = this.WriteStream = openForWrite ? System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite) : System.IO.File.OpenRead(path);
         }
 
