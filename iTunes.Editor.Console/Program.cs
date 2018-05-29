@@ -47,12 +47,12 @@ namespace ITunes.Editor
     internal class ListCommand : CommandBase
     {
         private string input;
-        
+
         /// <summary>
         /// Gets or sets the input.
         /// </summary>
         [Argument(0, Description = "The input", Name = "input")]
-        public string Input 
+        public string Input
         {
              get => this.input;
              set => this.input = value.Expand();
@@ -182,7 +182,7 @@ namespace ITunes.Editor
         /// Gets or sets the file.
         /// </summary>
         [Argument(0, Description = "The file to get information for", Name = "file")]
-        public string File 
+        public string File
         {
              get => this.file;
              set => this.file = value.Expand();
@@ -225,7 +225,7 @@ namespace ITunes.Editor
         /// Gets or sets the file to update.
         /// </summary>
         [Argument(0, "file", "The file")]
-        public string File 
+        public string File
         {
              get => this.file;
              set => this.file = value.Expand();
@@ -252,15 +252,7 @@ namespace ITunes.Editor
             var service = this.Parent.Parent.Kernel.Get<IUpdateComposerService>();
             foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
-                SongInformation songInformation;
-                using (var fileAbstraction = new LocalFileAbstraction(file))
-                {
-                    using (var tagLibFile = TagLib.File.Create(fileAbstraction))
-                    {
-                        songInformation = (SongInformation)tagLibFile;
-                    }
-                }
-
+                var songInformation = SongInformation.FromFile(file);
                 Console.WriteLine($"Processing {songInformation.Name}");
                 await service.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
             }
@@ -289,15 +281,7 @@ namespace ITunes.Editor
             var service = this.Parent.Parent.Kernel.Get<IUpdateLyricsService>();
             foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
-                SongInformation songInformation;
-                using (var fileAbstraction = new LocalFileAbstraction(file))
-                {
-                    using (var tagLibFile = TagLib.File.Create(fileAbstraction))
-                    {
-                        songInformation = (SongInformation)tagLibFile;
-                    }
-                }
-
+                var songInformation = SongInformation.FromFile(file);
                 Console.WriteLine($"Processing {songInformation.Name}");
                 await service.UpdateAsync(songInformation, this.Force).ConfigureAwait(false);
             }
