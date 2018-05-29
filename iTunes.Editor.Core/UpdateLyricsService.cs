@@ -85,7 +85,7 @@ namespace ITunes.Editor
             public Updater(SongInformation songInformation)
             {
                 this.songInformation = songInformation;
-                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name);
+                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name, true);
                 this.file = TagLib.File.Create(this.fileAbstraction);
                 if (this.file == null)
                 {
@@ -102,7 +102,7 @@ namespace ITunes.Editor
                 }
             }
 
-            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force); 
+            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
 
             public SongInformation Update(string lyrics = null)
             {
@@ -150,7 +150,7 @@ namespace ITunes.Editor
             {
                 this.file?.Dispose();
                 this.file = null;
-                
+
                 if (this.fileAbstraction is IDisposable disposable)
                 {
                     disposable.Dispose();

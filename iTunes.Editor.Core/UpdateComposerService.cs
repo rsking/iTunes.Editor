@@ -82,7 +82,7 @@ namespace ITunes.Editor
             public Updater(SongInformation songInformation)
             {
                 this.songInformation = songInformation;
-                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name);
+                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name, true);
                 this.file = TagLib.File.Create(this.fileAbstraction);
                 if (this.file == null)
                 {
@@ -118,7 +118,7 @@ namespace ITunes.Editor
             {
                 this.file?.Dispose();
                 this.file = null;
-                
+
                 if (this.fileAbstraction is IDisposable disposable)
                 {
                     disposable.Dispose();
