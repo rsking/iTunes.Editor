@@ -30,10 +30,16 @@ namespace ITunes.Editor
             }
 
             // get all the files
-            return directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
-                .Select(_ => TagLibHelper.GetFile(_.FullName))
-                .Where(_ => _ != null)
-                .Cast<SongInformation>();
+            foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories))
+            {
+                var fileTag = TagLibHelper.GetFile(fileInfo.FullName);
+                if (fileTag != null)
+                {
+                    yield return (SongInformation)fileTag;
+
+                    fileTag?.Dispose();
+                }
+            }
         }
     }
 }
