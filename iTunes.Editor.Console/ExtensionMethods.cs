@@ -6,6 +6,9 @@
 
 namespace ITunes.Editor
 {
+    /// <summary>
+    /// The extension methods.
+    /// </summary>
     internal static class ExtensionMethods
     {
         /// <summary>
