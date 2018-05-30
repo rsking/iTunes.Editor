@@ -84,7 +84,8 @@ namespace ITunes.Editor
                 .GetTagInformationAsync()
                 .ConfigureAwait(false))
             {
-                Console.WriteLine(song.Name);
+                var performers = song.Performers == null ? null : string.Join("; ", song.Performers);
+                Console.WriteLine($"{performers}|{song.Title}|{song.Name}");
             }
 
             return 0;
