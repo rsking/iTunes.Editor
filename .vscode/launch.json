@@ -40,6 +40,45 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Get Composers",
+            "preLaunchTask": "Build Console",
+            "type": "coreclr",
+            "request": "launch",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
+            "args": [
+                "composer",
+                "Pink Floyd",
+                "Comfortably Numb"
+            ],
+            "cwd": "${workspaceFolder}/iTunes.Editor.Console",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Update XML",
+            "preLaunchTask": "Build Console",
+            "type": "coreclr",
+            "request": "launch",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
+            "args": [
+                "update",
+                "list",
+                "all",
+                "%USERPROFILE%\\Music\\iTunes\\iTunes Music Library.xml",
+                "--type",
+                "plist"
+            ],
+            "cwd": "${workspaceFolder}/iTunes.Editor.Console",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }
