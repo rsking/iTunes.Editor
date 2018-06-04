@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Roslynator.Analyzers" Version="1.8.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.5.0-rc1-26502-06" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
