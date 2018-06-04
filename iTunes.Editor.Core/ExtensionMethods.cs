@@ -41,6 +41,32 @@ namespace ITunes.Editor
         private static readonly TagLib.ByteVector UnratedRatingData = new TagLib.ByteVector(new byte[] { 0x00 });
 
         /// <summary>
+        /// Gets the media type.
+        /// </summary>
+        /// <param name="songInformation">The song information.</param>
+        /// <returns>The medit type.</returns>
+        public static string GetMediaType(this SongInformation songInformation)
+        {
+            var name = songInformation.Name;
+            var values = name.Split(System.IO.Path.DirectorySeparatorChar);
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] == "iTunes Media")
+                {
+                    if (i + 1 < values.Length)
+                    {
+                        return values[i + 1];
+                    }
+
+                    break;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the value of this instance is equal to the value of the specified <see cref="DateTime"/> instance, optionally ignoring the <see cref="DateTime.Kind"/> value.
         /// </summary>
         /// <param name="dateTime">This date time value.</param>
@@ -284,7 +310,7 @@ namespace ITunes.Editor
                         returnString.Clear();
                         break;
                     case '\n':
-                        if (i <= 0 || !(lyrics[i - 1] == '\r'))
+                        if (i <= 0 || lyrics[i - 1] != '\r')
                         {
                             yield return returnString.ToString();
                             returnString.Clear();
