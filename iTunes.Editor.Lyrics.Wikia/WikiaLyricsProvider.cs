@@ -60,8 +60,8 @@ namespace ITunes.Editor.Lyrics.Wikia
         /// <inheritdoc/>
         public async Task<string> GetLyricsAsync(SongInformation tagInformation)
         {
-            var artist = string.Join("; ", tagInformation.Performers);
-            var songTitle = tagInformation.Title;
+            var artist = Escape(string.Join("; ", tagInformation.Performers));
+            var songTitle = Escape(tagInformation.Title);
 
             if (await this.channel.checkSongExistsAsync(artist, songTitle).ConfigureAwait(false))
             {
@@ -82,6 +82,8 @@ namespace ITunes.Editor.Lyrics.Wikia
 
             return null;
         }
+
+        private static string Escape(string unescaped) => new System.Xml.Linq.XText(unescaped).ToString();
 
         private static string ScrapeNode(HtmlAgilityPack.HtmlNode node)
         {
