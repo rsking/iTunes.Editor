@@ -9,7 +9,10 @@ namespace ITunes.Editor.Core.Tests
     using FluentAssertions;
     using Xunit;
 
-    internal class ExtensionMethodTests
+    /// <summary>
+    /// The extension method tests.
+    /// </summary>
+    public class ExtensionMethodTests
     {
         [Theory]
         [InlineData(null)]
