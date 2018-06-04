@@ -14,6 +14,8 @@ namespace ITunes.Editor.PList
     /// </summary>
     internal class Track
     {
+        private const string LocalHostString = "localhost/";
+
         /// <summary>
         /// The dictionary.
         /// </summary>
@@ -194,12 +196,8 @@ namespace ITunes.Editor.PList
             var path = track.Location;
             if (path != null)
             {
-                var uri = new Uri(path);
-                path = System.IO.Path.GetFullPath(
-                    System.Web.HttpUtility.UrlDecode(
-                        uri.AbsolutePath.StartsWith("/")
-                        ? uri.AbsolutePath.Substring(1)
-                        : uri.AbsolutePath));
+                var uri = new Uri(path.Replace(LocalHostString, string.Empty));
+                path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 
             return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);

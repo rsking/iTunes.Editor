@@ -30,14 +30,9 @@ namespace ITunes.Editor.PList
                 plist = serializer.Deserialize(stream) as PList;
             }
 
-            var dictionary = plist["Tracks"] as IDictionary<string, object>;
-
-            if (dictionary == null)
-            {
-                return null;
-            }
-
-            return dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Select(_ => (SongInformation)_);
+            return plist["Tracks"] is IDictionary<string, object> dictionary
+                ? dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Select(_ => (SongInformation)_)
+                : null;
         }
     }
 }
