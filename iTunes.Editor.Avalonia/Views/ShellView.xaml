@@ -1,0 +1,16 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Avalonia"
+        xmlns:vm="clr-namespace:ITunes.Editor.ViewModels;assembly=iTunes.Editor.Avalonia"
+        Icon="resm:ITunes.Editor.Assets.avalonia-logo.ico"
+        Title="iTunes.Editor">
+  <Design.DataContext>
+    <vm:ShellViewModel/>
+  </Design.DataContext>
+  <Window.Resources>
+    <local:ViewLocator x:Key="ViewLocator" />
+  </Window.Resources>
+
+  <ContentControl Content="{Binding Current}" 
+                  ContentTemplate="{StaticResource ViewLocator}" />
+</Window>

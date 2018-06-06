@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch UI",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build UI",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceRoot}/iTunes.Editor.Avalonia/bin/Debug/netcoreapp2.1/iTunes.Editor.Avalonia.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
             "name": "Load XML",
             "preLaunchTask": "Build Console",
             "type": "coreclr",

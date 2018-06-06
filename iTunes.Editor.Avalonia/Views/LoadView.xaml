@@ -1,0 +1,39 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core">
+  <ItemsControl Items="{Binding Providers}">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <WrapPanel />
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+      <DataTemplate DataType="{x:Type core:ISongsProvider}">
+        <Button Margin="10"
+                Width="100"
+                Height="100">
+          <Button.Content>
+            <StackPanel>
+              <TextBlock Text="Load songs from " />
+              <TextBlock Text="{Binding Name, Mode=OneWay}" />
+            </StackPanel>
+          </Button.Content>
+          <!--<Button.Content>
+            <TextBlock TextWrapping="Wrap">
+              <Run Text="Load songs from " />
+              <Run Text="{Binding Name, Mode=OneWay}" />
+            </TextBlock>
+          </Button.Content>-->
+          <!--
+          <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Click">
+              <cal:ActionMessage MethodName="LoadAsync">
+                <cal:Parameter Value="$dataContext" />
+              </cal:ActionMessage>
+            </i:EventTrigger>
+          </i:Interaction.Triggers>-->
+        </Button>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
+</UserControl>

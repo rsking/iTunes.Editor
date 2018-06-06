@@ -21,16 +21,4 @@
     <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core">
-      <HintPath>..\..\..\Caliburn.Micro\Caliburn.Micro\bin\net45\Debug\Caliburn.Micro.Platform.Core.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

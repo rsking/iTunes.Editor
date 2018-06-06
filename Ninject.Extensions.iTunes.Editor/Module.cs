@@ -25,7 +25,10 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ISongsProvider>().To<FolderSongsProvider>().Named("folder");
             this.Bind<ISongsProvider>().To<IPodSongsProvider>().Named("ipod");
             this.Bind<ISongsProvider>().To<PListSongsProvider>().Named("plist");
-            this.Bind<ISongsProvider>().To<ITunesSongsProvider>().Named("itunes");
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                this.Bind<ISongsProvider>().To<ITunesSongsProvider>().Named("itunes");
+            }
 
             // Tags
             this.Bind<ITagProvider>().To<TagLibTagProvider>().Named("taglib");

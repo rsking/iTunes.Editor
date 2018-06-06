@@ -1,0 +1,18 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+    <TextBlock Text="Songs!" />
+    <ListBox x:Name="Songs" Grid.Row="1">
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type core:SongInformation}">
+          <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

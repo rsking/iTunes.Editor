@@ -17,7 +17,6 @@ namespace ITunes.Editor.ITunesLib
         public override string Name => Properties.Resources.ITunesName;
 
         /// <inheritdoc />
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is by design, as the iTunes loaded does not need an input.")]
         public override IEnumerable<SongInformation> GetTagInformation()
         {
 #if NO_ITUNES
