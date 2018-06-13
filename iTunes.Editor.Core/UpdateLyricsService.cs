@@ -115,7 +115,7 @@ namespace ITunes.Editor
                 if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics.StartsWith(temp)))
                 {
                     // this has no lyrics, so update
-                    if (updated = this.appleTag.AddNoLyrics())
+                    if (updated = this.appleTag.AddNoLyrics() | this.appleTag.SetUnrated())
                     {
                         this.file.Save();
                     }
