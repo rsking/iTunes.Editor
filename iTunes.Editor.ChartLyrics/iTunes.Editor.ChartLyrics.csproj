@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Ninject.Extensions.ITunes.Editor</RootNamespace>
+    <RootNamespace>ITunes.Editor</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,18 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Roslynator.Analyzers" Version="1.8.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.iPod\iTunes.Editor.iPod.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.Lyrics.Wikia\iTunes.Editor.Lyrics.Wikia.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
   </ItemGroup>
 
 </Project>

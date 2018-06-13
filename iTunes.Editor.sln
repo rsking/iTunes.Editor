@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.UI", "iTunes.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.MediaInfo", "iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj", "{BCBCC8FD-F917-4C60-A84B-EEA24B341145}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.Avalonia", "iTunes.Editor.Avalonia\iTunes.Editor.Avalonia.csproj", "{699BDC41-AD71-4EFC-A695-1B048852BBEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Avalonia", "iTunes.Editor.Avalonia\iTunes.Editor.Avalonia.csproj", "{699BDC41-AD71-4EFC-A695-1B048852BBEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.ChartLyrics", "iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj", "{955075BB-85A8-4C4E-AEE0-2163CA27A858}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,6 +237,22 @@ Global
 		{699BDC41-AD71-4EFC-A695-1B048852BBEF}.Release|x64.Build.0 = Release|Any CPU
 		{699BDC41-AD71-4EFC-A695-1B048852BBEF}.Release|x86.ActiveCfg = Release|Any CPU
 		{699BDC41-AD71-4EFC-A695-1B048852BBEF}.Release|x86.Build.0 = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|ARM.Build.0 = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|x64.Build.0 = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Debug|x86.Build.0 = Debug|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|ARM.ActiveCfg = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|ARM.Build.0 = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|x64.ActiveCfg = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|x64.Build.0 = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|x86.ActiveCfg = Release|Any CPU
+		{955075BB-85A8-4C4E-AEE0-2163CA27A858}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
