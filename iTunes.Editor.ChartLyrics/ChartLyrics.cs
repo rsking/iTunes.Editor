@@ -18,7 +18,7 @@ namespace api.chartlyrics.com
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="SearchLyricResult", Namespace="http://api.chartlyrics.com/")]
-    public partial class SearchLyricResult : object, System.Runtime.Serialization.IExtensibleDataObject
+    internal partial class SearchLyricResult : object, System.Runtime.Serialization.IExtensibleDataObject
     {
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
@@ -174,7 +174,7 @@ namespace api.chartlyrics.com
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="GetLyricResult", Namespace="http://api.chartlyrics.com/")]
-    public partial class GetLyricResult : object, System.Runtime.Serialization.IExtensibleDataObject
+    internal partial class GetLyricResult : object, System.Runtime.Serialization.IExtensibleDataObject
     {
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
@@ -361,7 +361,7 @@ namespace api.chartlyrics.com
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ServiceModel.ServiceContractAttribute(Namespace="http://api.chartlyrics.com/", ConfigurationName="apiv1Soap")]
-public interface apiv1Soap
+internal interface apiv1Soap
 {
     
     // CODEGEN: Generating message contract since element name artist from namespace http://api.chartlyrics.com/ is not marked nillable
@@ -404,7 +404,7 @@ public interface apiv1Soap
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricRequest
+internal partial class SearchLyricRequest
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyric", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -424,7 +424,7 @@ public partial class SearchLyricRequest
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricRequestBody
+internal partial class SearchLyricRequestBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -448,7 +448,7 @@ public partial class SearchLyricRequestBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricResponse
+internal partial class SearchLyricResponse
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyricResponse", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -468,7 +468,7 @@ public partial class SearchLyricResponse
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricResponseBody
+internal partial class SearchLyricResponseBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -488,7 +488,7 @@ public partial class SearchLyricResponseBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricTextRequest
+internal partial class SearchLyricTextRequest
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyricText", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -508,7 +508,7 @@ public partial class SearchLyricTextRequest
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricTextRequestBody
+internal partial class SearchLyricTextRequestBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -528,7 +528,7 @@ public partial class SearchLyricTextRequestBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricTextResponse
+internal partial class SearchLyricTextResponse
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyricTextResponse", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -548,7 +548,7 @@ public partial class SearchLyricTextResponse
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricTextResponseBody
+internal partial class SearchLyricTextResponseBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -568,7 +568,7 @@ public partial class SearchLyricTextResponseBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class GetLyricRequest
+internal partial class GetLyricRequest
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="GetLyric", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -588,7 +588,7 @@ public partial class GetLyricRequest
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class GetLyricRequestBody
+internal partial class GetLyricRequestBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
@@ -612,7 +612,7 @@ public partial class GetLyricRequestBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class GetLyricResponse
+internal partial class GetLyricResponse
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="GetLyricResponse", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -632,7 +632,7 @@ public partial class GetLyricResponse
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class GetLyricResponseBody
+internal partial class GetLyricResponseBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -652,7 +652,7 @@ public partial class GetLyricResponseBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class AddLyricRequest
+internal partial class AddLyricRequest
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="AddLyric", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -672,7 +672,7 @@ public partial class AddLyricRequest
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class AddLyricRequestBody
+internal partial class AddLyricRequestBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
@@ -704,7 +704,7 @@ public partial class AddLyricRequestBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class AddLyricResponse
+internal partial class AddLyricResponse
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="AddLyricResponse", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -724,7 +724,7 @@ public partial class AddLyricResponse
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class AddLyricResponseBody
+internal partial class AddLyricResponseBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -744,7 +744,7 @@ public partial class AddLyricResponseBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricDirectRequest
+internal partial class SearchLyricDirectRequest
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyricDirect", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -764,7 +764,7 @@ public partial class SearchLyricDirectRequest
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricDirectRequestBody
+internal partial class SearchLyricDirectRequestBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -788,7 +788,7 @@ public partial class SearchLyricDirectRequestBody
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-public partial class SearchLyricDirectResponse
+internal partial class SearchLyricDirectResponse
 {
     
     [System.ServiceModel.MessageBodyMemberAttribute(Name="SearchLyricDirectResponse", Namespace="http://api.chartlyrics.com/", Order=0)]
@@ -808,7 +808,7 @@ public partial class SearchLyricDirectResponse
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
 [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
 [System.Runtime.Serialization.DataContractAttribute(Namespace="http://api.chartlyrics.com/")]
-public partial class SearchLyricDirectResponseBody
+internal partial class SearchLyricDirectResponseBody
 {
     
     [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
@@ -825,13 +825,13 @@ public partial class SearchLyricDirectResponseBody
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-public interface apiv1SoapChannel : apiv1Soap, System.ServiceModel.IClientChannel
+internal interface apiv1SoapChannel : apiv1Soap, System.ServiceModel.IClientChannel
 {
 }
 
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-public partial class apiv1SoapClient : System.ServiceModel.ClientBase<apiv1Soap>, apiv1Soap
+internal partial class apiv1SoapClient : System.ServiceModel.ClientBase<apiv1Soap>, apiv1Soap
 {
     
     public apiv1SoapClient()

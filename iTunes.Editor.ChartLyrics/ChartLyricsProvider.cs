@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+[assembly:System.Runtime.CompilerServices.InternalsVisibleTo("ProxyBuilder")]
+
 namespace ITunes.Editor.ChartLyrics
 {
     using System.Threading.Tasks;
