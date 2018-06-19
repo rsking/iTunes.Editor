@@ -17,17 +17,6 @@ namespace ITunes.Editor.Models
         System.Collections.Generic.IEnumerable<ISongsProvider> Providers { get; }
 
         /// <summary>
-        /// Gets or sets the selected provider.
-        /// </summary>
-        ISongsProvider SelectedProvider { get; set; }
-
-        /// <summary>
-        /// Loads the songs using <see cref="SelectedProvider"/>.
-        /// </summary>
-        /// <returns>The task associated with loading songs.</returns>
-        System.Threading.Tasks.Task LoadAsync();
-
-        /// <summary>
         /// Loads the songs using the specified <see cref="ISongsProvider"/>.
         /// </summary>
         /// <param name="provider">The provider.</param>

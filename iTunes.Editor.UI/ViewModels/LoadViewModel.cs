@@ -43,12 +43,6 @@ namespace ITunes.Editor.ViewModels
         public IEnumerable<ISongsProvider> Providers { get; }
 
         /// <inheritdoc />
-        public ISongsProvider SelectedProvider { get; set; }
-
-        /// <inheritdoc />
-        public System.Threading.Tasks.Task LoadAsync() => this.LoadAsync(this.SelectedProvider);
-
-        /// <inheritdoc />
         public async System.Threading.Tasks.Task LoadAsync(ISongsProvider provider)
         {
             switch (provider)
