@@ -6,7 +6,6 @@
 
 namespace ITunes.Editor
 {
-    using System;
     using Avalonia;
     using Avalonia.Logging.Serilog;
     using ITunes.Editor.Models;
@@ -35,11 +34,7 @@ namespace ITunes.Editor
         /// <summary>
         /// The main entry point.
         /// </summary>
-        /// <param name="args">The arguments.</param>
-        private static void Main(string[] args)
-        {
-            BuildAvaloniaApp().Start<ShellView>(() => container.Get<IShell>());
-        }
+        private static void Main() => BuildAvaloniaApp().Start<ShellView>(() => container.Get<IShell>());
 
         /// <summary>
         /// Use Ninject.
@@ -49,8 +44,7 @@ namespace ITunes.Editor
         /// <returns>The updated builder.</returns>
         private static TAppBuilder UseNinject<TAppBuilder>(this TAppBuilder builder)
             where TAppBuilder : Avalonia.Controls.AppBuilderBase<TAppBuilder>, new()
-        {
-            return builder.AfterSetup(_ =>
+            => builder.AfterSetup(_ =>
             {
                 container = new StandardKernel();
                 container.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
@@ -63,6 +57,5 @@ namespace ITunes.Editor
                 container.Bind<Services.Contracts.ISelectFolder>().To<Services.SelectFolderDialog>();
                 container.Bind<Services.Contracts.IOpenFile>().To<Services.OpenFileDialog>();
             });
-        }
     }
 }

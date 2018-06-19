@@ -6,6 +6,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>ITunes.Editor</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
     
   <ItemGroup>

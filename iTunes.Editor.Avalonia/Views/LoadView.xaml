@@ -1,30 +1,36 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core">
-  <ItemsControl Items="{Binding Providers}">
-    <ItemsControl.ItemsPanel>
-      <ItemsPanelTemplate>
-        <WrapPanel />
-      </ItemsPanelTemplate>
-    </ItemsControl.ItemsPanel>
-    <ItemsControl.ItemTemplate>
-      <DataTemplate DataType="{x:Type core:ISongsProvider}">
-        <Button Margin="10"
-                Width="100"
-                Height="100">
-          <Button.Content>
-            <StackPanel>
-              <TextBlock Text="Load songs from " />
-              <TextBlock Text="{Binding Name, Mode=OneWay}" />
-            </StackPanel>
-          </Button.Content>
-          <!--<Button.Content>
+             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core"
+             xmlns:converters="clr-namespace:ITunes.Editor.Converters;assembly=iTunes.Editor.Avalonia">
+    <UserControl.Resources>
+        <converters:CommandConverter x:Key="CommandConverter" />
+        <DataTemplate x:Key="SongsProviderTemplate"
+                          DataType="{x:Type core:ISongsProvider}">
+            <Button Margin="10"
+                        Width="100"
+                        Height="100"
+                        CommandParameter="{Binding}">
+                <Button.Command>
+                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
+                     Path="DataContext.LoadAsync">
+                        <Binding.Converter>
+                            <converters:CommandConverter />
+                        </Binding.Converter>
+                    </Binding>
+                </Button.Command>
+                <Button.Content>
+                    <StackPanel>
+                        <TextBlock Text="Load songs from " />
+                        <TextBlock Text="{Binding Name, Mode=OneWay}" />
+                    </StackPanel>
+                </Button.Content>
+                <!--<Button.Content>
             <TextBlock TextWrapping="Wrap">
               <Run Text="Load songs from " />
               <Run Text="{Binding Name, Mode=OneWay}" />
             </TextBlock>
           </Button.Content>-->
-          <!--
+                <!--
           <i:Interaction.Triggers>
             <i:EventTrigger EventName="Click">
               <cal:ActionMessage MethodName="LoadAsync">
@@ -32,8 +38,18 @@
               </cal:ActionMessage>
             </i:EventTrigger>
           </i:Interaction.Triggers>-->
-        </Button>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
-  </ItemsControl>
+            </Button>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ItemsControl Items="{Binding Providers}"
+                  ItemTemplate="{StaticResource SongsProviderTemplate}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <!--<ItemsControl.ItemTemplate>
+
+        </ItemsControl.ItemTemplate>-->
+    </ItemsControl>
 </UserControl>
