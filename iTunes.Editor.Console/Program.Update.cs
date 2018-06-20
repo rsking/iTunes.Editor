@@ -96,7 +96,7 @@ namespace ITunes.Editor
             {
                 var songInformation = SongInformation.FromFile(file);
                 Console.WriteLine($"Processing {songInformation.Name}");
-                await this.Update(songInformation);
+                await this.Update(songInformation).ConfigureAwait(false);
             }
 
             return 0;
