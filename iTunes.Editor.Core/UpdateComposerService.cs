@@ -21,7 +21,7 @@ namespace ITunes.Editor
         /// Initializes a new instance of the <see cref="UpdateComposerService"/> class.
         /// </summary>
         /// <param name="providers">The providers.</param>
-        public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers;
+        public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers.ToArray();
 
         /// <inheritdoc />
         public SongInformation Update(SongInformation songInformation, bool force = false)
