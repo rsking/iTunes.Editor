@@ -341,3 +341,5 @@ OpenCover/
 # should be stored in the .pubxml.user file.
 
 # End of https://www.gitignore.io/api/windows,visualstudio,visualstudiocode
+
+**/appsettings.json

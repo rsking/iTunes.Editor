@@ -35,6 +35,9 @@ namespace Ninject.Extensions.ITunes.Editor
             // Lyrics
             this.Bind<ILyricsProvider>().To<global::ITunes.Editor.Lyrics.Wikia.WikiaLyricsProvider>().Named("wikia");
             this.Bind<ILyricsProvider>().To<global::ITunes.Editor.ChartLyrics.ChartLyricsProvider>().Named("chart");
+            this.Bind<ILyricsProvider>().To<global::ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>()
+                .Named("apiseeds")
+                .WithConstructorArgument("apiKey", _ => _.Kernel.Get<Microsoft.Extensions.Configuration.IConfiguration>()["apiseeds:apikey"]);
 
             // Services
             this.Bind<IUpdateComposerService>().To<UpdateComposerService>();

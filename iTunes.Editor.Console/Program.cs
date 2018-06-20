@@ -14,6 +14,7 @@ namespace ITunes.Editor
     using System.Linq;
     using System.Threading.Tasks;
     using McMaster.Extensions.CommandLineUtils;
+    using Microsoft.Extensions.Configuration;
     using Ninject;
 
     /// <summary>
@@ -28,6 +29,22 @@ namespace ITunes.Editor
     [Subcommand("update", typeof(UpdateCommand))]
     internal class Program : CommandBase
     {
+        private const string AppSettings = "appsettings.json";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Program"/> class.
+        /// </summary>
+        public Program()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(System.IO.Directory.GetCurrentDirectory());
+            if (System.IO.File.Exists(AppSettings))
+            {
+                builder = builder.AddJsonFile(AppSettings);
+            }
+
+            this.Kernel.Bind<IConfiguration>().ToConstant(builder.Build());
+        }
+
         /// <summary>
         /// Gets the Ninject kernel.
         /// </summary>
