@@ -26,7 +26,7 @@
             "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.1/iTunes.Editor.Console.dll",
             "args": [
                 "list",
-                "%USERPROFILE%\\Music\\iTunes\\iTunes Music Library.xml",
+                "%USERPROFILE%\\OneDrive\\Music\\iTunes\\iTunes Library.xml",
                 "--type",
                 "plist"
             ],
@@ -83,7 +83,7 @@
                 "update",
                 "list",
                 "all",
-                "%USERPROFILE%\\Music\\iTunes\\iTunes Music Library.xml",
+                "%USERPROFILE%\\OneDrive\\Music\\iTunes\\iTunes Library.xml",
                 "--type",
                 "plist"
             ],

@@ -57,6 +57,6 @@ namespace ITunes.Editor.PList
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="string"/> value.</returns>
         public static string GetString(this IDictionary<string, object> dictionary, string key) =>
-            dictionary.ContainsKey(key) ? (string)dictionary[key] : default(string);
+            dictionary.ContainsKey(key) ? (string)dictionary[key] : default;
     }
 }

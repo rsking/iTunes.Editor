@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ITunes.Editor.Core.Tests")]
+
 namespace ITunes.Editor
 {
     using System;
