@@ -2,8 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core"
              xmlns:converters="clr-namespace:ITunes.Editor.Converters;assembly=iTunes.Editor.Avalonia">
-    <ItemsControl Items="{Binding Providers}"
-                  ItemTemplate="{StaticResource SongsProviderTemplate}">
+    <ItemsControl Items="{Binding Providers}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <WrapPanel />
