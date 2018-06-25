@@ -188,14 +188,14 @@ namespace ITunes.Editor.MediaInfo
         /// Creates a new instance of <c>MediaInfo</c>.
         /// </summary>
         /// <returns>The new instance of <c>MediaInfo</c>.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_New();
 
         /// <summary>
         /// Deletes the specified <c>MediaInfo</c>.
         /// </summary>
         /// <param name="Handle">The handle to delete.</param>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern void MediaInfo_Delete(IntPtr Handle);
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <param name="FileName">The file name to open.</param>
         /// <returns><see langword="true"/> if the file is opened; otherwise <see langword="false"/></returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfo_Open(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string FileName);
 
@@ -214,7 +214,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <param name="FileName">The file name to open.</param>
         /// <returns><see langword="true"/> if the file is opened; otherwise <see langword="false"/></returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfoA_Open(IntPtr Handle, [MarshalAs(UnmanagedType.LPStr)] string FileName);
 
@@ -225,7 +225,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="File_Size">Estimated file size.</param>
         /// <param name="File_Offset">Offset of the file (if we don't have the beginning of the file).</param>
         /// <returns><see langword="true"/> if the file is opened; otherwise <see langword="false"/></returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfo_Open_Buffer_Init(IntPtr Handle, long File_Size, long File_Offset);
 
@@ -236,7 +236,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="File_Size">Estimated file size.</param>
         /// <param name="File_Offset">Offset of the file (if we don't have the beginning of the file).</param>
         /// <returns><see langword="true"/> if the file is opened; otherwise <see langword="false"/></returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfoA_Open(IntPtr Handle, long File_Size, long File_Offset);
 
@@ -254,7 +254,7 @@ namespace ITunes.Editor.MediaInfo
         /// <para>bit 4-15: Reserved bit </para>
         /// <para>16-31: User defined</para>
         /// </returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern int MediaInfo_Open_Buffer_Continue(IntPtr Handle, byte[] Buffer, int Buffer_Size);
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace ITunes.Editor.MediaInfo
         /// <para>bit 4-15: Reserved bit </para>
         /// <para>16-31: User defined</para>
         /// </returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfoA_Open_Buffer_Continue(IntPtr Handle, long File_Size, byte[] Buffer, int Buffer_Size);
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace ITunes.Editor.MediaInfo
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <returns>the needed offset of the file or File size if no more bytes are needed</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern long MediaInfo_Open_Buffer_Continue_GoTo_Get(IntPtr Handle);
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace ITunes.Editor.MediaInfo
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <returns>the needed offset of the file or File size if no more bytes are needed</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern long MediaInfoA_Open_Buffer_Continue_GoTo_Get(IntPtr Handle);
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace ITunes.Editor.MediaInfo
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <returns><see langword="true"/> if successful; otherwise <see langword="false"/>.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfo_Open_Buffer_Finalize(IntPtr Handle);
 
@@ -305,7 +305,7 @@ namespace ITunes.Editor.MediaInfo
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <returns><see langword="true"/> if successful; otherwise <see langword="false"/>.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool MediaInfoA_Open_Buffer_Finalize(IntPtr Handle);
 
@@ -313,7 +313,7 @@ namespace ITunes.Editor.MediaInfo
         /// Close a file opened before with <see cref="MediaInfo_Open(IntPtr, string)"/> (without saving).
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern void MediaInfo_Close(IntPtr Handle);
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <param name="Reserved">Reserved, do not use.</param>
         /// <returns>Text with information about the file.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_Inform(IntPtr Handle, int Reserved = 0);
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <param name="Reserved">Reserved, do not use.</param>
         /// <returns>Text with information about the file.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfoA_Inform(IntPtr Handle, int Reserved = 0);
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace ITunes.Editor.MediaInfo
         /// </param>
         /// <param name="KindOfInfo">Kind of information you want about the parameter (the text, the measure, the help...).</param>
         /// <returns>a string about information you search.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_GetI(IntPtr Handle, StreamKind StreamKind, int StreamNumber, int Parameter, InfoKind KindOfInfo);
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace ITunes.Editor.MediaInfo
         /// </param>
         /// <param name="KindOfInfo">Kind of information you want about the parameter (the text, the measure, the help...).</param>
         /// <returns>a string about information you search.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfoA_GetI(IntPtr Handle, StreamKind StreamKind, int StreamNumber, int Parameter, InfoKind KindOfInfo);
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="KindOfInfo">Kind of information you want about the parameter (the text, the measure, the help...).</param>
         /// <param name="KindOfSearch">Where to look for the parameter</param>
         /// <returns>a string about information you search.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_Get(IntPtr Handle, StreamKind StreamKind, int StreamNumber, [MarshalAs(UnmanagedType.LPWStr)] string Parameter, InfoKind KindOfInfo, InfoKind KindOfSearch);
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="KindOfInfo">Kind of information you want about the parameter (the text, the measure, the help...).</param>
         /// <param name="KindOfSearch">Where to look for the parameter</param>
         /// <returns>a string about information you search.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfoA_Get(IntPtr Handle, StreamKind StreamKind, int StreamNumber, [MarshalAs(UnmanagedType.LPStr)] string Parameter, InfoKind KindOfInfo, InfoKind KindOfSearch);
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Option">The name of option.</param>
         /// <param name="Value">The value of option.</param>
         /// <returns>Depend of the option: by default "" (nothing) means No, other means Yes </returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_Option(IntPtr Handle, [MarshalAs(UnmanagedType.LPWStr)] string Option, [MarshalAs(UnmanagedType.LPWStr)] string Value = "");
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="Option">The name of option.</param>
         /// <param name="Value">The value of option.</param>
         /// <returns>Depend of the option: by default "" (nothing) means No, other means Yes </returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfoA_Option(IntPtr Handle, [MarshalAs(UnmanagedType.LPStr)] string Option, [MarshalAs(UnmanagedType.LPStr)] string Value);
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace ITunes.Editor.MediaInfo
         /// </summary>
         /// <param name="Handle">The <c>MediaInfo</c> handle.</param>
         /// <returns>The return value.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern IntPtr MediaInfo_State_Get(IntPtr Handle);
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="StreamKind">Kind of stream (general, video, audio...).</param>
         /// <param name="StreamNumber">Stream number in this kind of stream (first, second...).</param>
         /// <returns>The count of fields for this stream kind / stream number if stream number is provided, else the count of streams for this stream kind.</returns>
-        [DllImport("MediaInfo.dll")]
+        [DllImport("mediainfo")]
         public static extern int MediaInfo_Count_Get(IntPtr Handle, StreamKind StreamKind, int StreamNumber);
     }
 }
