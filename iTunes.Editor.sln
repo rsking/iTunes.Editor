@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.MediaInfo", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Avalonia", "iTunes.Editor.Avalonia\iTunes.Editor.Avalonia.csproj", "{699BDC41-AD71-4EFC-A695-1B048852BBEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.ChartLyrics", "iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj", "{955075BB-85A8-4C4E-AEE0-2163CA27A858}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.ChartLyrics", "iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj", "{955075BB-85A8-4C4E-AEE0-2163CA27A858}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lyrics", "Lyrics", "{7400F270-F7FD-41B3-871D-9D16D4C02975}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.ApiSeeds", "iTunes.Editor.ApiSeeds\iTunes.Editor.ApiSeeds.csproj", "{21368456-141D-4E55-85D1-D596B9DF22E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.ApiSeeds", "iTunes.Editor.ApiSeeds\iTunes.Editor.ApiSeeds.csproj", "{21368456-141D-4E55-85D1-D596B9DF22E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
