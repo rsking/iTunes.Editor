@@ -7,6 +7,7 @@
 namespace ITunes.Editor
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using McMaster.Extensions.CommandLineUtils;
     using Ninject;
@@ -236,9 +237,11 @@ namespace ITunes.Editor
                     break;
             }
 
-            foreach (var song in await songsProvider
+            var songs = await songsProvider
                 .GetTagInformationAsync()
-                .ConfigureAwait(false))
+                .ConfigureAwait(false);
+
+            foreach (var song in songs.Where(_ => _.Name != null && System.IO.File.Exists(_.Name)))
             {
                 // check the location
                 var mediaType = song.GetMediaType();
