@@ -22,7 +22,6 @@ namespace ITunes.Editor.ApiSeeds
         public string GetLyrics(SongInformation tagInformation)
         {
             var request = CreateRequest(tagInformation);
-            System.Console.WriteLine(this.client.BuildUri(request));
             var response = this.client.Execute<GetLyricsResponse>(request);
             return GetLyricsImpl(request, response?.Data?.Result);
         }
@@ -30,7 +29,6 @@ namespace ITunes.Editor.ApiSeeds
         public async System.Threading.Tasks.Task<string> GetLyricsAsync(SongInformation tagInformation)
         {
             var request = CreateRequest(tagInformation);
-            System.Console.WriteLine(this.client.BuildUri(request));
             var response = await this.client.ExecuteTaskAsync<GetLyricsResponse>(request);
             return GetLyricsImpl(request, response?.Data?.Result);
         }
