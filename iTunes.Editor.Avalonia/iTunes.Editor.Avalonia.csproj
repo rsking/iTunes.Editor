@@ -5,7 +5,7 @@
     <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>ITunes.Editor</RootNamespace>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
     

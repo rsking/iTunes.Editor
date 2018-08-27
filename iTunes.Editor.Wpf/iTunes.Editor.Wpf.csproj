@@ -6,7 +6,7 @@
     <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft.CSharp.targets</LanguageTargets>
     <LanguageTargets Condition="!Exists('$(LanguageTargets)')">$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <RootNamespace>ITunes.Editor</RootNamespace>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
