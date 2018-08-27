@@ -235,7 +235,7 @@ namespace ITunes.Editor.PList
                 stream.Write(System.Text.Encoding.UTF8.GetBytes(value));
             }
         }
-        
+
         private static byte[] GetBinaryInt(long value) => GetBinaryInt(BitConverter.GetBytes(value));
 
         private static byte[] GetBinaryInt(byte[] bytes)

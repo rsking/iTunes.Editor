@@ -153,27 +153,6 @@ namespace ITunes.Editor.PList
             var charCount = GetCount(stream, headerPosition, out var charStartPosition) * 2;
             var buffer = stream.Read(charStartPosition, charCount);
             return Encoding.BigEndianUnicode.GetString(buffer);
-            //var buffer = new byte[charCount];
-            //byte one, two;
-
-            //for (int i = 0; i < charCount; i += 2)
-            //{
-            //    one = stream.ReadByte(charStartPosition + i);
-            //    two = stream.ReadByte(charStartPosition + i + 1);
-
-            //    if (BitConverter.IsLittleEndian)
-            //    {
-            //        buffer[i] = two;
-            //        buffer[i + 1] = one;
-            //    }
-            //    else
-            //    {
-            //        buffer[i] = one;
-            //        buffer[i + 1] = two;
-            //    }
-            //}
-
-            //return Encoding.Unicode.GetString(buffer);
         }
 
         private static byte[] ReadBytes(Stream stream, int headerPosition)

@@ -1,10 +1,19 @@
-﻿namespace ITunes.Editor.PList
+﻿// -----------------------------------------------------------------------
+// <copyright file="PListBinaryFormatter.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace ITunes.Editor.PList
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// A binary formatter for PList values.
+    /// </summary>
     public partial class PListBinaryFormatter : IFormatter
     {
         /// <inheritdoc/>

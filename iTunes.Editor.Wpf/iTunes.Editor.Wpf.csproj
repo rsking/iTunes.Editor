@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" SubType="Designer" Generator="MSBuild:Compile" />
     <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" Exclude="App.xaml" />
-    <ApplicationDefinition Include="App.xaml" SubType="Designer" Generator="MSBuild:Compile" /> 
   </ItemGroup>
   
   <ItemGroup>

@@ -8,17 +8,25 @@ namespace ITunes.Editor.ApiSeeds
 {
     using RestSharp;
 
+    /// <summary>
+    /// Represents an <see cref="ILyricsProvider"/> using the API Seeds Lyrics service.
+    /// </summary>
     public class ApiSeedsLyricsProvider : ILyricsProvider
     {
         private static readonly System.Uri uri = new System.Uri("https://orion.apiseeds.com/api/music/lyric");
 
         private readonly IRestClient client = new RestClient(uri);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
         public ApiSeedsLyricsProvider(string apiKey)
         {
             this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
         }
 
+        /// <inheritdoc />
         public string GetLyrics(SongInformation tagInformation)
         {
             var request = CreateRequest(tagInformation);
@@ -26,6 +34,7 @@ namespace ITunes.Editor.ApiSeeds
             return GetLyricsImpl(request, response?.Data?.Result);
         }
 
+        /// <inheritdoc />
         public async System.Threading.Tasks.Task<string> GetLyricsAsync(SongInformation tagInformation)
         {
             var request = CreateRequest(tagInformation);
