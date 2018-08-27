@@ -5,7 +5,19 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>ITunes.Editor</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <!--<DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>-->
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="PList\testBin.plist" />
+    <None Remove="PList\testXml.plist" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="PList\testBin.plist" />
+    <EmbeddedResource Include="PList\testXml.plist" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.0" />

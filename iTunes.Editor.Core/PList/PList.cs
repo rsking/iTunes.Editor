@@ -43,76 +43,83 @@ namespace ITunes.Editor.PList
         private const string FalseElementName = "false";
 
         /// <summary>
-        /// The dictionary implementation.
+        /// Initializes a new instance of the <see cref="PList"/> class.
         /// </summary>
-        private IDictionary<string, object> dictionaryImplementation;
+        public PList()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PList"/> class.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        internal PList(IDictionary<string, object> dictionary)
+        {
+            this.Version = new System.Version(1, 0);
+            this.DictionaryImplementation = dictionary;
+        }
 
         /// <inheritdoc />
-        public int Count => this.dictionaryImplementation.Count;
+        public int Count => this.DictionaryImplementation.Count;
 
         /// <inheritdoc />
-        public bool IsReadOnly => this.dictionaryImplementation.IsReadOnly;
+        public bool IsReadOnly => this.DictionaryImplementation.IsReadOnly;
 
         /// <summary>
         /// Gets the version.
         /// </summary>
         public System.Version Version { get; private set; }
 
-        /// <summary>
-        /// Gets the tracks.
-        /// </summary>
-        public object Tracks => this.dictionaryImplementation[nameof(this.Tracks)];
-
-        /// <summary>
-        /// Gets the play lists.
-        /// </summary>
-        public object Playlists => this.dictionaryImplementation[nameof(this.Playlists)];
+        /// <inheritdoc />
+        public ICollection<string> Keys => this.DictionaryImplementation.Keys;
 
         /// <inheritdoc />
-        public ICollection<string> Keys => this.dictionaryImplementation.Keys;
+        public ICollection<object> Values => this.DictionaryImplementation.Values;
 
-        /// <inheritdoc />
-        public ICollection<object> Values => this.dictionaryImplementation.Values;
+        /// <summary>
+        /// Gets the implementation.
+        /// </summary>
+        protected IDictionary<string, object> DictionaryImplementation { get; private set; }
 
         /// <inheritdoc />
         public object this[string key]
         {
-            get => this.dictionaryImplementation[key];
-            set => this.dictionaryImplementation[key] = value;
+            get => this.DictionaryImplementation[key];
+            set => this.DictionaryImplementation[key] = value;
         }
 
         /// <inheritdoc />
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => this.dictionaryImplementation.GetEnumerator();
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => this.DictionaryImplementation.GetEnumerator();
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.dictionaryImplementation).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.DictionaryImplementation).GetEnumerator();
 
         /// <inheritdoc />
-        public void Add(KeyValuePair<string, object> item) => this.dictionaryImplementation.Add(item);
+        public void Add(KeyValuePair<string, object> item) => this.DictionaryImplementation.Add(item);
 
         /// <inheritdoc />
-        public void Clear() => this.dictionaryImplementation.Clear();
+        public void Clear() => this.DictionaryImplementation.Clear();
 
         /// <inheritdoc />
-        public bool Contains(KeyValuePair<string, object> item) => this.dictionaryImplementation.Contains(item);
+        public bool Contains(KeyValuePair<string, object> item) => this.DictionaryImplementation.Contains(item);
 
         /// <inheritdoc />
-        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => this.dictionaryImplementation.CopyTo(array, arrayIndex);
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => this.DictionaryImplementation.CopyTo(array, arrayIndex);
 
         /// <inheritdoc />
-        public bool Remove(KeyValuePair<string, object> item) => this.dictionaryImplementation.Remove(item);
+        public bool Remove(KeyValuePair<string, object> item) => this.DictionaryImplementation.Remove(item);
 
         /// <inheritdoc />
-        public void Add(string key, object value) => this.dictionaryImplementation.Add(key, value);
+        public void Add(string key, object value) => this.DictionaryImplementation.Add(key, value);
 
         /// <inheritdoc />
-        public bool ContainsKey(string key) => this.dictionaryImplementation.ContainsKey(key);
+        public bool ContainsKey(string key) => this.DictionaryImplementation.ContainsKey(key);
 
         /// <inheritdoc />
-        public bool Remove(string key) => this.dictionaryImplementation.Remove(key);
+        public bool Remove(string key) => this.DictionaryImplementation.Remove(key);
 
         /// <inheritdoc />
-        public bool TryGetValue(string key, out object value) => this.dictionaryImplementation.TryGetValue(key, out value);
+        public bool TryGetValue(string key, out object value) => this.DictionaryImplementation.TryGetValue(key, out value);
 
         /// <inheritdoc />
         public XmlSchema GetSchema()
@@ -142,7 +149,7 @@ namespace ITunes.Editor.PList
                 return;
             }
 
-            this.dictionaryImplementation = ReadDictionary(reader);
+            this.DictionaryImplementation = ReadDictionary(reader);
 
             reader.Read();
 
@@ -155,10 +162,7 @@ namespace ITunes.Editor.PList
         }
 
         /// <inheritdoc />
-        public void WriteXml(XmlWriter writer)
-        {
-            WriteDictionary(writer, 0, this);
-        }
+        public void WriteXml(XmlWriter writer) => WriteDictionary(writer, 0, this);
 
         /// <summary>
         /// Reads the dictionary.
