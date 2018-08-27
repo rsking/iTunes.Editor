@@ -25,8 +25,8 @@ namespace ITunes.Editor
         public SongInformation(string title, string performers, string sortPerformers, string album, string name, int? rating = null)
             : this(
                 title,
-                performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? System.Linq.Enumerable.Empty<string>(),
-                sortPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? System.Linq.Enumerable.Empty<string>(),
+                performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
+                sortPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
                 album,
                 name,
                 rating)
