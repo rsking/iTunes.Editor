@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="FolderSongsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
