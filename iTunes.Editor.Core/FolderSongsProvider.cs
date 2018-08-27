@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="FolderSongsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -32,13 +32,17 @@ namespace ITunes.Editor
             // get all the files
             foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories))
             {
-                var fileTag = TagLibHelper.GetFile(fileInfo.FullName);
-                if (fileTag != null)
+                SongInformation songInformation = null;
+                try
                 {
-                    yield return (SongInformation)fileTag;
-
-                    fileTag?.Dispose();
+                    songInformation = SongInformation.FromFile(fileInfo.FullName);
                 }
+                catch
+                {
+                    continue;
+                }
+
+                yield return songInformation;
             }
         }
     }
