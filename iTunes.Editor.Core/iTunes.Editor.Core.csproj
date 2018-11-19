@@ -20,13 +20,10 @@
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0" PrivateAssets="All" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.10" />
     <PackageReference Include="TagLib.Portable" Version="1.2.0-pre" />
   </ItemGroup>
   

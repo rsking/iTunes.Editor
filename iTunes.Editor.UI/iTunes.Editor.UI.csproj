@@ -7,14 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="PropertyChanged.Fody" Version="2.5.9" />
-    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0" PrivateAssets="All" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="System.Reactive" Version="4.1.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.5.14" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
 
   <ItemGroup>
