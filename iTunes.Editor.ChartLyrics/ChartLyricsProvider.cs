@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-[assembly:System.Runtime.CompilerServices.InternalsVisibleTo("ProxyBuilder")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ProxyBuilder")]
 
 namespace ITunes.Editor.ChartLyrics
 {
@@ -62,24 +62,32 @@ namespace ITunes.Editor.ChartLyrics
             {
                 return null;
             }
+            catch (System.ServiceModel.CommunicationException)
+            {
+                return null;
+            }
 
             return GetLyricsImpl(artist, songTitle, searchLyricDirectResponse?.Body?.SearchLyricDirectResult);
         }
 
         private static string GetLyricsImpl(string artist, string song, api.chartlyrics.com.GetLyricResult getLyricResult)
         {
-            if (getLyricResult?.LyricId > 0)
+            if (getLyricResult?.LyricId <= 0)
             {
-                if (getLyricResult.LyricArtist != artist || getLyricResult.LyricSong != song)
-                {
-                    System.Console.WriteLine($"\tIncorrect Lyrics found, Expected {artist}|{song}, but got {getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
-                    return null;
-                }
-
-                return getLyricResult.Lyric;
+                return null;
             }
 
-            return null;
+            if (getLyricResult.LyricArtist != artist || getLyricResult.LyricSong != song)
+            {
+                var returnAnyway = false;
+                System.Console.WriteLine($"\tIncorrect Lyrics found, Expected {artist}|{song}, but got {getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
+                if (!returnAnyway)
+                {
+                    return null;
+                }
+            }
+
+            return getLyricResult.Lyric;
         }
     }
 }

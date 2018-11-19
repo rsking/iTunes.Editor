@@ -63,8 +63,12 @@ namespace ITunes.Editor.ApiSeeds
 
             if (getLyricResult.Artist.Name != (string)request.Parameters[0].Value || getLyricResult.Track.Name != (string)request.Parameters[1].Value)
             {
+                var returnAnyway = false;
                 System.Console.WriteLine($"\tIncorrect Lyrics found, Expected {request.Parameters[0].Value}|{request.Parameters[1].Value}, but got {getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
-                return null;
+                if (!returnAnyway)
+                {
+                    return null;
+                }
             }
 
             return getLyricResult.Track.Text;
