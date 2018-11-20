@@ -1,4 +1,10 @@
-﻿namespace ITunes.Editor.PList
+﻿// -----------------------------------------------------------------------
+// <copyright file="XmlPListTests.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace ITunes.Editor.PList
 {
     using System;
     using FluentAssertions;
@@ -12,14 +18,14 @@
         private readonly PList plist;
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="XmlPListTests"/> class.
+        /// Initializes a new instance of the <see cref="XmlPListTests"/> class.
         /// </summary>
         public XmlPListTests()
         {
             using (var stream = Resources.TestXml)
             {
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-                plist = serializer.Deserialize(stream) as PList;
+                this.plist = serializer.Deserialize(stream) as PList;
             }
         }
 

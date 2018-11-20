@@ -33,7 +33,7 @@ namespace ITunes.Editor
             if (type != null)
             {
                 var control = (Control)Activator.CreateInstance(type);
-                Avalonia.Markup.Xaml.AvaloniaXamlLoaderPortableXaml.Load(control);
+                Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
                 return control;
             }
             else

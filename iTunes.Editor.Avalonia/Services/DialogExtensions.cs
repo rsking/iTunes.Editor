@@ -20,7 +20,7 @@ namespace ITunes.Editor.Services
         /// <returns>The active window.</returns>
         internal static Avalonia.Controls.Window GetActiveWindow(this Avalonia.Application application)
         {
-            var windows = Avalonia.Controls.Window.OpenWindows;
+            var windows = Avalonia.Application.Current.Windows;
             var window = windows.SingleOrDefault(x => x.IsActive);
 
             if (window == null)

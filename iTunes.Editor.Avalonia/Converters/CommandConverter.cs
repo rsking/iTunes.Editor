@@ -13,7 +13,7 @@ namespace ITunes.Editor.Converters
     /// <summary>
     /// Command converter.
     /// </summary>
-    public class CommandConverter : Avalonia.Markup.IValueConverter
+    public class CommandConverter : Avalonia.Data.Converters.IValueConverter
     {
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

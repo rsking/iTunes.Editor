@@ -26,6 +26,6 @@ namespace ITunes.Editor.Views
 #endif
         }
 
-        private void InitializeComponent() => AvaloniaXamlLoaderPortableXaml.Load(this);
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

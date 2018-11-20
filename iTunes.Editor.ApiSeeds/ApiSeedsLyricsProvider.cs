@@ -13,9 +13,9 @@ namespace ITunes.Editor.ApiSeeds
     /// </summary>
     public class ApiSeedsLyricsProvider : ILyricsProvider
     {
-        private static readonly System.Uri uri = new System.Uri("https://orion.apiseeds.com/api/music/lyric");
+        private static readonly System.Uri Uri = new System.Uri("https://orion.apiseeds.com/api/music/lyric");
 
-        private readonly IRestClient client = new RestClient(uri);
+        private readonly IRestClient client = new RestClient(Uri);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.

@@ -1,22 +1,31 @@
-﻿namespace ITunes.Editor.PList
+﻿// -----------------------------------------------------------------------
+// <copyright file="BinaryPListTests.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace ITunes.Editor.PList
 {
     using System;
     using FluentAssertions;
     using Xunit;
 
+    /// <summary>
+    /// Tests for <see cref="PListBinaryFormatter"/>.
+    /// </summary>
     public class BinaryPListTests
     {
         private readonly PList plist;
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="XmlPListTests"/> class.
+        /// Initializes a new instance of the <see cref="BinaryPListTests"/> class.
         /// </summary>
         public BinaryPListTests()
         {
             using (var stream = Resources.TestBin)
             {
                 var formatter = new PListBinaryFormatter();
-                plist = formatter.Deserialize(stream) as PList;
+                this.plist = formatter.Deserialize(stream) as PList;
             }
         }
 
@@ -28,7 +37,5 @@
 
         [Fact]
         private void TestIsReadOnly() => this.plist.IsReadOnly.Should().BeFalse();
-
-
     }
 }

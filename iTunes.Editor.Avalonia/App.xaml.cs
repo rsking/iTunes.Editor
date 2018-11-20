@@ -14,7 +14,7 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override void Initialize()
         {
-            Avalonia.Markup.Xaml.AvaloniaXamlLoaderPortableXaml.Load(this);
+            Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
         }
     }
 }
