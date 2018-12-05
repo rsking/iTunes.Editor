@@ -18,32 +18,15 @@ namespace ITunes.Editor.PList
     {
         private static int CountReferences(object value)
         {
-            int count = 0;
             switch (value)
             {
                 case IDictionary<string, object> dict:
-                    foreach (string key in dict.Keys)
-                    {
-                        count += CountReferences(dict[key]);
-                    }
-
-                    count += dict.Keys.Count;
-                    count++;
-                    break;
+                    return dict.Values.Sum(CountReferences) + dict.Keys.Count + 1;
                 case IList<object> list:
-                    foreach (object obj in list)
-                    {
-                        count += CountReferences(obj);
-                    }
-
-                    count++;
-                    break;
+                    return list.Sum(CountReferences) + 1;
                 default:
-                    count++;
-                    break;
+                    return 1;
             }
-
-            return count;
         }
 
         private static void Write(Stream stream, IList<int> offsetTable, int objectReferenceSize, object value)
@@ -94,7 +77,7 @@ namespace ITunes.Editor.PList
             }
             else
             {
-                stream.WriteByte(0xD0 | 0xf);
+                stream.WriteByte(0xD0 | 0x0F);
                 stream.Write(GetBinaryInt(dictionary.Count));
             }
 
@@ -126,7 +109,7 @@ namespace ITunes.Editor.PList
 
             foreach (var reference in references)
             {
-                byte[] refBuffer = RegulateNullBytes(BitConverter.GetBytes(reference), referenceSize);
+                var refBuffer = RegulateNullBytes(BitConverter.GetBytes(reference), referenceSize);
                 stream.Write(refBuffer.Reverse());
             }
 
@@ -142,7 +125,7 @@ namespace ITunes.Editor.PList
             }
             else
             {
-                stream.WriteByte(0xA0 | 0xf);
+                stream.WriteByte(0xA0 | 0x0F);
                 stream.Write(GetBinaryInt(values.Count));
             }
 
@@ -151,11 +134,11 @@ namespace ITunes.Editor.PList
             stream.Position += values.Count * referenceSize;
 
             var references = new List<int>();
-            foreach (var obj in values)
+            foreach (var value in values)
             {
                 references.Add(offsetTable.Count);
                 offsetTable.Add((int)stream.Position);
-                Write(stream, offsetTable, referenceSize, obj);
+                Write(stream, offsetTable, referenceSize, value);
             }
 
             var endPosition = stream.Position;
@@ -176,7 +159,7 @@ namespace ITunes.Editor.PList
             stream.Write(buffer, 0, buffer.Length);
         }
 
-        private static void Write(Stream stream, bool value) => stream.WriteByte(value ? (byte)9 : (byte)8);
+        private static void Write(Stream stream, bool value) => stream.WriteByte(value ? (byte)0x09 : (byte)0x08);
 
         private static void Write(Stream stream, long value) => stream.Write(GetBinaryInt(value));
 
@@ -221,7 +204,7 @@ namespace ITunes.Editor.PList
                 else
                 {
                     stream.WriteByte(0x50 | 0xf);
-                    stream.Write(GetBinaryInt((long)value.Length));
+                    stream.Write(GetBinaryInt(value.Length));
                 }
             }
 
