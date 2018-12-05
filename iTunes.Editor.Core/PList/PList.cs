@@ -47,6 +47,7 @@ namespace ITunes.Editor.PList
         /// </summary>
         public PList()
         {
+            this.DictionaryImplementation = new Dictionary<string, object>();
         }
 
         /// <summary>
