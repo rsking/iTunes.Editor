@@ -38,7 +38,7 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ILyricsProvider>().To<global::ITunes.Editor.ChartLyrics.ChartLyricsProvider>().Named("chart");
             this.Bind<ILyricsProvider>().To<global::ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>()
                 .Named("apiseeds")
-                .WithConstructorArgument("apiKey", _ => _.Kernel.Get<Microsoft.Extensions.Configuration.IConfiguration>()["apiseeds:apikey"]);
+                .WithConstructorArgument("apiKey", context => context.Kernel.Get<Microsoft.Extensions.Configuration.IConfiguration>()["apiseeds:apikey"]);
             this.Bind<IExplicitLyricsProvider>().To<global::ITunes.Editor.PurgoMalum.PurgoMalumExplicitLyricsProvider>().Named("purgo_malum");
             if (!this.Bindings.Any(binding => binding.Service == typeof(IExplicitLyricsProvider)))
             {

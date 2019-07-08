@@ -17,10 +17,10 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override TagLib.Tag GetTag()
         {
-            var tuple = GetFile(this.File);
-            var tag = tuple.file?.Tag;
-            tuple.file?.Dispose();
-            if (tuple.fileAbstraction is System.IDisposable disposable)
+            var (file, fileAbstraction) = GetFile(this.File);
+            var tag = file?.Tag;
+            file?.Dispose();
+            if (fileAbstraction is System.IDisposable disposable)
             {
                 disposable.Dispose();
             }
@@ -33,7 +33,7 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The file.</returns>
-        private static(TagLib.File file, TagLib.File.IFileAbstraction fileAbstraction) GetFile(string path)
+        private static (TagLib.File file, TagLib.File.IFileAbstraction fileAbstraction) GetFile(string path)
         {
             TagLib.File file = null;
             TagLib.File.IFileAbstraction fileAbstraction = default;

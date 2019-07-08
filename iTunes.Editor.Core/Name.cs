@@ -58,8 +58,8 @@ namespace ITunes.Editor
         public static Name FromName(string name)
         {
             var split = name.Split(' ');
-            string last = null;
             string first = null;
+            string last;
             if (split.Length == 1)
             {
                 last = split[0].Trim();
