@@ -1,7 +1,7 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core"
-             xmlns:converters="clr-namespace:ITunes.Editor.Converters;assembly=iTunes.Editor.Avalonia">
+             xmlns:converters="clr-namespace:ITunes.Editor.Converters;assembly=iTunes.Editor.Avalonia"
+             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core">
     <ItemsControl Items="{Binding Providers}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -10,13 +10,12 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type core:ISongsProvider}">
-                <Button Margin="10"
-                        Width="100"
+                <Button Width="100"
                         Height="100"
+                        Margin="10"
                         CommandParameter="{Binding}">
                     <Button.Command>
-                        <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}"
-                                 Path="DataContext.LoadAsync">
+                        <Binding Path="DataContext.LoadAsync" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}">
                             <Binding.Converter>
                                 <converters:CommandConverter />
                             </Binding.Converter>

@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="DialogExtensions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -20,7 +20,7 @@ namespace ITunes.Editor.Services
         /// <returns>The active window.</returns>
         internal static Avalonia.Controls.Window GetActiveWindow(this Avalonia.Application application)
         {
-            var windows = Avalonia.Application.Current.Windows;
+            var windows = application.Windows;
             var window = windows.SingleOrDefault(x => x.IsActive);
 
             if (window == null)

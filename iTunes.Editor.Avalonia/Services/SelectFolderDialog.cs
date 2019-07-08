@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="SelectFolderDialog.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -25,11 +25,7 @@ namespace ITunes.Editor.Services
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
         public System.Threading.Tasks.Task<string> GetSelectedPathAsync(string path = "")
         {
-            var dialog = new Avalonia.Controls.OpenFolderDialog
-            {
-                InitialDirectory = string.IsNullOrEmpty(path) ? null : path,
-            };
-
+            var dialog = new Avalonia.Controls.OpenFolderDialog { InitialDirectory = path };
             return dialog.ShowAsync(Avalonia.Application.Current.GetActiveWindow());
         }
     }

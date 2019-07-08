@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="OpenFileDialog.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
