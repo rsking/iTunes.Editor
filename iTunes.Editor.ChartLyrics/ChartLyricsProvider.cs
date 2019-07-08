@@ -11,7 +11,7 @@ namespace ITunes.Editor.ChartLyrics
     using System.Threading.Tasks;
 
     /// <summary>
-    /// The <see cref="ILyricsProvider"/> for www.chartlyrics.com
+    /// The <see cref="ILyricsProvider"/> for www.chartlyrics.com.
     /// </summary>
     public class ChartLyricsProvider : ILyricsProvider
     {
@@ -33,8 +33,7 @@ namespace ITunes.Editor.ChartLyrics
         {
             var artist = string.Join("; ", tagInformation.Performers);
             var songTitle = tagInformation.Title;
-
-            api.chartlyrics.com.GetLyricResult getLyricResult = default;
+            api.chartlyrics.com.GetLyricResult getLyricResult;
             try
             {
                 getLyricResult = this.channel.SearchLyricDirect(artist, songTitle);
@@ -52,8 +51,7 @@ namespace ITunes.Editor.ChartLyrics
         {
             var artist = string.Join("; ", tagInformation.Performers);
             var songTitle = tagInformation.Title;
-
-            SearchLyricDirectResponse searchLyricDirectResponse = default;
+            SearchLyricDirectResponse searchLyricDirectResponse;
             try
             {
                 searchLyricDirectResponse = await this.channel.SearchLyricDirectAsync(artist, songTitle).ConfigureAwait(false);
@@ -77,17 +75,14 @@ namespace ITunes.Editor.ChartLyrics
                 return null;
             }
 
-            if (getLyricResult.LyricArtist != artist || getLyricResult.LyricSong != song)
+            if (getLyricResult.LyricArtist.Equals(artist, System.StringComparison.InvariantCultureIgnoreCase)
+                && getLyricResult.LyricSong.Equals(song, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var returnAnyway = false;
-                System.Console.WriteLine($"\tIncorrect Lyrics found, Expected {artist}|{song}, but got {getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
-                if (!returnAnyway)
-                {
-                    return null;
-                }
+                return getLyricResult.Lyric;
             }
 
-            return getLyricResult.Lyric;
+            System.Console.WriteLine($"\tChartLyrics - Incorrect Lyrics found, Expected {artist}|{song}, but got {getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
+            return null;
         }
     }
 }

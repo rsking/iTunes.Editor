@@ -38,7 +38,7 @@ namespace ITunes.Editor.ApiSeeds
         public async System.Threading.Tasks.Task<string> GetLyricsAsync(SongInformation tagInformation)
         {
             var request = CreateRequest(tagInformation);
-            var response = await this.client.ExecuteTaskAsync<GetLyricsResponse>(request);
+            var response = await this.client.ExecuteTaskAsync<GetLyricsResponse>(request).ConfigureAwait(false);
             return GetLyricsImpl(request, response?.Data?.Result);
         }
 
@@ -61,17 +61,14 @@ namespace ITunes.Editor.ApiSeeds
                 return null;
             }
 
-            if (getLyricResult.Artist.Name != (string)request.Parameters[0].Value || getLyricResult.Track.Name != (string)request.Parameters[1].Value)
+            if (getLyricResult.Artist.Name.Equals((string)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+                && getLyricResult.Track.Name.Equals((string)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var returnAnyway = false;
-                System.Console.WriteLine($"\tIncorrect Lyrics found, Expected {request.Parameters[0].Value}|{request.Parameters[1].Value}, but got {getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
-                if (!returnAnyway)
-                {
-                    return null;
-                }
+                return getLyricResult.Track.Text;
             }
 
-            return getLyricResult.Track.Text;
+            System.Console.WriteLine($"\tAPI Seeds - Incorrect Lyrics found, Expected {request.Parameters[0].Value}|{request.Parameters[1].Value}, but got {getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
+            return null;
         }
 
         private class GetLyricsResponse
