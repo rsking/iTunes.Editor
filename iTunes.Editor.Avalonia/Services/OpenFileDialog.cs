@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="OpenFileDialog.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -45,7 +45,7 @@ namespace ITunes.Editor.Services
         public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => this.GetFileNamesImpl(null, true);
 
         /// <summary>
-        /// Internal implementation to get the filenames
+        /// Internal implementation to get the filenames.
         /// </summary>
         /// <param name="path">The starting file.</param>
         /// <param name="multiselect">Whether to select more than one file.</param>

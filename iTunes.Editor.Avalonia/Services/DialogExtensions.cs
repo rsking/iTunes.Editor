@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="DialogExtensions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -9,7 +9,7 @@ namespace ITunes.Editor.Services
     using System.Linq;
 
     /// <summary>
-    /// Dialog extension methods
+    /// Dialog extension methods.
     /// </summary>
     internal static class DialogExtensions
     {
