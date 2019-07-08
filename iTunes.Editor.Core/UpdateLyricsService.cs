@@ -15,13 +15,16 @@ namespace ITunes.Editor
     /// </summary>
     public class UpdateLyricsService : IUpdateLyricsService
     {
+        private readonly IExplicitLyricsProvider explicitLyrics;
+
         private readonly IEnumerable<ILyricsProvider> providers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateLyricsService"/> class.
         /// </summary>
+        /// <param name="explicitLyricsProvider">The explicit lyrics provider.</param>
         /// <param name="providers">The providers.</param>
-        public UpdateLyricsService(IEnumerable<ILyricsProvider> providers) => this.providers = providers.ToArray();
+        public UpdateLyricsService(IExplicitLyricsProvider explicitLyricsProvider, IEnumerable<ILyricsProvider> providers) => (this.explicitLyrics, this.providers) = (explicitLyricsProvider, providers.ToArray());
 
         /// <inheritdoc />
         public SongInformation Update(SongInformation songInformation, bool force = false)
@@ -38,7 +41,7 @@ namespace ITunes.Editor
                     var lyrics = provider.GetLyrics(songInformation);
                     if (lyrics != null)
                     {
-                        return updater.Update(lyrics);
+                        return updater.Update(this.explicitLyrics, lyrics);
                     }
                 }
             }
@@ -58,12 +61,12 @@ namespace ITunes.Editor
                         var lyrics = await provider.GetLyricsAsync(songInformation).ConfigureAwait(false);
                         if (lyrics != null)
                         {
-                            return updater.Update(lyrics);
+                            return updater.Update(this.explicitLyrics, lyrics);
                         }
                     }
                 }
 
-                return updater.Update();
+                return updater.Update(this.explicitLyrics);
             }
         }
 
@@ -101,13 +104,10 @@ namespace ITunes.Editor
 
             public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
 
-            public SongInformation Update(string lyrics = null)
+            public SongInformation Update(IExplicitLyricsProvider explicitLyricsProvider, string lyrics = null)
             {
                 var updated = false;
-                if (lyrics == null)
-                {
-                    lyrics = this.appleTag.Lyrics;
-                }
+                lyrics = (lyrics ?? this.appleTag.Lyrics)?.Replace("\r\n", "\r");
 
                 if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics.StartsWith(temp)))
                 {
@@ -132,7 +132,7 @@ namespace ITunes.Editor
                         this.appleTag.Lyrics = lyrics;
                     }
 
-                    if (updated | this.appleTag.CleanLyrics() | this.appleTag.RemoveNoLyrics() | this.appleTag.UpdateRating())
+                    if (updated | this.appleTag.CleanLyrics() | this.appleTag.RemoveNoLyrics() | this.appleTag.UpdateRating(explicitLyricsProvider))
                     {
                         updated = true;
                         this.file.Save();
@@ -156,5 +156,7 @@ namespace ITunes.Editor
                 this.fileAbstraction = null;
             }
         }
+
+        private static string NormaliseLineEndings(string input) => input.Replace("\r\n", "\r");
     }
 }

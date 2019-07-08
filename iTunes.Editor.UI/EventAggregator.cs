@@ -45,7 +45,7 @@ namespace ITunes.Editor
         public void Publish<TEvent>(TEvent sampleEvent) => this.subject.OnNext(sampleEvent);
 
         /// <summary>
-        /// Disposes unmanaged, and optionally managed, resources used by this <see cref="IEventAggregator"/>
+        /// Disposes unmanaged, and optionally managed, resources used by this <see cref="IEventAggregator"/>.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose of managed resources.</param>
         protected virtual void Dispose(bool disposing)

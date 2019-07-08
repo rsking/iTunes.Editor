@@ -12,7 +12,7 @@ namespace ITunes.Editor.Lyrics.Wikia
     using System.ServiceModel.Channels;
 
     /// <summary>
-    /// This class is used to create the custom encoder (GZipMessageEncoder)
+    /// This class is used to create the custom encoder (GZipMessageEncoder).
     /// </summary>
     internal sealed class GZipMessageEncoderFactory : MessageEncoderFactory
     {
@@ -20,7 +20,7 @@ namespace ITunes.Editor.Lyrics.Wikia
         /// Initializes a new instance of the <see cref="GZipMessageEncoderFactory"/> class.
         /// </summary>
         /// <param name="messageEncoderFactory">The message encoder factory.</param>
-        /// <remarks>The GZip encoder wraps an inner encoder. We require a factory to be passed in that will create this inner encoder</remarks>
+        /// <remarks>The GZip encoder wraps an inner encoder. We require a factory to be passed in that will create this inner encoder.</remarks>
         public GZipMessageEncoderFactory(MessageEncoderFactory messageEncoderFactory)
         {
             if (messageEncoderFactory == null)
@@ -32,49 +32,35 @@ namespace ITunes.Editor.Lyrics.Wikia
         }
 
         /// <inheritdoc />
-        /// <remarks>The service framework uses this property to obtain an encoder from this encoder factory</remarks>
+        /// <remarks>The service framework uses this property to obtain an encoder from this encoder factory.</remarks>
         public override MessageEncoder Encoder { get; }
 
         /// <inheritdoc />
         public override MessageVersion MessageVersion => this.Encoder.MessageVersion;
 
-        /// <summary>
-        /// This is the actual GZip encoder
-        /// </summary>
         private class GZipMessageEncoder : MessageEncoder
         {
             private const string GZipContentType = "application/x-gzip";
 
-            // This implementation wraps an inner encoder that actually converts a WCF Message
-            // into textual XML, binary XML or some other format. This implementation then compresses the results.
+            // This implementation wraps an inner encoder that actually converts a WCF Message into textual XML, binary XML or some other format.
+            // This implementation then compresses the results.
             // The opposite happens when reading messages.
             // This member stores this inner encoder.
             private readonly MessageEncoder innerEncoder;
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="GZipMessageEncoder"/> class.
-            /// </summary>
-            /// <param name="messageEncoder">The message encoder.</param>
-            /// <remarks>We require an inner encoder to be supplied (see comment above)</remarks>
             internal GZipMessageEncoder(MessageEncoder messageEncoder)
             {
                 this.innerEncoder = messageEncoder ?? throw new ArgumentNullException(nameof(messageEncoder), "A valid message encoder must be passed to the GZipEncoder");
             }
 
-            /// <inheritdoc />
             public override string ContentType => GZipContentType;
 
-            /// <inheritdoc />
             public override string MediaType => GZipContentType;
 
-            /// <inheritdoc />
-            /// <remarks>We delegate to the inner encoder for this</remarks>
             public override MessageVersion MessageVersion => this.innerEncoder.MessageVersion;
 
-            /// <inheritdoc />
             public override bool IsContentTypeSupported(string contentType) => base.IsContentTypeSupported(contentType) || this.innerEncoder.IsContentTypeSupported(contentType);
 
-            /// <inheritdoc />
             public override Message ReadMessage(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
             {
                 // see if the buffer needs to be decoded
@@ -96,10 +82,8 @@ namespace ITunes.Editor.Lyrics.Wikia
                 }
             }
 
-            /// <inheritdoc />
             public override ArraySegment<byte> WriteMessage(Message message, int maxMessageSize, BufferManager bufferManager, int messageOffset) => this.innerEncoder.WriteMessage(message, maxMessageSize, bufferManager, 0);
 
-            /// <inheritdoc />
             public override Message ReadMessage(Stream stream, int maxSizeOfHeaders, string contentType)
             {
                 // Pass false for the "leaveOpen" parameter to the GZipStream constructor.
@@ -109,19 +93,12 @@ namespace ITunes.Editor.Lyrics.Wikia
                 return this.innerEncoder.ReadMessage(gzStream, maxSizeOfHeaders);
             }
 
-            /// <inheritdoc />
             public override void WriteMessage(Message message, Stream stream)
             {
                 this.innerEncoder.WriteMessage(message, stream);
                 stream.Flush();
             }
 
-            /// <summary>
-            /// Helper method to decompress an array of bytes
-            /// </summary>
-            /// <param name="buffer">The buffer.</param>
-            /// <param name="bufferManager">The buffer manager.</param>
-            /// <returns>The decompressed buffer.</returns>
             private static ArraySegment<byte> DecompressBuffer(ArraySegment<byte> buffer, BufferManager bufferManager)
             {
                 const int blockSize = 1024;

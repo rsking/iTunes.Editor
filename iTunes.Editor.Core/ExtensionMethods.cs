@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ExtensionMethods.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -20,22 +20,6 @@ namespace ITunes.Editor
         private const string NoLyrics = "No Lyrics";
 
         private const string HasLyrics = "Has Lyrics";
-
-        private static readonly IEnumerable<string> ExplicitWords = new string[]
-        {
-            "fuck",
-            "f***",
-            "f**k",
-            "cunt",
-            "c***",
-            "c**t",
-            "shit",
-            "s***",
-            "s**t",
-            "dick",
-            "d***",
-            "d**k"
-        };
 
         private static readonly TagLib.ByteVector Rating = new TagLib.ByteVector(new byte[] { 114, 116, 110, 103 });
         private static readonly TagLib.ByteVector ExplicitRatingData = new TagLib.ByteVector(new byte[] { 0x04 });
@@ -201,8 +185,9 @@ namespace ITunes.Editor
         /// Updates the explicit value.
         /// </summary>
         /// <param name="tag">The tag to update.</param>
+        /// <param name="explicitLyricsProvider">The explicit lyrics provider.</param>
         /// <returns>Returns <see langword="true"/> if the explicit flag is updates; otherwise <see langword="false"/>.</returns>
-        public static bool UpdateRating(this TagLib.Tag tag)
+        public static bool UpdateRating(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider)
         {
             var lyrics = tag.Lyrics;
             if (string.IsNullOrEmpty(lyrics))
@@ -212,17 +197,28 @@ namespace ITunes.Editor
                     return appleTag.SetUnrated();
                 }
             }
-            else
+            else if (tag is TagLib.Mpeg4.AppleTag appleTag && !appleTag.HasRating())
             {
-                var @explicit = ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0);
-
-                if (tag is TagLib.Mpeg4.AppleTag appleTag)
+                var @explicit = explicitLyricsProvider.IsExplicit(lyrics);
+                if (@explicit.HasValue)
                 {
-                    return @explicit ? appleTag.SetExplicit() : appleTag.SetClean();
+                    return @explicit.Value ? appleTag.SetExplicit() : appleTag.SetClean();
                 }
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="TagLib.Mpeg4.AppleTag"/> has rating data.
+        /// </summary>
+        /// <param name="appleTag">The apple tag.</param>
+        /// <returns><see langword="true"/> if <paramref name="appleTag"/> has rating data; otherwise <see langword="false"/>.</returns>
+        public static bool HasRating(this TagLib.Mpeg4.AppleTag appleTag)
+        {
+            var dataBoxes = appleTag.DataBoxes(Rating);
+            return dataBoxes.Any()
+                && dataBoxes.All(box => box.Data != UnratedRatingData || box.Flags != (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData);
         }
 
         /// <summary>

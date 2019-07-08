@@ -15,14 +15,14 @@ namespace ITunes.Editor.Services.Contracts
         /// Gets the path using the specified <paramref name="path"/> as a starting point.
         /// </summary>
         /// <param name="path">The initial path.</param>
-        /// <returns>The selected path; otherwise <see langword="null"/></returns>
+        /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
         string GetSelectedPath(string path = "");
 
         /// <summary>
         /// Gets the path using the specified <paramref name="path"/> as a starting point asynchronously.
         /// </summary>
         /// <param name="path">The initial path.</param>
-        /// <returns>The selected path; otherwise <see langword="null"/></returns>
+        /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
         System.Threading.Tasks.Task<string> GetSelectedPathAsync(string path = "");
     }
 }

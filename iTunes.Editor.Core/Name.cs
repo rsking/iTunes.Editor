@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="Name.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -33,7 +33,7 @@ namespace ITunes.Editor
         public string Last { get; }
 
         /// <summary>
-        /// Creates a <see cref="Name"/> from an inversed name such as 'WALTERS D'
+        /// Creates a <see cref="Name"/> from an inversed name such as 'WALTERS D'.
         /// </summary>
         /// <param name="name">The inversed name.</param>
         /// <returns>The output name.</returns>
@@ -51,7 +51,7 @@ namespace ITunes.Editor
         }
 
         /// <summary>
-        /// Creates a <see cref="Name"/> from a name such as 'D. WALTERS'
+        /// Creates a <see cref="Name"/> from a name such as 'D. WALTERS'.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The output name.</returns>

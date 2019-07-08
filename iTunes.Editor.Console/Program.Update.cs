@@ -49,7 +49,7 @@ namespace ITunes.Editor
     }
 
     /// <summary>
-    /// The update sub-command base
+    /// The update sub-command base.
     /// </summary>
     internal abstract class UpdateSubcommandBase : CommandBase
     {
@@ -92,7 +92,6 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected async override Task<int> OnExecuteAsync(CommandLineApplication app)
         {
-            var fileName = this.File;
             foreach (var file in System.IO.Directory.EnumerateFiles(System.IO.Path.GetDirectoryName(this.File), System.IO.Path.GetFileName(this.File)))
             {
                 var songInformation = SongInformation.FromFile(file);

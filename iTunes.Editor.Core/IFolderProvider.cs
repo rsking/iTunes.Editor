@@ -7,7 +7,7 @@
 namespace ITunes.Editor
 {
     /// <summary>
-    /// The folder song loader
+    /// The folder song loader.
     /// </summary>
     public interface IFolderProvider
     {

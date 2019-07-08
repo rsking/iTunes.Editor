@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="WikiaLyricsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -13,7 +13,7 @@ namespace ITunes.Editor.Lyrics.Wikia
     using System.Threading.Tasks;
 
     /// <summary>
-    /// The <see cref="ILyricsProvider"/> for lyrics.wikia.com
+    /// The <see cref="ILyricsProvider"/> for lyrics.wikia.com.
     /// </summary>
     public class WikiaLyricsProvider : ILyricsProvider
     {

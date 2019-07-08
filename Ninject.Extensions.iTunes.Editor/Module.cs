@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="Module.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -6,6 +6,7 @@
 
 namespace Ninject.Extensions.ITunes.Editor
 {
+    using System.Linq;
     using global::ITunes.Editor;
 
     /// <summary>
@@ -38,6 +39,11 @@ namespace Ninject.Extensions.ITunes.Editor
             this.Bind<ILyricsProvider>().To<global::ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>()
                 .Named("apiseeds")
                 .WithConstructorArgument("apiKey", _ => _.Kernel.Get<Microsoft.Extensions.Configuration.IConfiguration>()["apiseeds:apikey"]);
+            this.Bind<IExplicitLyricsProvider>().To<global::ITunes.Editor.PurgoMalum.PurgoMalumExplicitLyricsProvider>().Named("purgo_malum");
+            if (!this.Bindings.Any(binding => binding.Service == typeof(IExplicitLyricsProvider)))
+            {
+                this.Bind<IExplicitLyricsProvider>().To<ListExplicitLyricsProvider>().Named("list");
+            }
 
             // Services
             this.Bind<IUpdateComposerService>().To<UpdateComposerService>();

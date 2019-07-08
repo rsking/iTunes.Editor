@@ -18,7 +18,7 @@ namespace ITunes.Editor.Lyrics.Wikia
         /// <summary>
         /// Initializes a new instance of the <see cref="GZipMessageEncodingBindingElement"/> class with the specified <see cref="MessageEncodingBindingElement"/>.
         /// </summary>
-        /// <remarks>By default, use the default text encoder as the inner encoder</remarks>
+        /// <remarks>By default, use the default text encoder as the inner encoder.</remarks>
         public GZipMessageEncodingBindingElement()
             : this(new TextMessageEncodingBindingElement())
         {
@@ -43,7 +43,7 @@ namespace ITunes.Editor.Lyrics.Wikia
         }
 
         /// <inheritdoc />
-        /// <remarks>Main entry point into the encoder binding element. Called by WCF to get the factory that will create the message encoder</remarks>
+        /// <remarks>Main entry point into the encoder binding element. Called by WCF to get the factory that will create the message encoder.</remarks>
         public override MessageEncoderFactory CreateMessageEncoderFactory() => new GZipMessageEncoderFactory(this.InnerMessageEncodingBindingElement.CreateMessageEncoderFactory());
 
         /// <inheritdoc />
