@@ -57,7 +57,7 @@ namespace ITunes.Editor
             var writer = string.Empty;
             var performer = tagInformation.Performers.FirstOrDefault() ?? string.Empty;
 
-            var stringContent = $"keywords={title.Replace(' ', '+')}&writer={writer.Replace(' ', '+')}&performer={performer.Replace(' ', '+')}&searchtype=works";
+            var stringContent = $"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works";
             var result = await this.client.PostAsync(this.uri, new StringContent(stringContent, Encoding.UTF8, "application/x-www-form-urlencoded")).ConfigureAwait(false);
             var pageText = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
