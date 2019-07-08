@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="ExtensionMethods.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -85,13 +85,14 @@ namespace ITunes.Editor
         /// Cleans the lyrics.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
+        /// <param name="newLine">The newline string.</param>
         /// <returns>Returns <see langword="true"/> if the lyics have been cleaned; otherwise <see langword="false"/>.</returns>
-        public static bool CleanLyrics(this TagLib.Tag appleTag)
+        public static bool CleanLyrics(this TagLib.Tag appleTag, string newLine = "\r")
         {
             var lyrics = string.IsNullOrEmpty(appleTag.Lyrics)
                 ? null
                 : string.Join(
-                    Environment.NewLine,
+                    newLine,
                     appleTag.Lyrics
                         .SplitLines()
                         .Select(line => line.Trim().Capitalize())
