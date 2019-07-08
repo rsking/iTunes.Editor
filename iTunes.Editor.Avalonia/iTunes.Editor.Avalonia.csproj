@@ -1,12 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   
   
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>ITunes.Editor</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
     
   <ItemGroup>
@@ -18,11 +16,11 @@
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="0.7.0" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.7.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.8.*" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.*" />
     <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="ReactiveUI" Version="9.2.2" />
-    <PackageReference Include="System.Reactive" Version="4.1.2" />
+    <PackageReference Include="ReactiveUI" Version="9.18.*" />
+    <PackageReference Include="System.Reactive" Version="4.1.*" />
   </ItemGroup>
   
   <ItemGroup>
