@@ -30,7 +30,8 @@ namespace ITunes.Editor
             }
 
             // get all the files
-            foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories))
+            foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
+                .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0))
             {
                 SongInformation songInformation = null;
                 try
@@ -38,6 +39,11 @@ namespace ITunes.Editor
                     songInformation = SongInformation.FromFile(fileInfo.FullName);
                 }
                 catch
+                {
+                    continue;
+                }
+
+                if (songInformation?.Title == null)
                 {
                     continue;
                 }
