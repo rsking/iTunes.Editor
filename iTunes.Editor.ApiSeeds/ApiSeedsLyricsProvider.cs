@@ -26,17 +26,32 @@ namespace ITunes.Editor.ApiSeeds
             this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
         }
 
-        /// <inheritdoc />
-        public string GetLyrics(SongInformation tagInformation)
+        public ApiSeedsLyricsProvider(Microsoft.Extensions.Options.IOptions<ApiSeeds> options)
+            : this(options.Value.ApiKey)
         {
+        }
+
+        /// <inheritdoc />
+        public string? GetLyrics(SongInformation tagInformation)
+        {
+            if (tagInformation is null)
+            {
+                return default;
+            }
+
             var request = CreateRequest(tagInformation);
             var response = this.client.Execute<GetLyricsResponse>(request);
             return GetLyricsImpl(request, response?.Data?.Result);
         }
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<string> GetLyricsAsync(SongInformation tagInformation)
+        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation)
         {
+            if (tagInformation is null)
+            {
+                return default;
+            }
+
             var request = CreateRequest(tagInformation);
             var response = await this.client.ExecuteTaskAsync<GetLyricsResponse>(request).ConfigureAwait(false);
             return GetLyricsImpl(request, response?.Data?.Result);
@@ -54,14 +69,16 @@ namespace ITunes.Editor.ApiSeeds
             return request;
         }
 
-        private static string GetLyricsImpl(IRestRequest request, GetLyricsResult getLyricResult)
+        private static string? GetLyricsImpl(IRestRequest request, GetLyricsResult? getLyricResult)
         {
             if (getLyricResult == null)
             {
                 return null;
             }
 
-            if (getLyricResult.Artist.Name.Equals((string)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+            if (getLyricResult.Artist?.Name != null
+                && getLyricResult.Artist.Name.Equals((string)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+                && getLyricResult.Track?.Name != null
                 && getLyricResult.Track.Name.Equals((string)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
             {
                 return getLyricResult.Track.Text;
@@ -73,46 +90,46 @@ namespace ITunes.Editor.ApiSeeds
 
         private class GetLyricsResponse
         {
-            public GetLyricsResult Result { get; set; }
+            public GetLyricsResult? Result { get; set; }
         }
 
         private class GetLyricsResult
         {
-            public Artist Artist { get; set; }
+            public Artist? Artist { get; set; }
 
-            public Track Track { get; set; }
+            public Track? Track { get; set; }
 
-            public Copyright Copyright { get; set; }
+            public Copyright? Copyright { get; set; }
         }
 
         private class Artist
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
         private class Track
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public string Text { get; set; }
+            public string? Text { get; set; }
 
-            public Language Lang { get; set; }
+            public Language? Lang { get; set; }
         }
 
         private class Language
         {
-            public string Code { get; set; }
+            public string? Code { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
         private class Copyright
         {
-            public string Notice { get; set; }
+            public string? Notice { get; set; }
 
-            public string Artist { get; set; }
+            public string? Artist { get; set; }
 
-            public string Text { get; set; }
+            public string? Text { get; set; }
         }
     }
 }

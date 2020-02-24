@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <RootNamespace>ITunes.Editor</RootNamespace>
   </PropertyGroup>
@@ -11,15 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine.Experimental" Version="0.3.0-alpha.19317.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20104.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
-    <ProjectReference Include="..\Ninject.Extensions.iTunes.Editor\Ninject.Extensions.iTunes.Editor.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

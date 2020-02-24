@@ -8,35 +8,23 @@ namespace ITunes.Editor
 {
     using System;
     using System.CommandLine;
+    using System.CommandLine.Builder;
+    using System.CommandLine.Hosting;
     using System.CommandLine.Invocation;
+    using System.CommandLine.Parsing;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
-    using Ninject;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// The program class.
     /// </summary>
     internal class Program
     {
-        private const string AppSettings = "appsettings.json";
-
         private const bool DefaultForce = false;
 
         private const string DefaultType = "plist";
-
-        private static readonly IKernel Kernel = new StandardKernel();
-
-        static Program()
-        {
-            var builder = new ConfigurationBuilder().SetBasePath(System.IO.Directory.GetCurrentDirectory());
-            if (System.IO.File.Exists(AppSettings))
-            {
-                builder = builder.AddJsonFile(AppSettings);
-            }
-
-            Kernel.Bind<IConfiguration>().ToConstant(builder.Build());
-        }
 
         private static Task<int> Main(string[] args)
         {
@@ -114,19 +102,55 @@ namespace ITunes.Editor
             updateCommand.AddCommand(updateFileCommand);
             updateCommand.AddCommand(updateListCommand);
 
-            var rootCommand = new RootCommand();
-            rootCommand.AddCommand(listCommand);
-            rootCommand.AddCommand(composerCommand);
-            rootCommand.AddCommand(lyricsCommand);
-            rootCommand.AddCommand(mediaInfoCommand);
-            rootCommand.AddCommand(updateCommand);
+            var builder = new CommandLineBuilder()
+                .UseDefaults()
+                .UseHost(Host.CreateDefaultBuilder, ConfigureHost)
+                .AddCommand(listCommand)
+                .AddCommand(composerCommand)
+                .AddCommand(lyricsCommand)
+                .AddCommand(mediaInfoCommand)
+                .AddCommand(updateCommand);
 
-            return rootCommand.InvokeAsync(args);
+            return builder.Build().InvokeAsync(args);
         }
 
-        private static async Task List(string input, string type = DefaultType)
+        private static void ConfigureHost(IHostBuilder hostBuilder)
         {
-            var songsProvider = Kernel.Get<ISongsProvider>(type);
+            hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
+            {
+                // Lyrics
+                serviceCollection
+                    .AddApiSeeds(hostingContext.Configuration)
+                    .AddChartLyrics()
+                    .AddWikia()
+                    .AddPurgoMalum();
+
+                // Composers
+                serviceCollection
+                    .AddApraAmcos();
+
+                // song providers
+                serviceCollection
+                    .AddFolder()
+                    .AddIPod()
+                    .AddPList()
+                    .AddITunes();
+
+                // tag provider
+                serviceCollection
+                    .AddTagLib()
+                    .AddMediaInfo();
+
+                // add services
+                serviceCollection
+                    .AddTransient<IUpdateComposerService, UpdateComposerService>()
+                    .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+            });
+        }
+
+        private static async Task List(IHost host, string input, string type = DefaultType, params string[] property)
+        {
+            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
             switch (songsProvider)
             {
                 case IFolderProvider folderProvider:
@@ -147,19 +171,19 @@ namespace ITunes.Editor
             }
         }
 
-        private static async Task Composer(string artist, string song, string provider = "apra_amcos")
+        private static async Task Composer(IHost host, string artist, string song, string provider = "apra_amcos")
         {
-            foreach (var composer in await Kernel.Get<IComposerProvider>(provider)
-                .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null))
-                .ConfigureAwait(false))
+            var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
+            await foreach (var composer in composerProvider
+                .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null)))
             {
                 Console.WriteLine(composer);
             }
         }
 
-        private static async Task Lyrics(string artist, string song, string provider = "wikia")
+        private static async Task Lyrics(IHost host, string artist, string song, string provider = "wikia")
         {
-            var lyrics = await Kernel.Get<ILyricsProvider>(provider)
+            var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
                .GetLyricsAsync(new SongInformation(song, artist, artist, null, null, null))
                .ConfigureAwait(false);
             Console.WriteLine(lyrics);
@@ -172,28 +196,28 @@ namespace ITunes.Editor
             Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
         }
 
-        private static Task UpdateComposerFile(string file, bool force = DefaultForce)
+        private static Task UpdateComposerFile(IHost host, string file, bool force = DefaultForce)
         {
-            var service = Kernel.Get<IUpdateComposerService>();
+            var service = host.Services.GetRequiredService<IUpdateComposerService>();
             return service.UpdateAsync(SongInformation.FromFile(file.Expand()), force);
         }
 
-        private static Task UpdateLyricsFile(string file, bool force = DefaultForce)
+        private static Task UpdateLyricsFile(IHost host, string file, bool force = DefaultForce)
         {
-            var service = Kernel.Get<IUpdateLyricsService>();
+            var service = host.Services.GetRequiredService<IUpdateLyricsService>();
             return service.UpdateAsync(SongInformation.FromFile(file.Expand()), force);
         }
 
-        private static async Task UpdateAllFile(string file, bool force = DefaultForce)
+        private static async Task UpdateAllFile(IHost host, string file, bool force = DefaultForce)
         {
             var songInformation = SongInformation.FromFile(file.Expand());
-            await Kernel.Get<IUpdateComposerService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
-            await Kernel.Get<IUpdateLyricsService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
+            await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
+            await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
         }
 
-        private static async Task UpdateList(string input, string type, bool force, Func<SongInformation, bool, Task> updateFunction)
+        private static async Task UpdateList(IHost host, string input, string type, bool force, Func<SongInformation, bool, Task> updateFunction)
         {
-            var songsProvider = Kernel.Get<ISongsProvider>(type);
+            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
             switch (songsProvider)
             {
                 case IFolderProvider folderProvider:
@@ -227,15 +251,15 @@ namespace ITunes.Editor
             }
         }
 
-        private static Task UpdateComposerList(string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(input, type, force, Kernel.Get<IUpdateComposerService>().UpdateAsync);
+        private static Task UpdateComposerList(IHost host, string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync);
 
-        private static Task UpdateLyricsList(string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(input, type, force, Kernel.Get<IUpdateLyricsService>().UpdateAsync);
+        private static Task UpdateLyricsList(IHost host, string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync);
 
-        private static Task UpdateAllList(string input, string type = DefaultType, bool force = DefaultForce)
+        private static Task UpdateAllList(IHost host, string input, string type = DefaultType, bool force = DefaultForce)
         {
-            var composerService = Kernel.Get<IUpdateComposerService>();
-            var lyricsService = Kernel.Get<IUpdateLyricsService>();
-            return UpdateList(input, type, force, async (songInformation, force) =>
+            var composerService = host.Services.GetRequiredService<IUpdateComposerService>();
+            var lyricsService = host.Services.GetRequiredService<IUpdateLyricsService>();
+            return UpdateList(host, input, type, force, async (songInformation, force) =>
             {
                 await composerService.UpdateAsync(songInformation, force).ConfigureAwait(false);
                 await lyricsService.UpdateAsync(songInformation, force).ConfigureAwait(false);

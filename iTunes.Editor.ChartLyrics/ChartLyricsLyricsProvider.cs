@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ChartLyricsProvider.cs" company="RossKing">
+// <copyright file="ChartLyricsLyricsProvider.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,16 +13,16 @@ namespace ITunes.Editor.ChartLyrics
     /// <summary>
     /// The <see cref="ILyricsProvider"/> for www.chartlyrics.com.
     /// </summary>
-    public class ChartLyricsProvider : ILyricsProvider
+    public class ChartLyricsLyricsProvider : ILyricsProvider
     {
         private readonly System.Uri uri = new System.Uri("http://api.chartlyrics.com/apiv1.asmx");
 
         private readonly apiv1SoapClient channel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChartLyricsProvider"/> class.
+        /// Initializes a new instance of the <see cref="ChartLyricsLyricsProvider"/> class.
         /// </summary>
-        public ChartLyricsProvider()
+        public ChartLyricsLyricsProvider()
         {
             var binding = new System.ServiceModel.BasicHttpBinding { Name = "apiv1Soap" };
             this.channel = new apiv1SoapClient(binding, new System.ServiceModel.EndpointAddress(this.uri));

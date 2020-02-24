@@ -342,4 +342,4 @@ OpenCover/
 
 # End of https://www.gitignore.io/api/windows,visualstudio,visualstudiocode
 
-**/appsettings.json
+**/appsettings.*.json

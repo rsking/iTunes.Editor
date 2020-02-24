@@ -3,12 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ITunes.Editor.ApiSeeds</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="RestSharp" Version="106.6.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
