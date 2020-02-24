@@ -16,6 +16,11 @@ namespace ITunes.Editor.ITunesLib
         /// <inheritdoc />
         public override string Name => Properties.Resources.ITunesName;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to update the metadata.
+        /// </summary>
+        public bool UpdateMetadata { get; set; }
+
         /// <inheritdoc />
         public override IEnumerable<SongInformation> GetTagInformation()
         {
@@ -29,6 +34,11 @@ namespace ITunes.Editor.ITunesLib
             {
                 if (library.Tracks[i] is iTunesLib.IITFileOrCDTrack track)
                 {
+                    if (this.UpdateMetadata)
+                    {
+                        track.UpdateInfoFromFile();
+                    }
+
                     if (track.Location == null)
                     {
                         continue;
