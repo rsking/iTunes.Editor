@@ -30,13 +30,18 @@ namespace ITunes.Editor
         /// Gets the media type.
         /// </summary>
         /// <param name="songInformation">The song information.</param>
-        /// <returns>The medit type.</returns>
-        public static string GetMediaType(this SongInformation songInformation)
+        /// <returns>The media type.</returns>
+        public static string? GetMediaType(this SongInformation songInformation)
         {
+            if (songInformation?.Name is null)
+            {
+                return null;
+            }
+
             var name = songInformation.Name;
             var values = name.Split(System.IO.Path.DirectorySeparatorChar);
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] == "iTunes Media")
                 {
@@ -89,6 +94,11 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the lyics have been cleaned; otherwise <see langword="false"/>.</returns>
         public static bool CleanLyrics(this TagLib.Tag appleTag, string newLine = "\r")
         {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
             var lyrics = string.IsNullOrEmpty(appleTag.Lyrics)
                 ? null
                 : string.Join(
@@ -114,6 +124,11 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the "no lyics" has been added; otherwise <see langword="false"/>.</returns>
         public static bool AddNoLyrics(this TagLib.Tag appleTag)
         {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
             if (string.IsNullOrEmpty(appleTag.Grouping))
             {
                 appleTag.Grouping = NoLyrics;
@@ -147,13 +162,18 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the "no lyics" has been removed; otherwise <see langword="false"/>.</returns>
         public static bool RemoveNoLyrics(this TagLib.Tag appleTag)
         {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
             if (!string.IsNullOrEmpty(appleTag.Grouping) && appleTag.Grouping.Contains(NoLyrics))
             {
                 var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-                int index = -1;
+                var index = -1;
 
                 // See if No Lyrics is already in there
-                for (int j = 0; j < grouping.Length; j++)
+                for (var j = 0; j < grouping.Length; j++)
                 {
                     if (grouping[j] == NoLyrics)
                     {
@@ -190,6 +210,11 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the explicit flag is updates; otherwise <see langword="false"/>.</returns>
         public static bool UpdateRating(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider)
         {
+            if (tag is null)
+            {
+                return false;
+            }
+
             var lyrics = tag.Lyrics;
             if (string.IsNullOrEmpty(lyrics))
             {
@@ -200,6 +225,11 @@ namespace ITunes.Editor
             }
             else if (tag is TagLib.Mpeg4.AppleTag appleTag && !appleTag.HasRating())
             {
+                if (explicitLyricsProvider is null)
+                {
+                    return false;
+                }
+
                 var @explicit = explicitLyricsProvider.IsExplicit(lyrics);
                 if (@explicit.HasValue)
                 {
@@ -217,6 +247,11 @@ namespace ITunes.Editor
         /// <returns><see langword="true"/> if <paramref name="appleTag"/> has rating data; otherwise <see langword="false"/>.</returns>
         public static bool HasRating(this TagLib.Mpeg4.AppleTag appleTag)
         {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
             var dataBoxes = appleTag.DataBoxes(Rating);
             return dataBoxes.Any()
                 && dataBoxes.All(box => box.Data != UnratedRatingData || box.Flags != (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData);
@@ -227,21 +262,21 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the explicit flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetExplicit(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(ExplicitRatingData);
+        public static bool SetExplicit(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(ExplicitRatingData) ?? false;
 
         /// <summary>
         /// Sets the rating flag to clean.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the clean flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetClean(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(CleanRatingData);
+        public static bool SetClean(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(CleanRatingData) ?? false;
 
         /// <summary>
         /// Sets the rating flag to unrated.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
-        public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag.SetRating(UnratedRatingData);
+        public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(UnratedRatingData) ?? false;
 
         private static bool SetRating(this TagLib.Mpeg4.AppleTag appleTag, TagLib.ByteVector rating)
         {
@@ -257,10 +292,10 @@ namespace ITunes.Editor
 
         private static IEnumerable<string> RemoveMultipleNull(this IEnumerable<string> source)
         {
-            bool last = false;
-            foreach (string item in source)
+            var last = false;
+            foreach (var item in source)
             {
-                bool current = string.IsNullOrEmpty(item);
+                var current = string.IsNullOrEmpty(item);
                 if (!current || !last)
                 {
                     last = current;
@@ -275,7 +310,7 @@ namespace ITunes.Editor
 
             // find the first and last actual characters
             var first = 0;
-            for (int i = 0; i < lyrics.Length; i++)
+            for (var i = 0; i < lyrics.Length; i++)
             {
                 if (!char.IsWhiteSpace(lyrics[i]))
                 {
@@ -285,7 +320,7 @@ namespace ITunes.Editor
             }
 
             var last = lyrics.Length - 1;
-            for (int i = last; i >= 0; i--)
+            for (var i = last; i >= 0; i--)
             {
                 if (!char.IsWhiteSpace(lyrics[i]))
                 {
@@ -294,9 +329,9 @@ namespace ITunes.Editor
                 }
             }
 
-            for (int i = first; i <= last; i++)
+            for (var i = first; i <= last; i++)
             {
-                char character = lyrics[i];
+                var character = lyrics[i];
                 switch (character)
                 {
                     case '\r':
@@ -325,12 +360,7 @@ namespace ITunes.Editor
             yield return returnString.ToString();
         }
 
-        private static string Capitalize(this string line)
-        {
-            return line.Length <= 0 || !char.IsLower(line[0])
-                ? line :
-                line.Substring(0, 1).ToUpper() + line.Substring(1);
-        }
+        private static string Capitalize(this string line) => Humanizer.To.TitleCase.Transform(line);
 
         private static bool IsNull(this DateTime dateTime) => dateTime.Year == 1 || dateTime.Year == 1899;
     }

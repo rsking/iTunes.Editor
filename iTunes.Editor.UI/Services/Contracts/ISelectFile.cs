@@ -14,12 +14,12 @@ namespace ITunes.Editor.Services.Contracts
         /// <summary>
         /// Gets or sets the default extension.
         /// </summary>
-        string DefaultExtension { get; set; }
+        string? DefaultExtension { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
-        string Title { get; set; }
+        string? Title { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to add this to the most recent list.
@@ -41,13 +41,13 @@ namespace ITunes.Editor.Services.Contracts
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        string GetFileName(string path = "");
+        string? GetFileName(string path = "");
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        System.Threading.Tasks.Task<string> GetFileNameAsync(string path = "");
+        System.Threading.Tasks.Task<string?> GetFileNameAsync(string path = "");
     }
 }

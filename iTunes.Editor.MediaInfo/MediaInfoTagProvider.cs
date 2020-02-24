@@ -12,13 +12,13 @@ namespace ITunes.Editor.MediaInfo
     public class MediaInfoTagProvider : TagProvider, IFileProvider
     {
         /// <inheritdoc/>
-        public string File { get; set; }
+        public string? File { get; set; }
 
         /// <inheritdoc/>
-        public override TagLib.Tag GetTag()
+        public override TagLib.Tag? GetTag()
         {
             var handle = NativeMethods.MediaInfo_New();
-            MediaInfoTag mediaTag = null;
+            MediaInfoTag? mediaTag = null;
             if (NativeMethods.MediaInfo_Open(handle, this.File))
             {
                 NativeMethods.MediaInfo_Option(handle, "Complete", "0");

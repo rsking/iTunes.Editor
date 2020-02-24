@@ -15,12 +15,12 @@ namespace ITunes.Editor
         /// Gets the tag.
         /// </summary>
         /// <returns>The tag.</returns>
-        TagLib.Tag GetTag();
+        TagLib.Tag? GetTag();
 
         /// <summary>
         /// Gets the tag asynchronously.
         /// </summary>
         /// <returns>The tag.</returns>
-        System.Threading.Tasks.Task<TagLib.Tag> GetTagAsync();
+        System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync();
     }
 }

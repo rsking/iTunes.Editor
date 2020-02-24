@@ -15,7 +15,7 @@ namespace ITunes.Editor
     public class FolderSongsProvider : SongsProvider, IFolderProvider
     {
         /// <inheritdoc />
-        public string Folder { get; set; }
+        public string? Folder { get; set; }
 
         /// <inheritdoc />
         public override string Name => Properties.Resources.FolderName;
@@ -33,7 +33,7 @@ namespace ITunes.Editor
             foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
                 .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0))
             {
-                SongInformation songInformation = null;
+                SongInformation? songInformation = null;
                 try
                 {
                     songInformation = SongInformation.FromFile(fileInfo.FullName);
@@ -43,7 +43,7 @@ namespace ITunes.Editor
                     continue;
                 }
 
-                if (songInformation?.Title == null)
+                if (songInformation?.Title is null)
                 {
                     continue;
                 }

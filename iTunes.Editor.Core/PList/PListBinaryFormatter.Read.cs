@@ -16,95 +16,71 @@ namespace ITunes.Editor.PList
     /// </summary>
     public partial class PListBinaryFormatter
     {
-        private static object Read(Stream stream, IList<int> offsetTable, int index, int objectReferenceSize)
+        private static object? Read(Stream stream, IList<int> offsetTable, int index, int objectReferenceSize)
         {
             var header = stream.ReadByte(offsetTable[index]);
-            switch (header & 0xF0)
+            return (header & 0xF0) switch
             {
-                case 0: // boolean
-                    // If the byte is
-                    // 0 return null
-                    // 9 return true
-                    // 8 return false
-                    return (header == 0) ? (object)null : header == 9;
-                case 0x10: // int64
-                    return ReadInt64(stream, offsetTable[index]);
-                case 0x20: // double
-                    return ReadDouble(stream, offsetTable[index]);
-                case 0x30: // date time
-                    return ReadDateTime(stream, offsetTable[index]);
-                case 0x40: // bytes
-                    return ReadBytes(stream, offsetTable[index]);
-                case 0x50: // ASCII
-                    return ReadAsciiString(stream, offsetTable[index]);
-                case 0x60: // Unicode
-                    return ReadUnicodeString(stream, offsetTable[index]);
-                case 0xa0: // Array
-                    return ReadArray(stream, offsetTable, index, objectReferenceSize);
-                case 0xd0: // Dictionary
-                    return ReadDictionary(stream, offsetTable, index, objectReferenceSize);
-            }
-
-            throw new Exception("This type is not supported");
+                0 => (header == 0) ? (object?)null : header == 9, // boolean, If the byte is 0 return null, 9 return true, 8 return false
+                0x10 => ReadInt64(stream, offsetTable[index]), // int64
+                0x20 => ReadDouble(stream, offsetTable[index]), // double
+                0x30 => ReadDateTime(stream, offsetTable[index]), // date time
+                0x40 => ReadBytes(stream, offsetTable[index]), // bytes
+                0x50 => ReadAsciiString(stream, offsetTable[index]), // ASCII
+                0x60 => ReadUnicodeString(stream, offsetTable[index]), // Unicode
+                0xa0 => ReadArray(stream, offsetTable, index, objectReferenceSize), // Array
+                0xd0 => ReadDictionary(stream, offsetTable, index, objectReferenceSize), // Dictionary
+                _ => throw new NotSupportedException(),
+            };
         }
 
         private static object ReadDictionary(Stream stream, IList<int> offsetTable, int index, int referenceSize)
         {
-            var buffer = new Dictionary<string, object>();
-            var referenceCount = GetCount(stream, offsetTable[index], out var referenceStartPosition);
+            var buffer = new Dictionary<string, object?>();
+            var referenceCount = GetCount(stream, offsetTable[index], out _);
 
-            if (referenceCount < 15)
-            {
-                referenceStartPosition = offsetTable[index] + 1;
-            }
-            else
-            {
-                // The following integer has a header aswell so we increase the referenceStartPosition by two to account for that.
-                referenceStartPosition = offsetTable[index] + 2 + RegulateNullBytes(BitConverter.GetBytes(referenceCount), 1).Length;
-            }
+            // Check if the following integer has a header aswell so we increase the referenceStartPosition by two to account for that.
+            var referenceStartPosition = referenceCount >= 15
+                ? offsetTable[index] + 2 + RegulateNullBytes(BitConverter.GetBytes(referenceCount), 1).Length
+                : offsetTable[index] + 1;
 
             var references = new int[referenceCount * 2];
             var current = referenceStartPosition;
-            for (int i = 0; i < references.Length; i++)
+            for (var i = 0; i < references.Length; i++)
             {
-                byte[] referenceBuffer = stream.Read(current, referenceSize).Reverse();
+                var referenceBuffer = stream.Read(current, referenceSize).Reverse();
                 references[i] = BitConverter.ToInt32(RegulateNullBytes(referenceBuffer, 4), 0);
                 current += referenceSize;
             }
 
-            for (int i = 0; i < referenceCount; i++)
+            for (var i = 0; i < referenceCount; i++)
             {
                 buffer.Add(
-                    (string)Read(stream, offsetTable, references[i], referenceSize),
+                    (string)Read(stream, offsetTable, references[i], referenceSize) !,
                     Read(stream, offsetTable, references[i + referenceCount], referenceSize));
             }
 
             return buffer;
         }
 
-        private static IList<object> ReadArray(Stream stream, IList<int> offsetTable, int index, int referenceSize)
+        private static IList<object?> ReadArray(Stream stream, IList<int> offsetTable, int index, int referenceSize)
         {
-            var buffer = new List<object>();
-            var referenceCount = GetCount(stream, offsetTable[index], out var referenceStartPosition);
+            var buffer = new List<object?>();
+            var referenceCount = GetCount(stream, offsetTable[index], out _);
 
-            if (referenceCount < 15)
-            {
-                referenceStartPosition = offsetTable[index] + 1;
-            }
-            else
-            {
-                // The following integer has a header aswell so we increase the referenceStartPosition by two to account for that.
-                referenceStartPosition = offsetTable[index] + 2 + RegulateNullBytes(BitConverter.GetBytes(referenceCount), 1).Length;
-            }
+            // Check if the following integer has a header aswell so we increase the referenceStartPosition by two to account for that.
+            var referenceStartPosition = referenceCount >= 15
+                ? offsetTable[index] + 2 + RegulateNullBytes(BitConverter.GetBytes(referenceCount), 1).Length
+                : offsetTable[index] + 1;
 
             var references = new List<int>();
-            for (int i = referenceStartPosition; i < referenceStartPosition + (referenceCount * referenceSize); i += referenceSize)
+            for (var i = referenceStartPosition; i < referenceStartPosition + (referenceCount * referenceSize); i += referenceSize)
             {
                 var referenceBuffer = stream.Read(i, referenceSize).Reverse();
                 references.Add(BitConverter.ToInt32(RegulateNullBytes(referenceBuffer, 4), 0));
             }
 
-            for (int i = 0; i < referenceCount; i++)
+            for (var i = 0; i < referenceCount; i++)
             {
                 buffer.Add(Read(stream, offsetTable, references[i], referenceSize));
             }
@@ -112,7 +88,7 @@ namespace ITunes.Editor.PList
             return buffer;
         }
 
-        private static long ReadInt64(Stream stream, int headerPosition) => ReadInt64(stream, headerPosition, out var output);
+        private static long ReadInt64(Stream stream, int headerPosition) => ReadInt64(stream, headerPosition, out _);
 
         private static long ReadInt64(Stream stream, int headerPosition, out int newHeaderPosition)
         {

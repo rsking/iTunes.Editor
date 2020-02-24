@@ -15,7 +15,7 @@ namespace ITunes.Editor.PList
     public class PListSongsProvider : SongsProvider, IFileProvider
     {
         /// <inheritdoc />
-        public string File { get; set; }
+        public string? File { get; set; }
 
         /// <inheritdoc />
         public override string Name => Properties.Resources.PListName;
@@ -26,13 +26,17 @@ namespace ITunes.Editor.PList
             PList plist;
             using (var stream = System.IO.File.OpenRead(this.File))
             {
+                using var reader = System.Xml.XmlReader.Create(stream);
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-                plist = serializer.Deserialize(stream) as PList;
+                plist = (PList)serializer.Deserialize(reader);
             }
 
             return plist["Tracks"] is IDictionary<string, object> dictionary
-                ? dictionary.Where(_ => _.Value is IDictionary<string, object>).Select(_ => new Track(_.Value as IDictionary<string, object>)).Select(_ => (SongInformation)_)
-                : null;
+                ? dictionary
+                    .Where(kvp => kvp.Value is IDictionary<string, object>)
+                    .Select(value => new Track((IDictionary<string, object>)value.Value))
+                    .Select(track => (SongInformation)track)
+                : Enumerable.Empty<SongInformation>();
         }
     }
 }

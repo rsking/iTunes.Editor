@@ -14,6 +14,11 @@ namespace ITunes.Editor
     public class SongInformation
     {
         /// <summary>
+        /// An empty song information.
+        /// </summary>
+        public static readonly SongInformation Empty = new SongInformation(string.Empty, string.Empty, string.Empty, null, null);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SongInformation"/> class.
         /// </summary>
         /// <param name="title">The title.</param>
@@ -22,7 +27,7 @@ namespace ITunes.Editor
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
-        public SongInformation(string title, string performers, string sortPerformers, string album, string name, int? rating = null)
+        public SongInformation(string title, string performers, string sortPerformers, string? album, string? name, int? rating = null)
             : this(
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
@@ -46,8 +51,8 @@ namespace ITunes.Editor
             string title,
             System.Collections.Generic.IEnumerable<string> performers,
             System.Collections.Generic.IEnumerable<string> sortPerformers,
-            string album,
-            string name,
+            string? album,
+            string? name,
             int? rating = null)
         {
             this.Title = title;
@@ -76,12 +81,12 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets the album.
         /// </summary>
-        public string Album { get; }
+        public string? Album { get; }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name { get; }
+        public string? Name { get; }
 
         /// <summary>
         /// Gets the rating.
@@ -92,12 +97,14 @@ namespace ITunes.Editor
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
         /// </summary>
         /// <param name="file">The file to convert.</param>
-        public static explicit operator SongInformation(TagLib.File file) => new SongInformation(
-            file.Tag.Title,
-            file.Tag.Performers,
-            file.Tag.PerformersSort ?? file.Tag.Performers,
-            file.Tag.Album,
-            file.Name);
+        public static explicit operator SongInformation(TagLib.File file) => file is null
+            ? throw new System.ArgumentNullException(nameof(file))
+            : new SongInformation(
+                file.Tag.Title,
+                file.Tag.Performers,
+                file.Tag.PerformersSort ?? file.Tag.Performers,
+                file.Tag.Album,
+                file.Name);
 
         /// <summary>
         /// Creates a new <see cref="SongInformation" /> from a file.
@@ -106,13 +113,9 @@ namespace ITunes.Editor
         /// <returns>The song information.</returns>
         public static SongInformation FromFile(string path)
         {
-            using (var fileAbstraction = new LocalFileAbstraction(path))
-            {
-                using (var tagLibFile = TagLib.File.Create(fileAbstraction))
-                {
-                    return (SongInformation)tagLibFile;
-                }
-            }
+            using var fileAbstraction = new LocalFileAbstraction(path);
+            using var tagLibFile = TagLib.File.Create(fileAbstraction);
+            return (SongInformation)tagLibFile;
         }
 
         /// <inheritdoc/>

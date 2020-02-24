@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor.PurgoMalum
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
     using RestSharp;
 
@@ -20,10 +17,10 @@ namespace ITunes.Editor.PurgoMalum
         private readonly IRestClient client = new RestClient("https://www.purgomalum.com/service/");
 
         /// <inheritdoc/>
-        public bool? IsExplicit(string lyrics) => ParseResponse(this.client.Execute(GetRequest(lyrics)));
+        public bool? IsExplicit(string lyrics) => ParseResponse(this.client.Execute<string?>(GetRequest(lyrics)));
 
         /// <inheritdoc/>
-        public async Task<bool?> IsExplicitAsync(string lyrics) => ParseResponse(await this.client.ExecuteTaskAsync(GetRequest(lyrics)).ConfigureAwait(false));
+        public async Task<bool?> IsExplicitAsync(string lyrics) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics)).ConfigureAwait(false));
 
         private static IRestRequest GetRequest(string lyrics)
         {
@@ -33,14 +30,6 @@ namespace ITunes.Editor.PurgoMalum
             return request;
         }
 
-        private static bool? ParseResponse(IRestResponse response)
-        {
-            if (bool.TryParse(response.Content, out var boolValue))
-            {
-                return boolValue;
-            }
-
-            return null;
-        }
+        private static bool? ParseResponse(IRestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : (bool?)null;
     }
 }

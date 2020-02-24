@@ -16,6 +16,18 @@ namespace ITunes.Editor.MediaInfo
     /// </summary>
     public class MediaInfoTag : Tag
     {
+        private const string GeneralCategory = "General";
+
+        private const string AlbumKey = nameof(Album);
+
+        private const string PerformerKey = "Performer";
+
+        private const string TrackNameKey = "Track name";
+
+        private const string ComposerKey = "Composer";
+
+        private const string SortedByKey = "Sorted by";
+
         /// <summary>
         /// The lookup.
         /// </summary>
@@ -27,9 +39,14 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="tags">The tags string.</param>
         public MediaInfoTag(string tags)
         {
-            // split this up
-            IDictionary<string, string> currentMainValue = null;
             this.lookup = new Dictionary<string, IDictionary<string, string>>();
+            if (tags is null)
+            {
+                return;
+            }
+
+            // split this up
+            IDictionary<string, string>? currentMainValue = null;
 
             foreach (var line in tags.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -39,7 +56,7 @@ namespace ITunes.Editor.MediaInfo
                     continue;
                 }
 
-                var index = line.IndexOf(":");
+                var index = line.IndexOf(":", StringComparison.InvariantCulture);
                 if (index == -1)
                 {
                     this.lookup.Add(line, currentMainValue = new Dictionary<string, string>());
@@ -49,6 +66,11 @@ namespace ITunes.Editor.MediaInfo
                 var key = line.Substring(0, index).Trim();
                 var value = line.Substring(index + 1).Trim();
 
+                if (currentMainValue is null)
+                {
+                    throw new Exception();
+                }
+
                 currentMainValue.Add(key, value);
             }
         }
@@ -57,71 +79,71 @@ namespace ITunes.Editor.MediaInfo
         public override TagTypes TagTypes => TagTypes.Apple;
 
         /// <inheritdoc/>
-        public override string Album { get => this.GetString("General", "Album"); set => this.SetString("General", "Album", value); }
+        public override string? Album { get => this.GetString(GeneralCategory, AlbumKey); set => this.SetString(GeneralCategory, AlbumKey, value); }
 
         /// <inheritdoc/>
-        public override string[] AlbumArtists { get => this.GetStringArray("General", "Album/Performer"); set => this.SetStringArray("General", "Album/Performer", value); }
+        public override string[] AlbumArtists { get => this.GetStringArray(GeneralCategory, $"{AlbumKey}/{PerformerKey}"); set => this.SetStringArray(GeneralCategory, $"{AlbumKey}/{PerformerKey}", value); }
 
         /// <inheritdoc/>
-        public override string[] AlbumArtistsSort { get => this.GetStringArray("General", "Album/Performer/Sort"); set => this.SetStringArray("General", "Album/Performer/Sort", value); }
+        public override string[] AlbumArtistsSort { get => this.GetStringArray(GeneralCategory, $"{AlbumKey}/{PerformerKey}/Sort"); set => this.SetStringArray(GeneralCategory, $"{AlbumKey}/{PerformerKey}/Sort", value); }
 
         /// <inheritdoc/>
-        public override string AlbumSort { get => this.GetString("General", "Album/Sorted by"); set => this.SetString("General", "Album/Sorted by", value); }
+        public override string? AlbumSort { get => this.GetString(GeneralCategory, $"{AlbumKey}/{SortedByKey}"); set => this.SetString(GeneralCategory, $"{AlbumKey}/{SortedByKey}", value); }
 
         /// <inheritdoc/>
-        public override uint BeatsPerMinute { get => this.GetUInt32("General", "BPM"); set => this.SetUInt32("General", "BPM", value); }
+        public override uint BeatsPerMinute { get => this.GetUInt32(GeneralCategory, "BPM"); set => this.SetUInt32(GeneralCategory, "BPM", value); }
 
         /// <inheritdoc/>
-        public override string Comment { get => this.GetString("General", "Comment"); set => this.SetString("General", "Comment", value); }
+        public override string? Comment { get => this.GetString(GeneralCategory, "Comment"); set => this.SetString(GeneralCategory, "Comment", value); }
 
         /// <inheritdoc/>
-        public override string[] Composers { get => this.GetStringArray("General", "Composer"); set => this.SetStringArray("General", "Composer", value); }
+        public override string[] Composers { get => this.GetStringArray(GeneralCategory, ComposerKey); set => this.SetStringArray(GeneralCategory, ComposerKey, value); }
 
         /// <inheritdoc/>
-        public override string[] ComposersSort { get => this.GetStringArray("General", "Composer/Sorted by"); set => this.SetStringArray("General", "Composer/Sorted by", value); }
+        public override string[] ComposersSort { get => this.GetStringArray(GeneralCategory, $"{ComposerKey}/{SortedByKey}"); set => this.SetStringArray(GeneralCategory, $"{ComposerKey}/{SortedByKey}", value); }
 
         /// <inheritdoc/>
-        public override uint Disc { get => this.GetUInt32("General", "Part/Position"); set => this.SetUInt32("General", "Part/Position", value); }
+        public override uint Disc { get => this.GetUInt32(GeneralCategory, "Part/Position"); set => this.SetUInt32(GeneralCategory, "Part/Position", value); }
 
         /// <inheritdoc/>
-        public override uint DiscCount { get => this.GetUInt32("General", "Part/Total"); set => this.SetUInt32("General", "Part/Total", value); }
+        public override uint DiscCount { get => this.GetUInt32(GeneralCategory, "Part/Total"); set => this.SetUInt32(GeneralCategory, "Part/Total", value); }
 
         /// <inheritdoc/>
-        public override string[] Genres { get => this.GetStringArray("General", "Genre"); set => this.SetStringArray("General", "Genre", value); }
+        public override string[] Genres { get => this.GetStringArray(GeneralCategory, "Genre"); set => this.SetStringArray(GeneralCategory, "Genre", value); }
 
         /// <inheritdoc/>
-        public override string Grouping { get => this.GetString("General", "Grouping"); set => this.SetString("General", "Grouping", value); }
+        public override string? Grouping { get => this.GetString(GeneralCategory, "Grouping"); set => this.SetString(GeneralCategory, "Grouping", value); }
 
         /// <inheritdoc/>
-        public override string Lyrics { get => this.GetString("General", "Lyrics")?.Replace(" / ", Environment.NewLine); set => this.SetString("General", "Lyrics", value?.Replace(Environment.NewLine, " / ")); }
+        public override string? Lyrics { get => this.GetString(GeneralCategory, "Lyrics")?.Replace(" / ", Environment.NewLine); set => this.SetString(GeneralCategory, "Lyrics", value?.Replace(Environment.NewLine, " / ")); }
 
         /// <inheritdoc/>
-        public override string[] Performers { get => this.GetStringArray("General", "Performer"); set => this.SetStringArray("General", "Performer", value); }
+        public override string[] Performers { get => this.GetStringArray(GeneralCategory, PerformerKey); set => this.SetStringArray(GeneralCategory, PerformerKey, value); }
 
         /// <inheritdoc/>
-        public override string[] PerformersSort { get => this.GetStringArray("General", "Performer/Sorted by"); set => this.SetStringArray("General", "Performer/Sorted by", value); }
+        public override string[] PerformersSort { get => this.GetStringArray(GeneralCategory, $"{PerformerKey}/{SortedByKey}"); set => this.SetStringArray(GeneralCategory, $"{PerformerKey}/{SortedByKey}", value); }
 
         /// <inheritdoc/>
-        public override string Title { get => this.GetString("General", "Track name"); set => this.SetString("General", "Track name", value); }
+        public override string? Title { get => this.GetString(GeneralCategory, TrackNameKey); set => this.SetString(GeneralCategory, TrackNameKey, value); }
 
         /// <inheritdoc/>
-        public override string TitleSort { get => this.GetString("General", "Title/Sort"); set => this.SetString("General", "Title/Sort", value); }
+        public override string? TitleSort { get => this.GetString(GeneralCategory, "Title/Sort"); set => this.SetString(GeneralCategory, "Title/Sort", value); }
 
         /// <inheritdoc/>
-        public override uint Track { get => this.GetUInt32("General", "Track name/Position"); set => this.SetUInt32("General", "Track name/Position", value); }
+        public override uint Track { get => this.GetUInt32(GeneralCategory, $"{TrackNameKey}/Position"); set => this.SetUInt32(GeneralCategory, $"{TrackNameKey}/Position", value); }
 
         /// <inheritdoc/>
-        public override uint TrackCount { get => this.GetUInt32("General", "Track name/Total"); set => this.SetUInt32("General", "Track name/Total", value); }
+        public override uint TrackCount { get => this.GetUInt32(GeneralCategory, $"{TrackNameKey}/Total"); set => this.SetUInt32(GeneralCategory, $"{TrackNameKey}/Total", value); }
 
         /// <inheritdoc/>
-        public override uint Year { get => this.GetUInt32("General", "Recorded date"); set => this.SetUInt32("General", "Recorded date", value); }
+        public override uint Year { get => this.GetUInt32(GeneralCategory, "Recorded date"); set => this.SetUInt32(GeneralCategory, "Recorded date", value); }
 
         /// <inheritdoc/>
         public override void Clear() => this.lookup.Clear();
 
-        private string GetString(string category, string key) => this.lookup[category].TryGetValue(key, out var value) ? value : null;
+        private string? GetString(string category, string key) => this.lookup[category].TryGetValue(key, out var value) ? value : null;
 
-        private void SetString(string category, string key, string value)
+        private void SetString(string category, string key, string? value)
         {
             if (value == null)
             {
@@ -135,7 +157,7 @@ namespace ITunes.Editor.MediaInfo
         private string[] GetStringArray(string category, string key)
         {
             var stringValue = this.GetString(category, key);
-            return string.IsNullOrEmpty(stringValue) ? new string[0] : stringValue.Split(';').Select(_ => _.Trim()).ToArray();
+            return string.IsNullOrEmpty(stringValue) ? Array.Empty<string>() : stringValue!.Split(';').Select(_ => _.Trim()).ToArray();
         }
 
         private void SetStringArray(string category, string key, string[] value) => this.SetString(category, key, value == null ? null : string.Join("; ", value));
@@ -151,6 +173,6 @@ namespace ITunes.Editor.MediaInfo
             return 0;
         }
 
-        private void SetUInt32(string category, string key, uint value) => this.SetString(category, key, value == 0 ? null : value.ToString());
+        private void SetUInt32(string category, string key, uint value) => this.SetString(category, key, value == 0 ? null : value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 }

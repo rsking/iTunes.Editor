@@ -29,6 +29,11 @@ namespace ITunes.Editor
         /// <inheritdoc />
         public SongInformation Update(SongInformation songInformation, bool force = false)
         {
+            if (songInformation is null)
+            {
+                return songInformation!;
+            }
+
             using (var updater = new Updater(songInformation))
             {
                 if (!updater.ShouldUpdate(force))
@@ -52,42 +57,50 @@ namespace ITunes.Editor
         /// <inheritdoc />
         public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false)
         {
-            using (var updater = new Updater(songInformation))
+            if (songInformation is null)
             {
-                if (updater.ShouldUpdate(force))
+                return songInformation!;
+            }
+
+            using var updater = new Updater(songInformation);
+            if (updater.ShouldUpdate(force))
+            {
+                foreach (var provider in this.providers)
                 {
-                    foreach (var provider in this.providers)
+                    var lyrics = await provider.GetLyricsAsync(songInformation).ConfigureAwait(false);
+                    if (lyrics != null)
                     {
-                        var lyrics = await provider.GetLyricsAsync(songInformation).ConfigureAwait(false);
-                        if (lyrics != null)
-                        {
-                            return updater.Update(this.explicitLyrics, lyrics);
-                        }
+                        return updater.Update(this.explicitLyrics, lyrics);
                     }
                 }
-
-                return updater.Update(this.explicitLyrics);
             }
+
+            return updater.Update(this.explicitLyrics);
         }
 
         private sealed class Updater : IDisposable
         {
             private static readonly string[] InvalidLyrics = new string[] { "Not found", "We haven't lyrics" };
 
-            private readonly TagLib.Mpeg4.AppleTag appleTag;
+            private readonly TagLib.Mpeg4.AppleTag? appleTag;
 
-            private TagLib.File.IFileAbstraction fileAbstraction;
+            private TagLib.File.IFileAbstraction? fileAbstraction;
 
-            private TagLib.File file;
+            private TagLib.File? file;
 
             private SongInformation songInformation;
 
             public Updater(SongInformation songInformation)
             {
-                this.songInformation = songInformation;
-                this.fileAbstraction = new LocalFileAbstraction(songInformation.Name, true);
+                this.songInformation = songInformation ?? SongInformation.Empty;
+                if (this.songInformation.Name is null)
+                {
+                    return;
+                }
+
+                this.fileAbstraction = new LocalFileAbstraction(this.songInformation.Name, true);
                 this.file = TagLib.File.Create(this.fileAbstraction);
-                if (this.file == null)
+                if (this.file is null)
                 {
                     if (this.fileAbstraction is IDisposable disposable)
                     {
@@ -104,35 +117,42 @@ namespace ITunes.Editor
 
             public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
 
-            public SongInformation Update(IExplicitLyricsProvider explicitLyricsProvider, string lyrics = null)
+            public SongInformation Update(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null)
             {
-                var updated = false;
-                lyrics = (lyrics ?? this.appleTag.Lyrics)?.Replace("\r\n", "\r");
+                if (this.file is null || this.appleTag is null)
+                {
+                    return this.songInformation;
+                }
 
-                if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics.StartsWith(temp)))
+                var appleTag = this.appleTag!;
+
+                var updated = false;
+                lyrics = (lyrics ?? this.appleTag?.Lyrics)?.Replace("\r\n", "\r");
+
+                if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     // this has no lyrics, so update
-                    if (updated = this.appleTag.AddNoLyrics() | this.appleTag.SetUnrated())
+                    if (updated = appleTag.AddNoLyrics() | appleTag.SetUnrated())
                     {
                         this.file.Save();
                     }
 
-                    if (!string.IsNullOrEmpty(this.appleTag.Lyrics))
+                    if (!string.IsNullOrEmpty(appleTag.Lyrics))
                     {
                         updated = true;
-                        this.appleTag.Lyrics = null;
+                        appleTag.Lyrics = null;
                         this.file.Save();
                     }
                 }
                 else
                 {
-                    if (this.appleTag.Lyrics != lyrics)
+                    if (appleTag.Lyrics != lyrics)
                     {
                         updated = true;
-                        this.appleTag.Lyrics = lyrics;
+                        appleTag.Lyrics = lyrics;
                     }
 
-                    if (updated | this.appleTag.CleanLyrics() | this.appleTag.RemoveNoLyrics() | this.appleTag.UpdateRating(explicitLyricsProvider))
+                    if (updated | appleTag.CleanLyrics() | appleTag.RemoveNoLyrics() | appleTag.UpdateRating(explicitLyricsProvider))
                     {
                         updated = true;
                         this.file.Save();
@@ -156,7 +176,5 @@ namespace ITunes.Editor
                 this.fileAbstraction = null;
             }
         }
-
-        private static string NormaliseLineEndings(string input) => input.Replace("\r\n", "\r");
     }
 }

@@ -14,6 +14,6 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets or sets the file.
         /// </summary>
-        string File { get; set; }
+        string? File { get; set; }
     }
 }

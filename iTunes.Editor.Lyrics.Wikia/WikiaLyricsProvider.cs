@@ -14,7 +14,7 @@ namespace ITunes.Editor.Lyrics.Wikia
     /// <summary>
     /// The <see cref="ILyricsProvider"/> for lyrics.fandom.com.
     /// </summary>
-    public class WikiaLyricsProvider : ILyricsProvider
+    public sealed class WikiaLyricsProvider : ILyricsProvider, IDisposable
     {
         private static readonly IEnumerable<string> PossibleNodes = new[]
                                                                {
@@ -26,11 +26,16 @@ namespace ITunes.Editor.Lyrics.Wikia
         private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
         /// <inheritdoc/>
-        public string GetLyrics(SongInformation tagInformation) => this.GetLyricsAsync(tagInformation).Result;
+        public string? GetLyrics(SongInformation tagInformation) => this.GetLyricsAsync(tagInformation).Result;
 
         /// <inheritdoc/>
-        public async Task<string> GetLyricsAsync(SongInformation tagInformation)
+        public async Task<string?> GetLyricsAsync(SongInformation tagInformation)
         {
+            if (tagInformation is null)
+            {
+                return default;
+            }
+
             var artist = Escape(string.Join(" & ", tagInformation.Performers)).Replace(' ', '_');
             var songTitle = Escape(tagInformation.Title).Replace(' ', '_');
 
@@ -40,6 +45,9 @@ namespace ITunes.Editor.Lyrics.Wikia
 
             return scraped?.Trim();
         }
+
+        /// <inheritdoc/>
+        public void Dispose() => this.client.Dispose();
 
         private static string Escape(string unescaped) => new System.Xml.Linq.XText(unescaped).ToString();
 
@@ -76,7 +84,7 @@ namespace ITunes.Editor.Lyrics.Wikia
                             var code = letter.Substring(index);
 
                             // get the value
-                            lyrics.Append((char)int.Parse(code));
+                            lyrics.Append((char)int.Parse(code, System.Globalization.CultureInfo.InvariantCulture));
                         }
 
                         break;
@@ -89,7 +97,7 @@ namespace ITunes.Editor.Lyrics.Wikia
             return lyrics.ToString();
         }
 
-        private async Task<string> ScrapeLyrics(string address)
+        private async Task<string?> ScrapeLyrics(string address)
         {
             string pageText;
             try

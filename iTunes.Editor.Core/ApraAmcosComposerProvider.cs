@@ -17,7 +17,7 @@ namespace ITunes.Editor
     /// <summary>
     /// The <see cref="IComposerProvider"/> for APRA AMCOS.
     /// </summary>
-    public class ApraAmcosComposerProvider : IComposerProvider
+    public sealed class ApraAmcosComposerProvider : IComposerProvider, IDisposable
     {
         private readonly Uri uri = new Uri("http://apraamcos.com.au/search");
 
@@ -26,6 +26,7 @@ namespace ITunes.Editor
         /// <summary>
         /// Initializes a new instance of the <see cref="ApraAmcosComposerProvider"/> class.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "This is disposed in the HttpClient")]
         public ApraAmcosComposerProvider()
         {
             var clientHandler = new HttpClientHandler();
@@ -47,45 +48,53 @@ namespace ITunes.Editor
             this.client.DefaultRequestHeaders.Connection.Add("Keep-Alive");
         }
 
-        /// <inheritdoc />
-        public System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation) => this.GetComposersAsync(tagInformation).Result;
+        /// <inheritdoc/>
+        public void Dispose() => this.client.Dispose();
 
         /// <inheritdoc />
-        public async Task<System.Collections.Generic.IEnumerable<Name>> GetComposersAsync(SongInformation tagInformation)
+        public System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation) => tagInformation is null
+            ? throw new ArgumentNullException(nameof(tagInformation))
+            : this.GetNamesAsync(tagInformation).Result;
+
+        /// <inheritdoc />
+        public async System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation)
+        {
+            if (tagInformation is null)
+            {
+                yield break;
+            }
+
+            foreach (var name in await this.GetNamesAsync(tagInformation).ConfigureAwait(false))
+            {
+                yield return name;
+            }
+        }
+
+        private async Task<System.Collections.Generic.IEnumerable<Name>> GetNamesAsync(SongInformation tagInformation)
         {
             var title = tagInformation.Title;
             var writer = string.Empty;
             var performer = tagInformation.Performers.FirstOrDefault() ?? string.Empty;
 
-            var stringContent = $"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works";
-            var result = await this.client.PostAsync(this.uri, new StringContent(stringContent, Encoding.UTF8, "application/x-www-form-urlencoded")).ConfigureAwait(false);
+            HttpResponseMessage result;
+            using (var stringContent = new StringContent($"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works", Encoding.UTF8, "application/x-www-form-urlencoded"))
+            {
+                result = await this.client.PostAsync(this.uri, stringContent).ConfigureAwait(false);
+            }
+
             var pageText = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var document = new HtmlAgilityPack.HtmlDocument();
             document.LoadHtml(pageText);
-            var div = document.DocumentNode.SelectSingleNode("//div[@class='searchresultcontainer']");
-            if (div == null)
-            {
-                return null;
-            }
+            var span = document.DocumentNode.SelectSingleNode("//div[@class='searchresultcontainer']")?
+                .SelectSingleNode("//table")?
+                .Descendants("tr").Skip(1).First()?
+                .Descendants("td").Last()?
+                .Descendants("span").First();
 
-            var table = div.SelectSingleNode("//table");
-            if (table == null)
-            {
-                return null;
-            }
-
-            var row = table.Descendants("tr").Skip(1).First();
-            if (row == null)
-            {
-                return null;
-            }
-
-            var td = row.Descendants("td").Last();
-            var span = td.Descendants("span").First();
-            return span.InnerText.Contains("Not available")
-                ? null
-                : span.InnerText.Split('/').Select(Name.FromInversedName).OrderBy(name => name.Last).ToArray();
+            return span?.InnerText.Contains("Not available") == false
+                ? span.InnerText.Split('/').Select(Name.FromInversedName).OrderBy(name => name.Last)
+                : Enumerable.Empty<Name>();
         }
     }
 }

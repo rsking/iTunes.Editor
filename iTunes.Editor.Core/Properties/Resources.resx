@@ -123,7 +123,16 @@
   <data name="FolderName" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="InvalidPListValueType" xml:space="preserve">
+    <value>Invalid PList value type</value>
+  </data>
+  <data name="InvalidXml" xml:space="preserve">
+    <value>Invalid XML</value>
+  </data>
   <data name="PListName" xml:space="preserve">
     <value>PList</value>
+  </data>
+  <data name="StreamDoesNotContainAPList" xml:space="preserve">
+    <value>Stream does not contain a PList</value>
   </data>
 </root>

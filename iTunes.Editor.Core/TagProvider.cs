@@ -12,9 +12,9 @@ namespace ITunes.Editor
     public abstract class TagProvider : ITagProvider
     {
         /// <inheritdoc/>
-        public abstract TagLib.Tag GetTag();
+        public abstract TagLib.Tag? GetTag();
 
         /// <inheritdoc/>
-        public virtual System.Threading.Tasks.Task<TagLib.Tag> GetTagAsync() => System.Threading.Tasks.Task.Run(() => this.GetTag());
+        public virtual System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync() => System.Threading.Tasks.Task.Run(() => this.GetTag());
     }
 }

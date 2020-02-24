@@ -79,11 +79,38 @@ namespace ITunes.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid PList value type.
+        /// </summary>
+        internal static string InvalidPListValueType {
+            get {
+                return ResourceManager.GetString("InvalidPListValueType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid XML.
+        /// </summary>
+        internal static string InvalidXml {
+            get {
+                return ResourceManager.GetString("InvalidXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PList.
         /// </summary>
         internal static string PListName {
             get {
                 return ResourceManager.GetString("PListName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream does not contain a PList.
+        /// </summary>
+        internal static string StreamDoesNotContainAPList {
+            get {
+                return ResourceManager.GetString("StreamDoesNotContainAPList", resourceCulture);
             }
         }
     }

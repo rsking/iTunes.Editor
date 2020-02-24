@@ -23,6 +23,6 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="tagInformation">The tag information.</param>
         /// <returns>The composers.</returns>
-        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<Name>> GetComposersAsync(SongInformation tagInformation);
+        System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation);
     }
 }

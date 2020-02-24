@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 
 namespace IPod
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5350:DoNotUseWeakCryptographicAlgorithms", Justification = "This is a requirement of the implementation")]
     internal static class Hash58
     {    
         private const int SizeOfHeaders = 0x6C;

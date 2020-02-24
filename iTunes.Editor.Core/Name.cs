@@ -6,6 +6,8 @@
 
 namespace ITunes.Editor
 {
+    using Humanizer;
+
     /// <summary>
     /// The performer name.
     /// </summary>
@@ -16,16 +18,16 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="first">The first name.</param>
         /// <param name="last">The last name.</param>
-        public Name(string first, string last)
+        public Name(string? first, string last)
         {
-            this.First = string.IsNullOrEmpty(first) ? first : string.Concat(first.Substring(0, 1).ToUpperInvariant(), first.Substring(1).ToLowerInvariant());
-            this.Last = string.IsNullOrEmpty(last) ? last : string.Concat(last.Substring(0, 1).ToUpperInvariant(), last.Substring(1).ToLowerInvariant());
+            this.First = first.Transform(To.LowerCase).Transform(To.TitleCase);
+            this.Last = last.Transform(To.LowerCase).Transform(To.TitleCase);
         }
 
         /// <summary>
         /// Gets the first name.
         /// </summary>
-        public string First { get; }
+        public string? First { get; }
 
         /// <summary>
         /// Gets the last name.
@@ -39,9 +41,14 @@ namespace ITunes.Editor
         /// <returns>The output name.</returns>
         public static Name FromInversedName(string name)
         {
+            if (name is null)
+            {
+                return new Name(string.Empty, string.Empty);
+            }
+
             var split = name.Split(' ');
             var last = split[0];
-            string first = null;
+            string? first = null;
             if (split.Length > 1)
             {
                 first = split[1];
@@ -57,8 +64,13 @@ namespace ITunes.Editor
         /// <returns>The output name.</returns>
         public static Name FromName(string name)
         {
+            if (name is null)
+            {
+                return new Name(string.Empty, string.Empty);
+            }
+
             var split = name.Split(' ');
-            string first = null;
+            string? first = null;
             string last;
             if (split.Length == 1)
             {
@@ -74,11 +86,8 @@ namespace ITunes.Editor
         }
 
         /// <inheritdoc/>
-        public override string ToString()
-        {
-            return string.IsNullOrEmpty(this.First)
-                ? this.Last
-                : string.Concat(this.First, this.First.Length == 1 ? ". " : " ", this.Last);
-        }
+        public override string ToString() => string.IsNullOrEmpty(this.First)
+            ? this.Last
+            : string.Concat(this.First, this.First?.Length == 1 ? ". " : " ", this.Last);
     }
 }

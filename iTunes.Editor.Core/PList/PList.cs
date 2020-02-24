@@ -18,6 +18,7 @@ namespace ITunes.Editor.PList
     /// Represents a PList.
     /// </summary>
     [XmlRoot(PListElementName)]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "This is the correct name")]
     public class PList : IDictionary<string, object>, IXmlSerializable
     {
         private const string ArrayElementName = "array";
@@ -47,7 +48,6 @@ namespace ITunes.Editor.PList
         /// </summary>
         public PList()
         {
-            this.DictionaryImplementation = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the version.
         /// </summary>
-        public System.Version Version { get; private set; }
+        public System.Version? Version { get; private set; }
 
         /// <inheritdoc />
         public ICollection<string> Keys => this.DictionaryImplementation.Keys;
@@ -80,7 +80,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the implementation.
         /// </summary>
-        protected IDictionary<string, object> DictionaryImplementation { get; private set; }
+        protected IDictionary<string, object> DictionaryImplementation { get; private set; } = new Dictionary<string, object>();
 
         /// <inheritdoc />
         public object this[string key]
@@ -123,15 +123,12 @@ namespace ITunes.Editor.PList
         public bool TryGetValue(string key, out object value) => this.DictionaryImplementation.TryGetValue(key, out value);
 
         /// <inheritdoc />
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema? GetSchema() => null;
 
         /// <inheritdoc />
         public void ReadXml(XmlReader reader)
         {
-            if (reader.Name != PListElementName || reader.NodeType != XmlNodeType.Element)
+            if (reader?.Name != PListElementName || reader.NodeType != XmlNodeType.Element)
             {
                 return;
             }
@@ -159,11 +156,19 @@ namespace ITunes.Editor.PList
                 return;
             }
 
-            throw new System.ArgumentException("Invalid XML");
+            throw new System.ArgumentException(Properties.Resources.InvalidXml);
         }
 
         /// <inheritdoc />
-        public void WriteXml(XmlWriter writer) => WriteDictionary(writer, 0, this);
+        public void WriteXml(XmlWriter writer)
+        {
+            if (writer is null)
+            {
+                throw new System.ArgumentNullException(nameof(writer));
+            }
+
+            WriteDictionary(writer, 0, this);
+        }
 
         /// <summary>
         /// Reads the dictionary.
@@ -173,12 +178,12 @@ namespace ITunes.Editor.PList
         private static IDictionary<string, object> ReadDictionary(XmlReader reader)
         {
             IDictionary<string, object> dictionary = new Dictionary<string, object>();
-            string key = null;
-            object value = null;
+            string? key = null;
+            object? value = null;
 
             void AddToDictionary()
             {
-                dictionary.Add(key, value);
+                dictionary.Add(key!, value!);
                 key = null;
                 value = null;
             }
@@ -215,7 +220,7 @@ namespace ITunes.Editor.PList
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <returns>The value from <paramref name="reader"/>.</returns>
-        private static object ReadValue(XmlReader reader)
+        private static object? ReadValue(XmlReader reader)
         {
             switch (reader.Name)
             {
@@ -225,17 +230,17 @@ namespace ITunes.Editor.PList
                     return false;
                 case IntegerElementName:
                     reader.Read();
-                    var longValue = long.Parse(reader.Value);
+                    var longValue = long.Parse(reader.Value, CultureInfo.InvariantCulture);
                     reader.Read();
                     return longValue;
                 case RealElementName:
                     reader.Read();
-                    var doubleValue = double.Parse(reader.Value);
+                    var doubleValue = double.Parse(reader.Value, CultureInfo.InvariantCulture);
                     reader.Read();
                     return doubleValue;
                 case StringElementName:
                     // read until the end
-                    string stringValue = null;
+                    string? stringValue = null;
                     while (reader.Read())
                     {
                         if (reader.NodeType == XmlNodeType.EndElement)
@@ -254,13 +259,13 @@ namespace ITunes.Editor.PList
                     return stringValue;
                 case DateElementName:
                     reader.Read();
-                    var dateValue = System.DateTime.Parse(reader.Value);
+                    var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
                     reader.Read();
                     return dateValue;
                 case DictionaryElementName:
                     return ReadDictionary(reader);
                 case ArrayElementName:
-                    var list = new List<object>();
+                    var list = new List<object?>();
 
                     while (reader.Read())
                     {
@@ -280,7 +285,7 @@ namespace ITunes.Editor.PList
                     return dataValue;
             }
 
-            throw new System.ArgumentException("Invalid PList value type", nameof(reader));
+            throw new System.ArgumentException(Properties.Resources.InvalidPListValueType, nameof(reader));
         }
 
         /// <summary>
@@ -326,7 +331,7 @@ namespace ITunes.Editor.PList
             else if (type == typeof(int) || type == typeof(long))
             {
                 var longValue = (long)value;
-                writer.WriteElementString(IntegerElementName, longValue.ToString());
+                writer.WriteElementString(IntegerElementName, longValue.ToString(CultureInfo.InvariantCulture));
             }
             else if (type == typeof(float) || type == typeof(double))
             {
@@ -341,7 +346,7 @@ namespace ITunes.Editor.PList
             else if (type == typeof(System.DateTime))
             {
                 var dateValue = (System.DateTime)value;
-                writer.WriteElementString(DateElementName, dateValue.ToUniversalTime().ToString("s") + "Z");
+                writer.WriteElementString(DateElementName, dateValue.ToUniversalTime().ToString("s", CultureInfo.InvariantCulture) + "Z");
             }
             else if (typeof(IDictionary<string, object>).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
             {

@@ -14,6 +14,6 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets or sets the folder.
         /// </summary>
-        string Folder { get; set; }
+        string? Folder { get; set; }
     }
 }

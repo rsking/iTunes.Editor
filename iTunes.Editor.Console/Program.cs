@@ -185,6 +185,11 @@ namespace ITunes.Editor
         {
             var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider { File = file };
             var mediaInfo = await mediaInfoTagProvider.GetTagAsync().ConfigureAwait(false);
+            if (mediaInfo is null)
+            {
+                return;
+            }
+
             Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
         }
 

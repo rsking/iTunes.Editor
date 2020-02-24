@@ -17,23 +17,28 @@ namespace ITunes.Editor.PList
     public partial class PListBinaryFormatter : IFormatter
     {
         /// <inheritdoc/>
-        public SerializationBinder Binder { get; set; }
+        public SerializationBinder? Binder { get; set; }
 
         /// <inheritdoc/>
         public StreamingContext Context { get; set; }
 
         /// <inheritdoc/>
-        public ISurrogateSelector SurrogateSelector { get; set; }
+        public ISurrogateSelector? SurrogateSelector { get; set; }
 
         /// <inheritdoc/>
-        public object Deserialize(Stream serializationStream)
+        public object? Deserialize(Stream serializationStream)
         {
+            if (serializationStream is null)
+            {
+                throw new ArgumentNullException(nameof(serializationStream));
+            }
+
             // see if this is a PList
             var header = serializationStream.Read(8);
 
             if (BitConverter.ToInt64(header, 0) != 3472403351741427810)
             {
-                throw new ArgumentException("Stream does not contain a PList");
+                throw new ArgumentException(Properties.Resources.StreamDoesNotContainAPList);
             }
 
             // get the last 32 bytes
@@ -69,6 +74,11 @@ namespace ITunes.Editor.PList
         /// <inheritdoc/>
         public void Serialize(Stream serializationStream, object graph)
         {
+            if (serializationStream is null)
+            {
+                throw new ArgumentNullException(nameof(serializationStream));
+            }
+
             var calculatedReferenceCount = CountReferences(graph);
 
             // calculate the reference size.

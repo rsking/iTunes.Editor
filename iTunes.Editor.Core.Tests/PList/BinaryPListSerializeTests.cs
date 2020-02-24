@@ -68,13 +68,15 @@ namespace ITunes.Editor.PList
 
             var formatter = new PListBinaryFormatter();
 
-            PList temp;
+            PList? temp;
             using (var stream = Resources.TestBin)
             {
                 temp = formatter.Deserialize(stream) as PList;
             }
 
-            PList temp1;
+            temp.Should().NotBeNull();
+
+            PList? temp1;
             using (var stream = new System.IO.MemoryStream())
             {
                 formatter.Serialize(stream, plist);
@@ -91,7 +93,8 @@ namespace ITunes.Editor.PList
                 temp1 = formatter.Deserialize(stream) as PList;
             }
 
-            temp1["testImage"].As<byte[]>().Should().BeEquivalentTo(temp["testImage"].As<byte[]>());
+            temp1.Should().NotBeNull();
+            temp1!["testImage"].As<byte[]>().Should().BeEquivalentTo(temp!["testImage"].As<byte[]>());
             temp1["testDictLarge"].As<IDictionary<string, object>>().Should().BeEquivalentTo(temp["testDictLarge"].As<IDictionary<string, object>>());
             temp1.Should().BeEquivalentTo(plist);
             temp1.Should().BeEquivalentTo(temp);
@@ -100,14 +103,10 @@ namespace ITunes.Editor.PList
         [Fact]
         private void TestOutput()
         {
-            using (var stream = Resources.TestBin)
-            {
-                using (var memoryStream = new System.IO.MemoryStream())
-                {
-                    stream.CopyTo(memoryStream);
-                    this.bytes.Should().BeEquivalentTo(memoryStream.ToArray());
-                }
-            }
+            using var stream = Resources.TestBin;
+            using var memoryStream = new System.IO.MemoryStream();
+            stream.CopyTo(memoryStream);
+            this.bytes.Should().BeEquivalentTo(memoryStream.ToArray());
         }
     }
 }
