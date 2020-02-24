@@ -28,88 +28,80 @@ namespace ITunes.Editor
 
         private static Task<int> Main(string[] args)
         {
-            var inputArgument = new Argument<string>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne };
-            var typeOption = new Option(new[] { "-t", "--type" }, "The type of input") { Argument = new Argument<string>("type") };
+            var inputArgument = new Argument<System.IO.FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
+            var typeOption = new Option(new[] { "-t", "--type" }, "The type of input") { Argument = new Argument<string>("TYPE") };
+            var propertiesOptions = new Option(new[] { "-p", "--property" }, "A property to set on the input provider") { Argument = new Argument<string>("PROPERTY") { Arity = ArgumentArity.ZeroOrMore } };
 
-            var listCommand = new Command("list", "Lists the files from the specified input");
-            listCommand.AddArgument(inputArgument);
-            listCommand.AddOption(typeOption);
-            listCommand.Handler = CommandHandler.Create<string, string>(List);
+            var listCommandBuilder = new CommandBuilder(new Command("list", "Lists the files from the specified input") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, string[]>(List) })
+                .AddArgument(inputArgument)
+                .AddOption(typeOption)
+                .AddOption(propertiesOptions);
 
-            var composerCommand = new Command("composer", "Gets the composers for a specific song/artist");
-            composerCommand.AddArgument(new Argument<string>("artist") { Description = "The artist" });
-            composerCommand.AddArgument(new Argument<string>("song") { Description = "The song" });
-            composerCommand.AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
-            composerCommand.Handler = CommandHandler.Create<string, string, string>(Composer);
+            var composerCommandBuilder = new CommandBuilder(new Command("composer", "Gets the composers for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string>(Composer) })
+                .AddArgument(new Argument<string>("artist") { Description = "The artist" })
+                .AddArgument(new Argument<string>("song") { Description = "The song" })
+                .AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
 
-            var lyricsCommand = new Command("lyrics", "Gets the lyrics for a specific song/artist");
-            lyricsCommand.AddArgument(new Argument<string>("artist") { Description = "The artist" });
-            lyricsCommand.AddArgument(new Argument<string>("song") { Description = "The song" });
-            lyricsCommand.AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
-            lyricsCommand.Handler = CommandHandler.Create<string, string, string>(Lyrics);
+            var lyricsCommandBuilder = new CommandBuilder(new Command("lyrics", "Gets the lyrics for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string>(Lyrics) })
+                .AddArgument(new Argument<string>("artist") { Description = "The artist" })
+                .AddArgument(new Argument<string>("song") { Description = "The song" })
+                .AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
 
-            var mediaInfoCommand = new Command("mediainfo", "Gets the media info for a specific file");
-            mediaInfoCommand.AddArgument(new Argument<string>("file") { Description = "The file to get information for" });
-            mediaInfoCommand.Handler = CommandHandler.Create<string>(MediaInfo);
+            var mediaInfoCommandBuilder = new CommandBuilder(new Command("mediainfo", "Gets the media info for a specific file") { Handler = CommandHandler.Create<string>(MediaInfo) })
+                .AddArgument(new Argument<string>("file") { Description = "The file to get information for" });
 
             var forceOption = new Option(new[] { "-f", "--force" }, "Whether to force the update") { Argument = new Argument<bool>() };
-            var fileArgument = new Argument<string>("file") { Description = "The file" };
+            var fileArgument = new Argument<System.IO.FileInfo>("file") { Description = "The file" };
 
-            var updateComposerFileCommand = new Command("composer", "Updates the composer in the specific file");
-            updateComposerFileCommand.AddArgument(fileArgument);
-            updateComposerFileCommand.AddOption(forceOption);
-            updateComposerFileCommand.Handler = CommandHandler.Create<string, bool>(UpdateComposerFile);
+            var updateComposerFileCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateComposerFile) })
+                .AddArgument(fileArgument)
+                .AddOption(forceOption);
 
-            var updateLyricsFileCommand = new Command("lyrics", "Updates the lyrics in the specific file");
-            updateLyricsFileCommand.AddArgument(fileArgument);
-            updateLyricsFileCommand.AddOption(forceOption);
-            updateLyricsFileCommand.Handler = CommandHandler.Create<string, bool>(UpdateLyricsFile);
+            var updateLyricsFileCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateLyricsFile) })
+                .AddArgument(fileArgument)
+                .AddOption(forceOption);
 
-            var updateAllFileCommand = new Command("all", "Updates the specific file using all the updaters");
-            updateAllFileCommand.AddArgument(fileArgument);
-            updateAllFileCommand.AddOption(forceOption);
-            updateAllFileCommand.Handler = CommandHandler.Create<string, bool>(UpdateAllFile);
+            var updateAllFileCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific file using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateAllFile) })
+                .AddArgument(fileArgument)
+                .AddOption(forceOption);
 
-            var updateFileCommand = new Command("file", "Updates a specific file");
-            updateFileCommand.AddCommand(updateComposerFileCommand);
-            updateFileCommand.AddCommand(updateLyricsFileCommand);
-            updateFileCommand.AddCommand(updateAllFileCommand);
+            var updateFileCommandBuilder = new CommandBuilder(new Command("file", "Updates a specific file"))
+                .AddCommand(updateComposerFileCommandBuilder.Command)
+                .AddCommand(updateLyricsFileCommandBuilder.Command)
+                .AddCommand(updateAllFileCommandBuilder.Command);
 
-            var updateComposerListCommand = new Command("composer", "Updates the composer in the specific list");
-            updateComposerListCommand.AddArgument(inputArgument);
-            updateComposerListCommand.AddOption(typeOption);
-            updateComposerListCommand.AddOption(forceOption);
-            updateComposerListCommand.Handler = CommandHandler.Create<string, string, bool>(UpdateComposerList);
+            var updateComposerListCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateComposerList) })
+                .AddArgument(inputArgument)
+                .AddOption(typeOption)
+                .AddOption(forceOption);
 
-            var updateLyricsListCommand = new Command("lyrics", "Updates the lyrics in the specific list");
-            updateLyricsListCommand.AddArgument(inputArgument);
-            updateLyricsListCommand.AddOption(typeOption);
-            updateLyricsListCommand.AddOption(forceOption);
-            updateLyricsListCommand.Handler = CommandHandler.Create<string, string, bool>(UpdateLyricsList);
+            var updateLyricsListCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateLyricsList) })
+                .AddArgument(inputArgument)
+                .AddOption(typeOption)
+                .AddOption(forceOption);
 
-            var updateAllListCommand = new Command("all", "Updates the specific list using all the updaters");
-            updateAllListCommand.AddArgument(inputArgument);
-            updateAllListCommand.AddOption(typeOption);
-            updateAllListCommand.AddOption(forceOption);
-            updateAllListCommand.Handler = CommandHandler.Create<string, string, bool>(UpdateAllList);
+            var updateAllListCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific list using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateAllList) })
+                .AddArgument(inputArgument)
+                .AddOption(typeOption)
+                .AddOption(forceOption);
 
-            var updateListCommand = new Command("list", "Updates a specific list");
-            updateListCommand.AddCommand(updateComposerListCommand);
-            updateListCommand.AddCommand(updateLyricsListCommand);
-            updateListCommand.AddCommand(updateAllListCommand);
+            var updateListCommandBuilder = new CommandBuilder(new Command("list", "Updates a specific list"))
+                .AddCommand(updateComposerListCommandBuilder.Command)
+                .AddCommand(updateLyricsListCommandBuilder.Command)
+                .AddCommand(updateAllListCommandBuilder.Command);
 
-            var updateCommand = new Command("update", "Updates a specific file or list");
-            updateCommand.AddCommand(updateFileCommand);
-            updateCommand.AddCommand(updateListCommand);
+            var updateCommandBuilder = new CommandBuilder(new Command("update", "Updates a specific file or list"))
+                .AddCommand(updateFileCommandBuilder.Command)
+                .AddCommand(updateListCommandBuilder.Command);
 
             var builder = new CommandLineBuilder()
                 .UseDefaults()
                 .UseHost(Host.CreateDefaultBuilder, ConfigureHost)
-                .AddCommand(listCommand)
-                .AddCommand(composerCommand)
-                .AddCommand(lyricsCommand)
-                .AddCommand(mediaInfoCommand)
-                .AddCommand(updateCommand);
+                .AddCommand(listCommandBuilder.Command)
+                .AddCommand(composerCommandBuilder.Command)
+                .AddCommand(lyricsCommandBuilder.Command)
+                .AddCommand(mediaInfoCommandBuilder.Command)
+                .AddCommand(updateCommandBuilder.Command);
 
             return builder.Build().InvokeAsync(args);
         }
@@ -148,16 +140,16 @@ namespace ITunes.Editor
             });
         }
 
-        private static async Task List(IHost host, string input, string type = DefaultType, params string[] property)
+        private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, params string[] property)
         {
-            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
+            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type).SetProperties(property);
             switch (songsProvider)
             {
                 case IFolderProvider folderProvider:
-                    folderProvider.Folder = input.Expand();
+                    folderProvider.Folder = input.FullName;
                     break;
                 case IFileProvider fileProvider:
-                    fileProvider.File = input.Expand();
+                    fileProvider.File = input.FullName;
                     break;
             }
 
@@ -196,35 +188,35 @@ namespace ITunes.Editor
             Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
         }
 
-        private static Task UpdateComposerFile(IHost host, string file, bool force = DefaultForce)
+        private static Task UpdateComposerFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
         {
             var service = host.Services.GetRequiredService<IUpdateComposerService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.Expand()), force);
+            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force);
         }
 
-        private static Task UpdateLyricsFile(IHost host, string file, bool force = DefaultForce)
+        private static Task UpdateLyricsFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
         {
             var service = host.Services.GetRequiredService<IUpdateLyricsService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.Expand()), force);
+            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force);
         }
 
-        private static async Task UpdateAllFile(IHost host, string file, bool force = DefaultForce)
+        private static async Task UpdateAllFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
         {
-            var songInformation = SongInformation.FromFile(file.Expand());
+            var songInformation = SongInformation.FromFile(file.FullName);
             await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
             await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
         }
 
-        private static async Task UpdateList(IHost host, string input, string type, bool force, Func<SongInformation, bool, Task> updateFunction)
+        private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, Task> updateFunction)
         {
             var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
             switch (songsProvider)
             {
                 case IFolderProvider folderProvider:
-                    folderProvider.Folder = input.Expand();
+                    folderProvider.Folder = input.FullName;
                     break;
                 case IFileProvider fileProvider:
-                    fileProvider.File = input.Expand();
+                    fileProvider.File = input.FullName;
                     break;
             }
 
@@ -251,11 +243,11 @@ namespace ITunes.Editor
             }
         }
 
-        private static Task UpdateComposerList(IHost host, string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync);
+        private static Task UpdateComposerList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync);
 
-        private static Task UpdateLyricsList(IHost host, string input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync);
+        private static Task UpdateLyricsList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync);
 
-        private static Task UpdateAllList(IHost host, string input, string type = DefaultType, bool force = DefaultForce)
+        private static Task UpdateAllList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce)
         {
             var composerService = host.Services.GetRequiredService<IUpdateComposerService>();
             var lyricsService = host.Services.GetRequiredService<IUpdateLyricsService>();
