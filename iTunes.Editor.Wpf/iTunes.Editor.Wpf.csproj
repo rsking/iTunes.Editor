@@ -1,49 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft.CSharp.targets</LanguageTargets>
-    <LanguageTargets Condition="!Exists('$(LanguageTargets)')">$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
+    <UseWpf>true</UseWpf>
     <RootNamespace>ITunes.Editor</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" Exclude="App.xaml" />
-    <ApplicationDefinition Include="App.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.105-alpha" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
     <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="**\*.resx" Generator="ResXFileCodeGenerator" LastGenOutput="%(Filename).Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Caliburn.Micro" Version="3.2.0" />
-    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="PropertyChanged.Fody" Version="2.5.14" />
-    <PackageReference Include="System.Reactive" Version="4.1.2" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.3.3" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.3.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
-    <ProjectReference Include="..\Ninject.Extensions.iTunes.Editor\Ninject.Extensions.iTunes.Editor.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   
 </Project>
