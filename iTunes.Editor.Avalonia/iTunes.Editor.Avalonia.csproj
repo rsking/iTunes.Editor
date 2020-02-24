@@ -2,7 +2,7 @@
   
   
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net462</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>ITunes.Editor</RootNamespace>
   </PropertyGroup>
@@ -16,16 +16,14 @@
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="0.8.*" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.*" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="ReactiveUI" Version="9.18.*" />
-    <PackageReference Include="System.Reactive" Version="4.1.*" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.*" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.*" />
+    <PackageReference Include="ReactiveUI" Version="11.1.*" />
+    <PackageReference Include="System.Reactive" Version="4.3.*" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
-    <ProjectReference Include="..\Ninject.Extensions.iTunes.Editor\Ninject.Extensions.iTunes.Editor.csproj" />
   </ItemGroup>
       
 </Project>
