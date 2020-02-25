@@ -8,61 +8,106 @@ namespace ITunes.Editor
 {
     using System;
     using System.Collections.Generic;
-    using Ninject;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// The boot strapper.
     /// </summary>
     public class Bootstrapper : Caliburn.Micro.BootstrapperBase
     {
-        private readonly IKernel container;
+        private IHost host = default(DummyHost);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
-        public Bootstrapper()
-        {
-            this.container = new StandardKernel();
-            this.Initialize();
-        }
+        public Bootstrapper() => this.Initialize();
 
         /// <inheritdoc/>
-        protected override void Configure()
+        protected override async void Configure()
         {
-            this.container.Bind<Caliburn.Micro.IWindowManager>().To<MetroWindowManager>().InSingletonScope();
-            this.container.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+            this.host = Host.CreateDefaultBuilder()
+                .ConfigureServices((hostingContext, serviceCollection) =>
+                {
+                    serviceCollection.AddSingleton<Caliburn.Micro.IWindowManager, MetroWindowManager>();
+                    serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
 
-            this.container.Bind<Models.ILoad>().To<ViewModels.LoadViewModel>();
-            this.container.Bind<Models.ISongs>().To<ViewModels.SongsViewModel>();
+                    serviceCollection.AddTransient<ViewModels.ShellViewModel>();
 
-            // Services
-            this.container.Bind<Services.Contracts.ISelectFolder>().To<Services.SelectFolderDialog>();
-            this.container.Bind<Services.Contracts.IOpenFile>().To<Services.OpenFileDialog>();
+                    serviceCollection.AddTransient<Models.ILoad, ViewModels.LoadViewModel>();
+                    serviceCollection.AddTransient<Models.ISongs, ViewModels.SongsViewModel>();
+
+                    serviceCollection.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
+                    serviceCollection.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
+
+                    // Lyrics
+                    serviceCollection
+                        .AddApiSeeds(hostingContext.Configuration)
+                        .AddChartLyrics()
+                        .AddWikia()
+                        .AddPurgoMalum();
+
+                    // Composers
+                    serviceCollection
+                        .AddApraAmcos();
+
+                    // song providers
+                    serviceCollection
+                        .AddFolder()
+                        .AddIPod()
+                        .AddPList()
+                        .AddITunes();
+
+                    // tag provider
+                    serviceCollection
+                        .AddTagLib()
+                        .AddMediaInfo();
+
+                    // add services
+                    serviceCollection
+                        .AddTransient<IUpdateComposerService, UpdateComposerService>()
+                        .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+                })
+                .UseWpfApplicationLifetime()
+                .Build();
+
+            await this.host.StartAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e) => this.DisplayRootViewFor<ViewModels.ShellViewModel>();
 
-        /// <inheritdoc/>
-        protected override void OnExit(object sender, EventArgs e)
-        {
-            if (!this.container.IsDisposed)
-            {
-                this.container.Dispose();
-            }
-
-            base.OnExit(sender, e);
-        }
+        ///// <inheritdoc/>
+        //protected override async void OnExit(object sender, EventArgs e)
+        //{
+        //    await this.host.StopAsync().ConfigureAwait(false);
+        //    base.OnExit(sender, e);
+        //}
 
         /// <inheritdoc/>
         protected override object GetInstance(Type service, string key) => string.IsNullOrEmpty(key)
-            ? this.container.Get(service)
-            : this.container.Get(service, key);
+            ? this.host.Services.GetRequiredService(service)
+            : this.host.Services.GetRequiredService(service, key);
 
         /// <inheritdoc/>
-        protected override IEnumerable<object> GetAllInstances(Type service) => this.container.GetAll(service);
+        protected override IEnumerable<object> GetAllInstances(Type service) => this.host.Services.GetServices(service);
 
         /// <inheritdoc/>
-        protected override void BuildUp(object instance) => this.container.Inject(instance);
+        //protected override void BuildUp(object instance) => throw new InvalidOperationException();
+
+        private readonly struct DummyHost : IHost
+        {
+            public IServiceProvider Services { get; }
+
+            public void Dispose()
+            {
+            }
+
+            public Task StartAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public Task StopAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        }
     }
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Update="*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,23 +14,13 @@ namespace ITunes.Editor.ViewModels
     [PropertyChanged.AddINotifyPropertyChangedInterface]
     public class SongsViewModel : Models.ISongs
     {
-        private readonly System.Collections.ObjectModel.ObservableCollection<SongInformation> songs = new System.Collections.ObjectModel.ObservableCollection<SongInformation>();
+        private readonly System.Collections.ObjectModel.ObservableRangeCollection<SongInformation> songs = new System.Collections.ObjectModel.ObservableRangeCollection<SongInformation>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
-        public SongsViewModel(IEventAggregator eventAggregator)
-        {
-            eventAggregator.GetEvent<Models.SongsLoadedEvent>().Subscribe(evt =>
-            {
-                this.songs.Clear();
-                foreach (var song in evt.Information)
-                {
-                    this.songs.Add(song);
-                }
-            });
-        }
+        public SongsViewModel(IEventAggregator eventAggregator) => eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(evt => this.songs.ReplaceRange(evt.Information));
 
         /// <summary>
         /// Gets the songs.

@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// The extentions.
     /// </summary>
-    public static class Extensions
+    public static class ServiceExtensions
     {
         private static readonly System.Collections.IList ServiceByNameBuilders = new System.Collections.Generic.List<object>();
 
@@ -138,6 +138,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>A service object of type <typeparamref name="T"/>.</returns>
         /// <exception cref="System.InvalidOperationException">There is no service of type <typeparamref name="T"/>.</exception>
         public static T GetRequiredService<T>(this System.IServiceProvider provider, string key) => provider.GetByName<T>(key) ?? throw new System.InvalidOperationException();
+
+        /// <summary>
+        /// Gets the service object of the specified type from the <see cref="System.IServiceProvider"/> with the specified key.
+        /// </summary>
+        /// <param name="provider">The <see cref="System.IServiceProvider"/> to retrieve the service object from.</param>
+        /// <param name="serviceType">The service type.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>A service object of type <paramref name="serviceType"/> --or-- <see langword="null"/> if there is no service object of type <paramref name="serviceType"/>.</returns>
+        public static object GetRequiredService(this System.IServiceProvider provider, System.Type serviceType, string key) => typeof(ServiceExtensions)
+            .GetMethod(nameof(GetRequiredService), new[] { typeof(System.IServiceProvider), typeof(string) })
+            .MakeGenericMethod(serviceType)
+            .Invoke(null, new object[] { provider, key });
 
         private static IServiceCollection AddTransient<TService, TImplementation>(this IServiceCollection serviceCollection, string name)
             where TService : class
