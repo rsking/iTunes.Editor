@@ -26,7 +26,11 @@ namespace ITunes.Editor.PList
             PList plist;
             using (var stream = System.IO.File.OpenRead(this.File))
             {
-                using var reader = System.Xml.XmlReader.Create(stream);
+                using var reader = System.Xml.XmlReader.Create(stream, new System.Xml.XmlReaderSettings
+                {
+                    DtdProcessing = System.Xml.DtdProcessing.Parse,
+                    IgnoreWhitespace = true,
+                });
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
                 plist = (PList)serializer.Deserialize(reader);
             }
