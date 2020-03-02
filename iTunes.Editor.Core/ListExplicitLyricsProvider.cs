@@ -33,9 +33,6 @@ namespace ITunes.Editor
         };
 
         /// <inheritdoc/>
-        public bool? IsExplicit(string lyrics) => ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0);
-
-        /// <inheritdoc/>
-        public Task<bool?> IsExplicitAsync(string lyrics) => Task.Run(() => this.IsExplicit(lyrics));
+        public Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => Task.Run<bool?>(() => ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0), cancellationToken);
     }
 }

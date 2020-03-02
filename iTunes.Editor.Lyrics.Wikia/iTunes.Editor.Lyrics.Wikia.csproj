@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ITunes.Editor.Lyrics.Wikia</RootNamespace>
+    <RootNamespace>$(RootNamespace).Lyrics.Wikia</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,10 +11,10 @@ namespace ITunes.Editor.ITunesLib
     /// <summary>
     /// The iTunes song loader.
     /// </summary>
-    public class ITunesSongsProvider : SongsProvider
+    public class ITunesSongsProvider : ISongsProvider
     {
         /// <inheritdoc />
-        public override string Name => Properties.Resources.ITunesName;
+        public string Name => Properties.Resources.ITunesName;
 
         /// <summary>
         /// Gets or sets a value indicating whether to update the metadata.
@@ -22,13 +22,17 @@ namespace ITunes.Editor.ITunesLib
         public bool UpdateMetadata { get; set; }
 
         /// <inheritdoc />
-        public override IEnumerable<SongInformation> GetTagInformation()
-        {
+
 #if NO_ITUNES
-            throw new System.NotImplementedException("Compiled without iTunes support");
+        public IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken) => throw new System.NotImplementedException("Compiled without iTunes support");
 #else
-            var app = new iTunesLib.iTunesApp();
-            var library = app.LibraryPlaylist;
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
+        {
+            var library = await System.Threading.Tasks.Task.Run(() =>
+            {
+                var app = new iTunesLib.iTunesApp();
+                return app.LibraryPlaylist;
+            }).ConfigureAwait(false);
 
             for (int i = 1; i <= library.Tracks.Count; i++)
             {

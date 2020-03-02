@@ -45,7 +45,7 @@ namespace ITunes.Editor.ApiSeeds
         }
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation)
+        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)
         {
             if (tagInformation is null)
             {
@@ -53,8 +53,8 @@ namespace ITunes.Editor.ApiSeeds
             }
 
             var request = CreateRequest(tagInformation);
-            var response = await this.client.ExecuteTaskAsync<GetLyricsResponse>(request).ConfigureAwait(false);
             return GetLyricsImpl(request, response?.Data?.Result);
+            var response = await this.client.ExecuteAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
         }
 
         private static IRestRequest CreateRequest(SongInformation tagInformation)

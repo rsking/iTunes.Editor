@@ -26,10 +26,7 @@ namespace ITunes.Editor.Lyrics.Wikia
         private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
         /// <inheritdoc/>
-        public string? GetLyrics(SongInformation tagInformation) => this.GetLyricsAsync(tagInformation).Result;
-
-        /// <inheritdoc/>
-        public async Task<string?> GetLyricsAsync(SongInformation tagInformation)
+        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)
         {
             if (tagInformation is null)
             {
@@ -41,7 +38,7 @@ namespace ITunes.Editor.Lyrics.Wikia
 
             var webAddress = $"https://lyrics.fandom.com/wiki/{artist}:{songTitle}";
 
-            var scraped = await this.ScrapeLyrics(webAddress).ConfigureAwait(false);
+            var scraped = await this.ScrapeLyricsAsync(webAddress, cancellationToken).ConfigureAwait(false);
 
             return scraped?.Trim();
         }
@@ -97,7 +94,7 @@ namespace ITunes.Editor.Lyrics.Wikia
             return lyrics.ToString();
         }
 
-        private async Task<string?> ScrapeLyrics(string address)
+        private async Task<string?> ScrapeLyricsAsync(string address, System.Threading.CancellationToken cancellationToken)
         {
             string pageText;
             try
@@ -109,6 +106,8 @@ namespace ITunes.Editor.Lyrics.Wikia
                 return null;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // parse the HTML
             var document = new HtmlAgilityPack.HtmlDocument();
             document.LoadHtml(pageText);
@@ -116,7 +115,7 @@ namespace ITunes.Editor.Lyrics.Wikia
             // select the div
             var nodes = PossibleNodes.Select(document.DocumentNode.SelectNodes).FirstOrDefault(node => node != null);
 
-            return nodes != null ? ScrapeNode(nodes[0]) : string.Empty;
+            return nodes is null ? null : ScrapeNode(nodes[0]);
         }
     }
 }

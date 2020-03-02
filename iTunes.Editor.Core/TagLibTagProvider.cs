@@ -9,23 +9,26 @@ namespace ITunes.Editor
     /// <summary>
     /// The <see cref="ITagProvider"/> for <see cref="TagLib"/>.
     /// </summary>
-    public class TagLibTagProvider : TagProvider, IFileProvider
+    public class TagLibTagProvider : ITagProvider, IFileProvider
     {
         /// <inheritdoc/>
-        public string File { get; set; }
+        public string? File { get; set; }
 
         /// <inheritdoc/>
-        public override TagLib.Tag GetTag()
+        public System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var (file, fileAbstraction) = GetFile(this.File);
-            var tag = file?.Tag;
-            file?.Dispose();
-            if (fileAbstraction is System.IDisposable disposable)
+            if (this.File is null)
             {
-                disposable.Dispose();
+                return System.Threading.Tasks.Task.FromResult<TagLib.Tag?>(null);
             }
 
-            return tag;
+            return System.Threading.Tasks.Task.Run(
+                () =>
+                {
+                    using var file = GetFile(this.File);
+                    return file?.Tag;
+                },
+                cancellationToken);
         }
 
         /// <summary>
@@ -33,34 +36,24 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The file.</returns>
-        private static (TagLib.File file, TagLib.File.IFileAbstraction fileAbstraction) GetFile(string path)
+        private static TagLib.File? GetFile(string path)
         {
-            TagLib.File file = null;
-            TagLib.File.IFileAbstraction fileAbstraction = default;
+            TagLib.File? file = null;
 
             try
             {
-                fileAbstraction = new LocalFileAbstraction(path);
-                file = TagLib.File.Create(fileAbstraction);
+                file = TagLib.File.Create(path);
             }
             catch (TagLib.UnsupportedFormatException)
             {
                 // ignore the error
-            }
-            finally
-            {
-                if (file == null && fileAbstraction is System.IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
             }
 
             if (file == null)
             {
                 try
                 {
-                    fileAbstraction = new LocalFileAbstraction(path);
-                    file = new TagLib.Mpeg4.File(fileAbstraction);
+                    file = new TagLib.Mpeg4.File(path);
                 }
                 catch (TagLib.CorruptFileException)
                 {
@@ -70,16 +63,9 @@ namespace ITunes.Editor
                 {
                     // ignore the error
                 }
-                finally
-                {
-                    if (file == null && fileAbstraction is System.IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-                }
             }
 
-            return (file, fileAbstraction);
+            return file;
         }
     }
 }

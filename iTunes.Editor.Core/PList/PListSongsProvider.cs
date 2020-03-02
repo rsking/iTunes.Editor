@@ -12,35 +12,39 @@ namespace ITunes.Editor.PList
     /// <summary>
     /// A <see cref="ISongsProvider"/> that loads from an Apple plist file.
     /// </summary>
-    public class PListSongsProvider : SongsProvider, IFileProvider
+    public class PListSongsProvider : ISongsProvider, IFileProvider
     {
         /// <inheritdoc />
         public string? File { get; set; }
 
         /// <inheritdoc />
-        public override string Name => Properties.Resources.PListName;
+        public string Name => Properties.Resources.PListName;
 
         /// <inheritdoc />
-        public override IEnumerable<SongInformation> GetTagInformation()
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             PList plist;
             using (var stream = System.IO.File.OpenRead(this.File))
             {
+                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
                 using var reader = System.Xml.XmlReader.Create(stream, new System.Xml.XmlReaderSettings
                 {
                     DtdProcessing = System.Xml.DtdProcessing.Parse,
                     IgnoreWhitespace = true,
                 });
-                var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-                plist = (PList)serializer.Deserialize(reader);
+
+                plist = await System.Threading.Tasks.Task.Run(() => (PList)serializer.Deserialize(reader), cancellationToken).ConfigureAwait(false);
             }
 
-            return plist["Tracks"] is IDictionary<string, object> dictionary
-                ? dictionary
+            if (plist["Tracks"] is IDictionary<string, object> dictionary)
+            {
+                foreach (var track in dictionary
                     .Where(kvp => kvp.Value is IDictionary<string, object>)
-                    .Select(value => new Track((IDictionary<string, object>)value.Value))
-                    .Select(track => (SongInformation)track)
-                : Enumerable.Empty<SongInformation>();
+                    .Select(value => new Track((IDictionary<string, object>)value.Value)))
+                {
+                    yield return (SongInformation)track;
+                }
+            }
         }
     }
 }

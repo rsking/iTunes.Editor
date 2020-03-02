@@ -17,10 +17,7 @@ namespace ITunes.Editor.PurgoMalum
         private readonly IRestClient client = new RestClient("https://www.purgomalum.com/service/");
 
         /// <inheritdoc/>
-        public bool? IsExplicit(string lyrics) => ParseResponse(this.client.Execute<string?>(GetRequest(lyrics)));
-
-        /// <inheritdoc/>
-        public async Task<bool?> IsExplicitAsync(string lyrics) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics)).ConfigureAwait(false));
+        public async Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics), cancellationToken).ConfigureAwait(false));
 
         private static IRestRequest GetRequest(string lyrics)
         {

@@ -29,26 +29,13 @@ namespace ITunes.Editor.ChartLyrics
         }
 
         /// <inheritdoc/>
-        public string GetLyrics(SongInformation tagInformation)
+        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
-            var artist = string.Join("; ", tagInformation.Performers);
-            var songTitle = tagInformation.Title;
-            api.chartlyrics.com.GetLyricResult getLyricResult;
-            try
-            {
-                getLyricResult = this.channel.SearchLyricDirect(artist, songTitle);
-            }
-            catch (System.ServiceModel.FaultException)
+            if (tagInformation is null)
             {
                 return null;
             }
 
-            return GetLyricsImpl(artist, songTitle, getLyricResult);
-        }
-
-        /// <inheritdoc/>
-        public async Task<string> GetLyricsAsync(SongInformation tagInformation)
-        {
             var artist = string.Join("; ", tagInformation.Performers);
             var songTitle = tagInformation.Title;
             SearchLyricDirectResponse searchLyricDirectResponse;
@@ -65,7 +52,10 @@ namespace ITunes.Editor.ChartLyrics
                 return null;
             }
 
-            return GetLyricsImpl(artist, songTitle, searchLyricDirectResponse?.Body?.SearchLyricDirectResult);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return GetLyricsImpl(this.logger, artist, songTitle, searchLyricDirectResponse?.Body?.SearchLyricDirectResult);
+        }
         }
 
         private static string GetLyricsImpl(string artist, string song, api.chartlyrics.com.GetLyricResult getLyricResult)

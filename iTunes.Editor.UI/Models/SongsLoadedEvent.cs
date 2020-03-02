@@ -7,6 +7,7 @@
 namespace ITunes.Editor.Models
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Contains information when songs are loaded.
@@ -26,5 +27,12 @@ namespace ITunes.Editor.Models
         /// Gets the song information.
         /// </summary>
         public IEnumerable<SongInformation> Information { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="SongsLoadedEvent"/>.
+        /// </summary>
+        /// <param name="information">The information.</param>
+        /// <returns>The event data.</returns>
+        public static SongsLoadedEvent FromAysnc(IAsyncEnumerable<SongInformation> information) => new SongsLoadedEvent(information.ToEnumerable());
     }
 }

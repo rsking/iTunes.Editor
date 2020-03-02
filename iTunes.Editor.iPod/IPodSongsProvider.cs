@@ -12,19 +12,18 @@ namespace ITunes.Editor.IPod
     /// <summary>
     /// The iPod <see cref="ISongsProvider"/>.
     /// </summary>
-    public class IPodSongsProvider : SongsProvider, IFolderProvider
+    public class IPodSongsProvider : ISongsProvider, IFolderProvider
     {
         /// <inheritdoc />
-        public string Folder { get; set; }
+        public string? Folder { get; set; }
 
         /// <inheritdoc />
-        public override string Name => Properties.Resources.IPodName;
+        public string Name => Properties.Resources.IPodName;
 
         /// <inheritdoc />
-        public override IEnumerable<SongInformation> GetTagInformation()
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
         {
             // see if this has the requisit parts
-            var directory = new System.IO.DirectoryInfo(this.Folder);
             var controlDirectory = System.IO.Path.Combine(this.Folder, "iPod_Control");
             if (!System.IO.Directory.Exists(controlDirectory))
             {
@@ -39,7 +38,7 @@ namespace ITunes.Editor.IPod
             }
 
             // read in the database
-            var trackDatabase = new TrackDatabase(iTunesDB);
+            var trackDatabase = await System.Threading.Tasks.Task.Run(() => new TrackDatabase(iTunesDB), cancellationToken).ConfigureAwait(false);
             var count = trackDatabase.Tracks.Count;
 
             for (int i = 0; i < count; i++)

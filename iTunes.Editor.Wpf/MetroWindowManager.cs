@@ -20,12 +20,12 @@ namespace ITunes.Editor
         /// <returns>The window.</returns>
         protected override System.Windows.Window EnsureWindow(object model, object view, bool isDialog)
         {
-            if (view is System.Windows.Window window)
+            if (view is System.Windows.Window)
             {
                 return base.EnsureWindow(model, view, isDialog);
             }
 
-            window = new MahApps.Metro.Controls.MetroWindow { Content = view, SizeToContent = System.Windows.SizeToContent.WidthAndHeight };
+            var window = new MahApps.Metro.Controls.MetroWindow { Content = view, SizeToContent = System.Windows.SizeToContent.WidthAndHeight };
             window.SetValue(Caliburn.Micro.View.IsGeneratedProperty, true);
 
             var owner = this.InferOwnerOf(window);

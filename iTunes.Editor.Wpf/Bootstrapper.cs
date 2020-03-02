@@ -44,9 +44,9 @@ namespace ITunes.Editor
 
                     // Lyrics
                     serviceCollection
-                        .AddApiSeeds(hostingContext.Configuration)
-                        .AddChartLyrics()
                         .AddWikia()
+                        .AddChartLyrics()
+                        .AddApiSeeds(hostingContext.Configuration)
                         .AddPurgoMalum();
 
                     // Composers

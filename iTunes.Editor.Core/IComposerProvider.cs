@@ -15,14 +15,8 @@ namespace ITunes.Editor
         /// Gets the composers.
         /// </summary>
         /// <param name="tagInformation">The tag information.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The composers.</returns>
-        System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation);
-
-        /// <summary>
-        /// Gets the composers.
-        /// </summary>
-        /// <param name="tagInformation">The tag information.</param>
-        /// <returns>The composers.</returns>
-        System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation);
+        System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken);
     }
 }

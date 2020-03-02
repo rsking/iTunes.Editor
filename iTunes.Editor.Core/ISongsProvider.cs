@@ -14,13 +14,8 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets the tag information.
         /// </summary>
-        /// <returns>The tag information.</returns>
-        System.Collections.Generic.IEnumerable<SongInformation> GetTagInformation();
-
-        /// <summary>
-        /// Gets the tag information.
-        /// </summary>
-        /// <returns>The task to get the tag information.</returns>
-        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<SongInformation>> GetTagInformationAsync();
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The async enumerable to get the tag information.</returns>
+        System.Collections.Generic.IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default);
     }
 }

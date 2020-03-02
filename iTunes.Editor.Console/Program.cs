@@ -32,36 +32,36 @@ namespace ITunes.Editor
             var typeOption = new Option(new[] { "-t", "--type" }, "The type of input") { Argument = new Argument<string>("TYPE") };
             var propertiesOptions = new Option(new[] { "-p", "--property" }, "A property to set on the input provider") { Argument = new Argument<string>("PROPERTY") { Arity = ArgumentArity.ZeroOrMore } };
 
-            var listCommandBuilder = new CommandBuilder(new Command("list", "Lists the files from the specified input") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, string[]>(List) })
+            var listCommandBuilder = new CommandBuilder(new Command("list", "Lists the files from the specified input") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, System.Threading.CancellationToken, string[]>(List) })
                 .AddArgument(inputArgument)
                 .AddOption(typeOption)
                 .AddOption(propertiesOptions);
 
-            var composerCommandBuilder = new CommandBuilder(new Command("composer", "Gets the composers for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string>(Composer) })
+            var composerCommandBuilder = new CommandBuilder(new Command("composer", "Gets the composers for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string, System.Threading.CancellationToken>(Composer) })
                 .AddArgument(new Argument<string>("artist") { Description = "The artist" })
                 .AddArgument(new Argument<string>("song") { Description = "The song" })
                 .AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
 
-            var lyricsCommandBuilder = new CommandBuilder(new Command("lyrics", "Gets the lyrics for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string>(Lyrics) })
+            var lyricsCommandBuilder = new CommandBuilder(new Command("lyrics", "Gets the lyrics for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string, System.Threading.CancellationToken>(Lyrics) })
                 .AddArgument(new Argument<string>("artist") { Description = "The artist" })
                 .AddArgument(new Argument<string>("song") { Description = "The song" })
                 .AddOption(new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("provider") });
 
-            var mediaInfoCommandBuilder = new CommandBuilder(new Command("mediainfo", "Gets the media info for a specific file") { Handler = CommandHandler.Create<string>(MediaInfo) })
+            var mediaInfoCommandBuilder = new CommandBuilder(new Command("mediainfo", "Gets the media info for a specific file") { Handler = CommandHandler.Create<IHost, string, System.Threading.CancellationToken>(MediaInfo) })
                 .AddArgument(new Argument<string>("file") { Description = "The file to get information for" });
 
             var forceOption = new Option(new[] { "-f", "--force" }, "Whether to force the update") { Argument = new Argument<bool>() };
             var fileArgument = new Argument<System.IO.FileInfo>("file") { Description = "The file" };
 
-            var updateComposerFileCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateComposerFile) })
+            var updateComposerFileCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool, System.Threading.CancellationToken>(UpdateComposerFile) })
                 .AddArgument(fileArgument)
                 .AddOption(forceOption);
 
-            var updateLyricsFileCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateLyricsFile) })
+            var updateLyricsFileCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool, System.Threading.CancellationToken>(UpdateLyricsFile) })
                 .AddArgument(fileArgument)
                 .AddOption(forceOption);
 
-            var updateAllFileCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific file using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool>(UpdateAllFile) })
+            var updateAllFileCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific file using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool, System.Threading.CancellationToken>(UpdateAllFile) })
                 .AddArgument(fileArgument)
                 .AddOption(forceOption);
 
@@ -70,17 +70,17 @@ namespace ITunes.Editor
                 .AddCommand(updateLyricsFileCommandBuilder.Command)
                 .AddCommand(updateAllFileCommandBuilder.Command);
 
-            var updateComposerListCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateComposerList) })
+            var updateComposerListCommandBuilder = new CommandBuilder(new Command("composer", "Updates the composer in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool, System.Threading.CancellationToken>(UpdateComposerList) })
                 .AddArgument(inputArgument)
                 .AddOption(typeOption)
                 .AddOption(forceOption);
 
-            var updateLyricsListCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateLyricsList) })
+            var updateLyricsListCommandBuilder = new CommandBuilder(new Command("lyrics", "Updates the lyrics in the specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool, System.Threading.CancellationToken>(UpdateLyricsList) })
                 .AddArgument(inputArgument)
                 .AddOption(typeOption)
                 .AddOption(forceOption);
 
-            var updateAllListCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific list using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool>(UpdateAllList) })
+            var updateAllListCommandBuilder = new CommandBuilder(new Command("all", "Updates the specific list using all the updaters") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, bool, System.Threading.CancellationToken>(UpdateAllList) })
                 .AddArgument(inputArgument)
                 .AddOption(typeOption)
                 .AddOption(forceOption);
@@ -140,7 +140,7 @@ namespace ITunes.Editor
             });
         }
 
-        private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, params string[] property)
+        private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default, params string[] property)
         {
             var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type).SetProperties(property);
             switch (songsProvider)
@@ -153,66 +153,62 @@ namespace ITunes.Editor
                     break;
             }
 
-            foreach (var song in await songsProvider
-                .GetTagInformationAsync()
-                .ConfigureAwait(false))
+            await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken))
             {
-                var performers = song.Performers == null ? null : string.Join("; ", song.Performers);
-                var exists = System.IO.File.Exists(song.Name);
                 Console.WriteLine($"{performers}|{song.Title}|{song.Name}|{exists}");
             }
         }
 
-        private static async Task Composer(IHost host, string artist, string song, string provider = "apra_amcos")
+        private static async Task Composer(IHost host, string artist, string song, string provider = "apra_amcos", System.Threading.CancellationToken cancellationToken = default)
         {
             var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
             await foreach (var composer in composerProvider
-                .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null)))
+                .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken))
             {
                 Console.WriteLine(composer);
             }
         }
 
-        private static async Task Lyrics(IHost host, string artist, string song, string provider = "wikia")
+        private static async Task Lyrics(IHost host, string artist, string song, string provider = "wikia", System.Threading.CancellationToken cancellationToken = default)
         {
             var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
-               .GetLyricsAsync(new SongInformation(song, artist, artist, null, null, null))
+               .GetLyricsAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken)
                .ConfigureAwait(false);
             Console.WriteLine(lyrics);
         }
 
-        private static async Task MediaInfo(string file)
+        private static async Task MediaInfo(IHost host, string file, System.Threading.CancellationToken cancellationToken = default)
         {
             var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider { File = file };
-            var mediaInfo = await mediaInfoTagProvider.GetTagAsync().ConfigureAwait(false);
+            var mediaInfo = await mediaInfoTagProvider.GetTagAsync(cancellationToken).ConfigureAwait(false);
             if (mediaInfo is null)
             {
                 return;
             }
 
-            Console.WriteLine($"{mediaInfo.JoinedPerformers} - {mediaInfo.Title}");
+            host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
         }
 
-        private static Task UpdateComposerFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
+        private static Task UpdateComposerFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var service = host.Services.GetRequiredService<IUpdateComposerService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force);
+            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force, cancellationToken);
         }
 
-        private static Task UpdateLyricsFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
+        private static Task UpdateLyricsFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var service = host.Services.GetRequiredService<IUpdateLyricsService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force);
+            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force, cancellationToken);
         }
 
-        private static async Task UpdateAllFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce)
+        private static async Task UpdateAllFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var songInformation = SongInformation.FromFile(file.FullName);
-            await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
-            await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force).ConfigureAwait(false);
+            await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+            await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
         }
 
-        private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, Task> updateFunction)
+        private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, System.Threading.CancellationToken, Task> updateFunction, System.Threading.CancellationToken cancellationToken)
         {
             var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
             switch (songsProvider)
@@ -225,11 +221,10 @@ namespace ITunes.Editor
                     break;
             }
 
-            var songs = await songsProvider
-                .GetTagInformationAsync()
-                .ConfigureAwait(false);
 
-            foreach (var song in songs.Where(_ => _.Name != null && System.IO.File.Exists(_.Name)))
+            await foreach (var song in songsProvider
+                .GetTagInformationAsync(cancellationToken)
+                .Where(_ => _.Name != null && System.IO.File.Exists(_.Name)))
             {
                 // check the location
                 var mediaType = song.GetMediaType();
@@ -244,23 +239,29 @@ namespace ITunes.Editor
                         continue;
                 }
 
-                await updateFunction(song, force).ConfigureAwait(false);
+                await updateFunction(song, force, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        private static Task UpdateComposerList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync);
+        private static Task UpdateComposerList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync, cancellationToken);
 
-        private static Task UpdateLyricsList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync);
+        private static Task UpdateLyricsList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync, cancellationToken);
 
-        private static Task UpdateAllList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce)
+        private static Task UpdateAllList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var composerService = host.Services.GetRequiredService<IUpdateComposerService>();
             var lyricsService = host.Services.GetRequiredService<IUpdateLyricsService>();
-            return UpdateList(host, input, type, force, async (songInformation, force) =>
-            {
-                await composerService.UpdateAsync(songInformation, force).ConfigureAwait(false);
-                await lyricsService.UpdateAsync(songInformation, force).ConfigureAwait(false);
-            });
+            return UpdateList(
+                host,
+                input,
+                type,
+                force,
+                async (songInformation, force, token) =>
+                {
+                    await composerService.UpdateAsync(songInformation, force, token).ConfigureAwait(false);
+                    await lyricsService.UpdateAsync(songInformation, force, token).ConfigureAwait(false);
+                },
+                cancellationToken);
         }
     }
 }

@@ -113,10 +113,21 @@ namespace ITunes.Editor
         /// <returns>The song information.</returns>
         public static SongInformation FromFile(string path)
         {
-            using var fileAbstraction = new LocalFileAbstraction(path);
+            var fileAbstraction = new TagLib.File.LocalFileAbstraction(path);
             using var tagLibFile = TagLib.File.Create(fileAbstraction);
             return (SongInformation)tagLibFile;
         }
+
+        /// <summary>
+        /// Creates a new <see cref="SongInformation" /> from a file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The song information.</returns>
+        public static System.Threading.Tasks.Task<SongInformation> FromFileAsync(string path, System.Threading.CancellationToken cancellationToken) =>
+            System.Threading.Tasks.Task.Run(
+                () => FromFile(path),
+                cancellationToken);
 
         /// <inheritdoc/>
         public override string ToString()

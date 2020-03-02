@@ -24,7 +24,7 @@ namespace ITunes.Editor
         public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers.ToArray();
 
         /// <inheritdoc />
-        public SongInformation Update(SongInformation songInformation, bool force = false)
+        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default)
         {
             if (songInformation is null)
             {
@@ -40,35 +40,7 @@ namespace ITunes.Editor
 
                 foreach (var provider in this.providers)
                 {
-                    var composers = provider.GetComposers(songInformation);
-                    if (composers != null)
-                    {
-                        return updater.Update(composers);
-                    }
-                }
-            }
-
-            return songInformation;
-        }
-
-        /// <inheritdoc />
-        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false)
-        {
-            if (songInformation is null)
-            {
-                return songInformation!;
-            }
-
-            using (var updater = new Updater(songInformation))
-            {
-                if (!updater.ShouldUpdate(force))
-                {
-                    return songInformation;
-                }
-
-                foreach (var provider in this.providers)
-                {
-                    var composers = provider.GetComposersAsync(songInformation);
+                    var composers = provider.GetComposersAsync(songInformation, cancellationToken);
                     if (composers != null)
                     {
                         return await updater.UpdateAsync(composers).ConfigureAwait(false);
@@ -83,8 +55,6 @@ namespace ITunes.Editor
         {
             private readonly TagLib.Tag? appleTag;
 
-            private TagLib.File.IFileAbstraction? fileAbstraction;
-
             private TagLib.File? file;
 
             private SongInformation songInformation;
@@ -97,16 +67,8 @@ namespace ITunes.Editor
                     return;
                 }
 
-                this.fileAbstraction = new LocalFileAbstraction(this.songInformation.Name, true);
-                this.file = TagLib.File.Create(this.fileAbstraction);
-                if (this.file == null)
-                {
-                    if (this.fileAbstraction is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-                }
-                else
+                this.file = TagLib.File.Create(this.songInformation.Name);
+                if (this.file != null)
                 {
                     this.appleTag = this.file.GetTag(TagLib.TagTypes.Apple);
                 }
@@ -159,13 +121,6 @@ namespace ITunes.Editor
             {
                 this.file?.Dispose();
                 this.file = null;
-
-                if (this.fileAbstraction is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-
-                this.fileAbstraction = null;
             }
         }
     }

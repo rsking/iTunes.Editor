@@ -1,10 +1,18 @@
-﻿namespace System.Collections.ObjectModel
+﻿// <copyright file="ObservableSortableCollection.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+
+namespace System.Collections.ObjectModel
 {
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Linq;
 
+    /// <summary>
+    /// The observable, sortable collection.
+    /// </summary>
+    /// <typeparam name="T">The type in the collection.</typeparam>
     public class ObservableSortableCollection<T> : ObservableRangeCollection<T>
     {
         private IComparer<T> comparer;

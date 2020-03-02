@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Core", "iTune
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Console", "iTunes.Editor.Console\iTunes.Editor.Console.csproj", "{93FF4281-1D9A-4B57-9F15-A101B3CD5444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.DependencyInjection", "iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj", "{69F5B6DF-5D1B-4054-A03C-0A829E701178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.DependencyInjection", "iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj", "{69F5B6DF-5D1B-4054-A03C-0A829E701178}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.iPod", "iTunes.Editor.iPod\iTunes.Editor.iPod.csproj", "{1649C70D-5030-42E1-8539-26EE1255A9B4}"
 EndProject

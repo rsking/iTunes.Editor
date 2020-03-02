@@ -19,6 +19,8 @@ namespace ITunes.Editor
     {
         private const string NoLyrics = "No Lyrics";
 
+        private const string TitleCased = "Lyrics Title Cased";
+
         private const string HasLyrics = "Has Lyrics";
 
         private static readonly TagLib.ByteVector Rating = new TagLib.ByteVector(new byte[] { 114, 116, 110, 103 });
@@ -99,14 +101,7 @@ namespace ITunes.Editor
                 return false;
             }
 
-            var lyrics = string.IsNullOrEmpty(appleTag.Lyrics)
-                ? null
-                : string.Join(
-                    newLine,
-                    appleTag.Lyrics
-                        .SplitLines()
-                        .Select(line => line.Trim().Capitalize())
-                        .RemoveMultipleNull());
+            var lyrics = appleTag.Lyrics.CleanLyrics(newLine);
 
             if (lyrics != appleTag.Lyrics)
             {
@@ -118,97 +113,67 @@ namespace ITunes.Editor
         }
 
         /// <summary>
+        /// Cleans the lyrics.
+        /// </summary>
+        /// <param name="lyrics">The lyrics.</param>
+        /// <param name="newLine">The newline.</param>
+        /// <returns>The cleaned lyrics.</returns>
+        public static string? CleanLyrics(this string? lyrics, string newLine = "\r") => string.IsNullOrEmpty(lyrics)
+                ? null
+                : string.Join(
+                    newLine,
+                    lyrics!
+                        .SplitLines()
+                        .Select(line => line.Trim().Capitalize())
+                        .RemoveMultipleNull());
+
+        /// <summary>
+        /// Gets a value indicating whether the lyrics are title cased.
+        /// </summary>
+        /// <param name="appleTag">The tag.</param>
+        /// <param name="newLine">The newline.</param>
+        /// <returns><see langword="true"/> if <paramref name="appleTag"/><see cref="TagLib.Tag.Lyrics"/> are title cased; otherwise <see langword="false"/>. </returns>
+        public static bool LyricsAreTitleCased(this TagLib.Tag appleTag, string newLine = "\r")
+        {
+            if (appleTag is null || appleTag.Lyrics is null || appleTag.Lyrics.Length == 0)
+            {
+                return false;
+            }
+
+            var original = appleTag.Lyrics;
+            var titleCase = string.Join(newLine, original.SplitLines().Select(line => Humanizer.To.TitleCase.Transform(line)));
+            return original == titleCase;
+        }
+
+        /// <summary>
+        /// Adds the "title cased lyrics" flag to the grouping.
+        /// </summary>
+        /// <param name="appleTag">The apple tag.</param>
+        /// <returns>Returns <see langword="true"/> if the "title cased lyrics" has been added; otherwise <see langword="false"/>.</returns>
+        public static bool AddTitleCased(this TagLib.Tag appleTag) => appleTag.AddTag(TitleCased);
+
+        /// <summary>
         /// Adds the "no lyrics" flag to the grouping.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the "no lyics" has been added; otherwise <see langword="false"/>.</returns>
-        public static bool AddNoLyrics(this TagLib.Tag appleTag)
-        {
-            if (appleTag is null)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(appleTag.Grouping))
-            {
-                appleTag.Grouping = NoLyrics;
-                return true;
-            }
-
-            var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-            if (grouping.Contains(NoLyrics))
-            {
-                return false;
-            }
-
-            Array.Resize(ref grouping, grouping.Length + 1);
-            grouping[grouping.Length - 1] = NoLyrics;
-
-            var update = string.Join("; ", grouping);
-
-            if (update != appleTag.Grouping)
-            {
-                appleTag.Grouping = update;
-                return true;
-            }
-
-            return false;
-        }
+        public static bool AddNoLyrics(this TagLib.Tag appleTag) => appleTag.AddTag(NoLyrics);
 
         /// <summary>
         /// Removes the "no lyrics" flag from the grouping.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
         /// <returns>Returns <see langword="true"/> if the "no lyics" has been removed; otherwise <see langword="false"/>.</returns>
-        public static bool RemoveNoLyrics(this TagLib.Tag appleTag)
-        {
-            if (appleTag is null)
-            {
-                return false;
-            }
-
-            if (!string.IsNullOrEmpty(appleTag.Grouping) && appleTag.Grouping.Contains(NoLyrics))
-            {
-                var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-                var index = -1;
-
-                // See if No Lyrics is already in there
-                for (var j = 0; j < grouping.Length; j++)
-                {
-                    if (grouping[j] == NoLyrics)
-                    {
-                        index = j;
-                        break;
-                    }
-                }
-
-                if (index >= 0)
-                {
-                    var groupingList = new List<string>(grouping);
-                    groupingList.RemoveAt(index);
-                    if (groupingList.Count == 0)
-                    {
-                        appleTag.Grouping = HasLyrics;
-                    }
-                    else
-                    {
-                        appleTag.Grouping = string.Join("; ", groupingList.ToArray());
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        public static bool RemoveNoLyrics(this TagLib.Tag appleTag) => appleTag.RemoveTag(NoLyrics, HasLyrics);
 
         /// <summary>
         /// Updates the explicit value.
         /// </summary>
         /// <param name="tag">The tag to update.</param>
         /// <param name="explicitLyricsProvider">The explicit lyrics provider.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Returns <see langword="true"/> if the explicit flag is updates; otherwise <see langword="false"/>.</returns>
-        public static bool UpdateRating(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider)
+        public static async System.Threading.Tasks.Task<bool> UpdateRatingAsync(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider, System.Threading.CancellationToken cancellationToken)
         {
             if (tag is null)
             {
@@ -230,7 +195,7 @@ namespace ITunes.Editor
                     return false;
                 }
 
-                var @explicit = explicitLyricsProvider.IsExplicit(lyrics);
+                var @explicit = await explicitLyricsProvider.IsExplicitAsync(lyrics, cancellationToken).ConfigureAwait(false);
                 if (@explicit.HasValue)
                 {
                     return @explicit.Value ? appleTag.SetExplicit() : appleTag.SetClean();
@@ -288,6 +253,73 @@ namespace ITunes.Editor
 
             appleTag.SetData(Rating, new[] { new TagLib.Mpeg4.AppleDataBox(rating, (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData) });
             return true;
+        }
+
+        private static bool AddTag(this TagLib.Tag appleTag, string tag)
+        {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(appleTag.Grouping))
+            {
+                appleTag.Grouping = tag;
+                return true;
+            }
+
+            var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            if (grouping.Contains(tag))
+            {
+                return false;
+            }
+
+            Array.Resize(ref grouping, grouping.Length + 1);
+            grouping[grouping.Length - 1] = tag;
+
+            var update = string.Join("; ", grouping);
+
+            if (update != appleTag.Grouping)
+            {
+                appleTag.Grouping = update;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool RemoveTag(this TagLib.Tag appleTag, string tag, string replacement)
+        {
+            if (appleTag is null)
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(appleTag.Grouping) && appleTag.Grouping.Contains(tag))
+            {
+                var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+                var index = -1;
+
+                // See if No Lyrics is already in there
+                for (var j = 0; j < grouping.Length; j++)
+                {
+                    if (grouping[j] == tag)
+                    {
+                        index = j;
+                        break;
+                    }
+                }
+
+                if (index >= 0)
+                {
+                    var groupingList = new List<string>(grouping);
+                    groupingList.RemoveAt(index);
+                    appleTag.Grouping = groupingList.Count == 0 ? replacement : string.Join("; ", groupingList);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static IEnumerable<string> RemoveMultipleNull(this IEnumerable<string> source)
@@ -360,7 +392,7 @@ namespace ITunes.Editor
             yield return returnString.ToString();
         }
 
-        private static string Capitalize(this string line) => Humanizer.To.TitleCase.Transform(line);
+        private static string Capitalize(this string line) => Humanizer.To.SentenceCase.Transform(line);
 
         private static bool IsNull(this DateTime dateTime) => dateTime.Year == 1 || dateTime.Year == 1899;
     }

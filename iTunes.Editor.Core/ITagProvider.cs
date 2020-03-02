@@ -12,15 +12,10 @@ namespace ITunes.Editor
     public interface ITagProvider
     {
         /// <summary>
-        /// Gets the tag.
-        /// </summary>
-        /// <returns>The tag.</returns>
-        TagLib.Tag? GetTag();
-
-        /// <summary>
         /// Gets the tag asynchronously.
         /// </summary>
         /// <returns>The tag.</returns>
-        System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync();
+        /// <param name="cancellationToken">The cancellation token.</param>
+        System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
     }
 }

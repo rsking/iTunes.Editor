@@ -19,7 +19,7 @@ namespace ITunes.Editor
     /// </summary>
     public sealed class ApraAmcosComposerProvider : IComposerProvider, IDisposable
     {
-        private readonly Uri uri = new Uri("http://apraamcos.com.au/search");
+        private readonly Uri uri = new Uri("https://apraamcos.com.au/search");
 
         private readonly HttpClient client;
 
@@ -52,48 +52,50 @@ namespace ITunes.Editor
         public void Dispose() => this.client.Dispose();
 
         /// <inheritdoc />
-        public System.Collections.Generic.IEnumerable<Name> GetComposers(SongInformation tagInformation) => tagInformation is null
-            ? throw new ArgumentNullException(nameof(tagInformation))
-            : this.GetNamesAsync(tagInformation).Result;
-
-        /// <inheritdoc />
-        public async System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation)
+        public async System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(
+            SongInformation tagInformation,
+            [System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
         {
             if (tagInformation is null)
             {
                 yield break;
             }
 
-            foreach (var name in await this.GetNamesAsync(tagInformation).ConfigureAwait(false))
+            foreach (var name in await this.GetNamesAsync(tagInformation, cancellationToken).ConfigureAwait(false))
             {
                 yield return name;
             }
         }
 
-        private async Task<System.Collections.Generic.IEnumerable<Name>> GetNamesAsync(SongInformation tagInformation)
+        private async Task<System.Collections.Generic.IEnumerable<Name>> GetNamesAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             var title = tagInformation.Title;
             var writer = string.Empty;
             var performer = tagInformation.Performers.FirstOrDefault() ?? string.Empty;
 
             HttpResponseMessage result;
-            using (var stringContent = new StringContent($"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works", Encoding.UTF8, "application/x-www-form-urlencoded"))
+
+            var query = $"searchtype=works&keywords={System.Web.HttpUtility.UrlEncode(title)}&x=20&y=40";
+            var content = $"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works";
+            using (var stringContent = new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"))
             {
-                result = await this.client.PostAsync(this.uri, stringContent).ConfigureAwait(false);
+                var uri = new Uri(this.uri, $"?{query}");
+                result = await this.client.PostAsync(this.uri, stringContent, cancellationToken).ConfigureAwait(false);
             }
 
             var pageText = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var document = new HtmlAgilityPack.HtmlDocument();
             document.LoadHtml(pageText);
-            var span = document.DocumentNode.SelectSingleNode("//div[@class='searchresultcontainer']")?
+            var span = document.DocumentNode
+                .SelectSingleNode("//div[@class='searchresultcontainer']")?
                 .SelectSingleNode("//table")?
                 .Descendants("tr").Skip(1).First()?
                 .Descendants("td").Last()?
                 .Descendants("span").First();
 
             return span?.InnerText.Contains("Not available") == false
-                ? span.InnerText.Split('/').Select(Name.FromInversedName).OrderBy(name => name.Last)
+                ? span.InnerText.Split('/').Select(Name.FromInversedName).OrderBy(name => name.Last).ThenBy(name => name.First)
                 : Enumerable.Empty<Name>();
         }
     }

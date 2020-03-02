@@ -12,16 +12,16 @@ namespace ITunes.Editor
     /// <summary>
     /// A <see cref="ISongsProvider"/> for a folder of files.
     /// </summary>
-    public class FolderSongsProvider : SongsProvider, IFolderProvider
+    public class FolderSongsProvider : ISongsProvider, IFolderProvider
     {
         /// <inheritdoc />
         public string? Folder { get; set; }
 
         /// <inheritdoc />
-        public override string Name => Properties.Resources.FolderName;
+        public string Name => Properties.Resources.FolderName;
 
         /// <inheritdoc />
-        public override IEnumerable<SongInformation> GetTagInformation()
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
         {
             var directoryInfo = new System.IO.DirectoryInfo(this.Folder);
             if (!directoryInfo.Exists)
@@ -36,14 +36,14 @@ namespace ITunes.Editor
                 SongInformation? songInformation = null;
                 try
                 {
-                    songInformation = SongInformation.FromFile(fileInfo.FullName);
+                    songInformation = await SongInformation.FromFileAsync(fileInfo.FullName, cancellationToken).ConfigureAwait(false);
                 }
                 catch
                 {
                     continue;
                 }
 
-                if (songInformation?.Title is null)
+                if (songInformation.Title is null)
                 {
                     continue;
                 }

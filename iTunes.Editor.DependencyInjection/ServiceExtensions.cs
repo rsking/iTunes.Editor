@@ -1,4 +1,4 @@
-﻿// <copyright file="Extensions.cs" company="RossKing">
+﻿// <copyright file="ServiceExtensions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
@@ -40,6 +40,14 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddWikia(this IServiceCollection serviceCollection) => serviceCollection
             .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Wikia.WikiaLyricsProvider>("wikia");
+
+        /// <summary>
+        /// Adds Genius.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        /// <returns>The return service collection.</returns>
+        public static IServiceCollection AddGenius(this IServiceCollection serviceCollection) => serviceCollection
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Genius.GeniusLyricsProvider>("genius");
 
         /// <summary>
         /// Adds Purgo Malum.

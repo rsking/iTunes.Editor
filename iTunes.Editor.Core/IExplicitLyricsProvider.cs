@@ -15,14 +15,8 @@ namespace ITunes.Editor
         /// Returns a value indicating whether the lyrics are explicit.
         /// </summary>
         /// <param name="lyrics">The lyrics.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Returns <see langword="true"/> if <paramref name="lyrics"/> are explicit; otherwise <see langword="false"/>.</returns>
-        bool? IsExplicit(string lyrics);
-
-        /// <summary>
-        /// Returns a value indicating whether the lyrics are explicit.
-        /// </summary>
-        /// <param name="lyrics">The lyrics.</param>
-        /// <returns>Returns <see langword="true"/> if <paramref name="lyrics"/> are explicit; otherwise <see langword="false"/>.</returns>
-        System.Threading.Tasks.Task<bool?> IsExplicitAsync(string lyrics);
+        System.Threading.Tasks.Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken);
     }
 }

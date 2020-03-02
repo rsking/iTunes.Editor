@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.1;net462</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <UseWpf>true</UseWpf>
-    <RootNamespace>ITunes.Editor</RootNamespace>
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,9 +15,9 @@
 
   <ItemGroup>
     <None Update="*.json" CopyToOutputDirectory="PreserveNewest" />
-    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
     <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
-  </ItemGroup>
+    <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
+    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />

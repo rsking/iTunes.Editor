@@ -22,11 +22,10 @@ namespace ITunes.Editor.PList
         /// </summary>
         public BinaryPListDeserializeTests()
         {
-            using (var stream = Resources.TestBin)
-            {
-                var formatter = new PListBinaryFormatter();
-                this.plist = formatter.Deserialize(stream) as PList;
-            }
+            using var stream = Resources.TestBin;
+            var formatter = new PListBinaryFormatter();
+            var deserialized = formatter.Deserialize(stream);
+            this.plist = (PList)deserialized!;
         }
 
         [Fact]

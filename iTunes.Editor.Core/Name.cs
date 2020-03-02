@@ -11,18 +11,14 @@ namespace ITunes.Editor
     /// <summary>
     /// The performer name.
     /// </summary>
-    public class Name
+    public readonly struct Name : System.IEquatable<Name>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Name"/> class.
+        /// Initializes a new instance of the <see cref="Name"/> struct.
         /// </summary>
         /// <param name="first">The first name.</param>
         /// <param name="last">The last name.</param>
-        public Name(string? first, string last)
-        {
-            this.First = first.Transform(To.LowerCase).Transform(To.TitleCase);
-            this.Last = last.Transform(To.LowerCase).Transform(To.TitleCase);
-        }
+        public Name(string? first, string last) => (this.First, this.Last) = (first.Transform(To.LowerCase).Transform(To.TitleCase), last.Transform(To.LowerCase).Transform(To.TitleCase));
 
         /// <summary>
         /// Gets the first name.
@@ -35,6 +31,22 @@ namespace ITunes.Editor
         public string Last { get; }
 
         /// <summary>
+        /// The equals operator.
+        /// </summary>
+        /// <param name="left">The left hand side.</param>
+        /// <param name="right">The right hand side.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(Name left, Name right) => left.Equals(right);
+
+        /// <summary>
+        /// The not-equals operator.
+        /// </summary>
+        /// <param name="left">The left hand side.</param>
+        /// <param name="right">The right hand side.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(Name left, Name right) => !(left == right);
+
+        /// <summary>
         /// Creates a <see cref="Name"/> from an inversed name such as 'WALTERS D'.
         /// </summary>
         /// <param name="name">The inversed name.</param>
@@ -43,12 +55,12 @@ namespace ITunes.Editor
         {
             if (name is null)
             {
-                return new Name(string.Empty, string.Empty);
+                return new Name(default, string.Empty);
             }
 
             var split = name.Split(' ');
             var last = split[0];
-            string? first = null;
+            string? first = default;
             if (split.Length > 1)
             {
                 first = split[1];
@@ -70,7 +82,7 @@ namespace ITunes.Editor
             }
 
             var split = name.Split(' ');
-            string? first = null;
+            string? first = default;
             string last;
             if (split.Length == 1)
             {
@@ -89,5 +101,14 @@ namespace ITunes.Editor
         public override string ToString() => string.IsNullOrEmpty(this.First)
             ? this.Last
             : string.Concat(this.First, this.First?.Length == 1 ? ". " : " ", this.Last);
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) => obj is Name name ? this.Equals(name) : base.Equals(obj);
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => (this.First, this.Last).GetHashCode();
+
+        /// <inheritdoc/>
+        public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.InvariantCulture) && string.Equals(this.Last, other.Last, System.StringComparison.InvariantCulture);
     }
 }

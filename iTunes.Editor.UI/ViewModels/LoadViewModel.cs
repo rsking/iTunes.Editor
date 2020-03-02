@@ -55,7 +55,7 @@ namespace ITunes.Editor.ViewModels
                     break;
             }
 
-            this.eventAggregator.Publish(new Models.SongsLoadedEvent(await provider.GetTagInformationAsync().ConfigureAwait(false)));
+            this.eventAggregator.Publish(Models.SongsLoadedEvent.FromAysnc(provider.GetTagInformationAsync()));
         }
     }
 }

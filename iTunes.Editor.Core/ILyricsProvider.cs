@@ -15,14 +15,8 @@ namespace ITunes.Editor
         /// Gets the lyrics.
         /// </summary>
         /// <param name="tagInformation">The tag information.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The lyrics.</returns>
-        string? GetLyrics(SongInformation tagInformation);
-
-        /// <summary>
-        /// Gets the lyrics.
-        /// </summary>
-        /// <param name="tagInformation">The tag information.</param>
-        /// <returns>The lyrics.</returns>
-        System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation);
+        System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken);
     }
 }
