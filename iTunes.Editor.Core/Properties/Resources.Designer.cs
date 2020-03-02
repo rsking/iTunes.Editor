@@ -22,7 +22,7 @@ namespace ITunes.Editor.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace ITunes.Editor.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ITunes.Editor.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace ITunes.Editor.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace ITunes.Editor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
-        internal static string FileName {
+        public static string FileName {
             get {
                 return ResourceManager.GetString("FileName", resourceCulture);
             }
@@ -72,16 +72,34 @@ namespace ITunes.Editor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Folder.
         /// </summary>
-        internal static string FolderName {
+        public static string FolderName {
             get {
                 return ResourceManager.GetString("FolderName", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Getting lyics for {Song}.
+        /// </summary>
+        public static string GettingLyrics {
+            get {
+                return ResourceManager.GetString("GettingLyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect Lyrics found, expected {Expected}, but got {Reply}.
+        /// </summary>
+        public static string IncorrectLyricsFound {
+            get {
+                return ResourceManager.GetString("IncorrectLyricsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid PList value type.
         /// </summary>
-        internal static string InvalidPListValueType {
+        public static string InvalidPListValueType {
             get {
                 return ResourceManager.GetString("InvalidPListValueType", resourceCulture);
             }
@@ -90,27 +108,90 @@ namespace ITunes.Editor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid XML.
         /// </summary>
-        internal static string InvalidXml {
+        public static string InvalidXml {
             get {
                 return ResourceManager.GetString("InvalidXml", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No lyrics found for {Song}.
+        /// </summary>
+        public static string NoLyricsFound {
+            get {
+                return ResourceManager.GetString("NoLyricsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PList.
         /// </summary>
-        internal static string PListName {
+        public static string PListName {
             get {
                 return ResourceManager.GetString("PListName", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Removed NoLyrics tag for {Song}.
+        /// </summary>
+        public static string RemovedNoLyricsTag {
+            get {
+                return ResourceManager.GetString("RemovedNoLyricsTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving {Song} with no lyrics, and unrated.
+        /// </summary>
+        public static string SavingWithNoLyricsAndUnrated {
+            get {
+                return ResourceManager.GetString("SavingWithNoLyricsAndUnrated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting lyrics on {Song} to null.
+        /// </summary>
+        public static string SettingLyricsToNull {
+            get {
+                return ResourceManager.GetString("SettingLyricsToNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream does not contain a PList.
         /// </summary>
-        internal static string StreamDoesNotContainAPList {
+        public static string StreamDoesNotContainAPList {
             get {
                 return ResourceManager.GetString("StreamDoesNotContainAPList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated cleaned lyrics for {Song}.
+        /// </summary>
+        public static string UpdatedCleanedLyrics {
+            get {
+                return ResourceManager.GetString("UpdatedCleanedLyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated lyrics for {Song}.
+        /// </summary>
+        public static string UpdatedLyrics {
+            get {
+                return ResourceManager.GetString("UpdatedLyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated Rating for {Song}.
+        /// </summary>
+        public static string UpdatedRating {
+            get {
+                return ResourceManager.GetString("UpdatedRating", resourceCulture);
             }
         }
     }

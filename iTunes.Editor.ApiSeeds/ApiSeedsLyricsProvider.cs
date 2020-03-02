@@ -6,6 +6,7 @@
 
 namespace ITunes.Editor.ApiSeeds
 {
+    using Microsoft.Extensions.Logging;
     using RestSharp;
 
     /// <summary>
@@ -15,33 +16,32 @@ namespace ITunes.Editor.ApiSeeds
     {
         private static readonly System.Uri Uri = new System.Uri("https://orion.apiseeds.com/api/music/lyric");
 
+        private readonly ILogger logger;
+
         private readonly IRestClient client = new RestClient(Uri);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="apiKey">The API key.</param>
-        public ApiSeedsLyricsProvider(string apiKey)
+        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, string? apiKey)
         {
-            this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
-        }
-
-        public ApiSeedsLyricsProvider(Microsoft.Extensions.Options.IOptions<ApiSeeds> options)
-            : this(options.Value.ApiKey)
-        {
-        }
-
-        /// <inheritdoc />
-        public string? GetLyrics(SongInformation tagInformation)
-        {
-            if (tagInformation is null)
+            this.logger = logger;
+            if (apiKey != null)
             {
-                return default;
+                this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
             }
+        }
 
-            var request = CreateRequest(tagInformation);
-            var response = this.client.Execute<GetLyricsResponse>(request);
-            return GetLyricsImpl(request, response?.Data?.Result);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="options">The options.</param>
+        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeeds> options)
+            : this(logger, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
+        {
         }
 
         /// <inheritdoc />
@@ -52,24 +52,15 @@ namespace ITunes.Editor.ApiSeeds
                 return default;
             }
 
-            var request = CreateRequest(tagInformation);
-            return GetLyricsImpl(request, response?.Data?.Result);
+            this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
+            var request = new RestRequest("{artist}/{track}", Method.GET)
+                .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
+                .AddUrlSegment("track", tagInformation.Title);
             var response = await this.client.ExecuteAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
+            return GetLyricsImpl(this.logger, request, response?.Data?.Result);
         }
 
-        private static IRestRequest CreateRequest(SongInformation tagInformation)
-        {
-            var artist = string.Join("; ", tagInformation.Performers);
-            var songTitle = tagInformation.Title;
-
-            var request = new RestRequest("{artist}/{track}", Method.GET);
-            request.AddUrlSegment("artist", artist);
-            request.AddUrlSegment("track", songTitle);
-
-            return request;
-        }
-
-        private static string? GetLyricsImpl(IRestRequest request, GetLyricsResult? getLyricResult)
+        private static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? getLyricResult)
         {
             if (getLyricResult == null)
             {
@@ -84,7 +75,7 @@ namespace ITunes.Editor.ApiSeeds
                 return getLyricResult.Track.Text;
             }
 
-            System.Console.WriteLine($"\tAPI Seeds - Incorrect Lyrics found, Expected {request.Parameters[0].Value}|{request.Parameters[1].Value}, but got {getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
+            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
             return null;
         }
 

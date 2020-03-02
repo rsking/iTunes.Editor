@@ -117,49 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FileName" xml:space="preserve">
-    <value>File</value>
+  <data name="ComposerLog" xml:space="preserve">
+    <value>{Composer}</value>
   </data>
-  <data name="FolderName" xml:space="preserve">
-    <value>Folder</value>
+  <data name="ListLog" xml:space="preserve">
+    <value>{Performers}|{Title}|{Name}|{Exists}</value>
   </data>
-  <data name="GettingLyrics" xml:space="preserve">
-    <value>Getting lyics for {Song}</value>
+  <data name="LyricsLog" xml:space="preserve">
+    <value>{Lyrics}</value>
   </data>
-  <data name="IncorrectLyricsFound" xml:space="preserve">
-    <value>Incorrect Lyrics found, expected {Expected}, but got {Reply}</value>
+  <data name="MediaInfoLog" xml:space="preserve">
+    <value>{Performers} - {Title}</value>
   </data>
-  <data name="InvalidPListValueType" xml:space="preserve">
-    <value>Invalid PList value type</value>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing {Song}</value>
   </data>
-  <data name="InvalidXml" xml:space="preserve">
-    <value>Invalid XML</value>
-  </data>
-  <data name="NoLyricsFound" xml:space="preserve">
-    <value>No lyrics found for {Song}</value>
-  </data>
-  <data name="PListName" xml:space="preserve">
-    <value>PList</value>
-  </data>
-  <data name="RemovedNoLyricsTag" xml:space="preserve">
-    <value>Removed NoLyrics tag for {Song}</value>
-  </data>
-  <data name="SavingWithNoLyricsAndUnrated" xml:space="preserve">
-    <value>Saving {Song} with no lyrics, and unrated</value>
-  </data>
-  <data name="SettingLyricsToNull" xml:space="preserve">
-    <value>Setting lyrics on {Song} to null</value>
-  </data>
-  <data name="StreamDoesNotContainAPList" xml:space="preserve">
-    <value>Stream does not contain a PList</value>
-  </data>
-  <data name="UpdatedCleanedLyrics" xml:space="preserve">
-    <value>Updated cleaned lyrics for {Song}</value>
-  </data>
-  <data name="UpdatedLyrics" xml:space="preserve">
-    <value>Updated lyrics for {Song}</value>
-  </data>
-  <data name="UpdatedRating" xml:space="preserve">
-    <value>Updated Rating for {Song}</value>
+  <data name="Skipping" xml:space="preserve">
+    <value>Skipping {Song}: {MediaType}</value>
   </data>
 </root>

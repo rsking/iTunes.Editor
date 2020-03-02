@@ -9,23 +9,29 @@
 namespace ITunes.Editor.ChartLyrics
 {
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The <see cref="ILyricsProvider"/> for www.chartlyrics.com.
     /// </summary>
-    public class ChartLyricsLyricsProvider : ILyricsProvider
+    public sealed class ChartLyricsLyricsProvider : ILyricsProvider, System.IDisposable
     {
         private readonly System.Uri uri = new System.Uri("http://api.chartlyrics.com/apiv1.asmx");
+
+        private readonly ILogger logger;
 
         private readonly apiv1SoapClient channel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChartLyricsLyricsProvider"/> class.
         /// </summary>
-        public ChartLyricsLyricsProvider()
+        /// <param name="logger">The logger.</param>
+        public ChartLyricsLyricsProvider(ILogger<ChartLyricsLyricsProvider> logger)
         {
-            var binding = new System.ServiceModel.BasicHttpBinding { Name = "apiv1Soap" };
-            this.channel = new apiv1SoapClient(binding, new System.ServiceModel.EndpointAddress(this.uri));
+            this.logger = logger;
+            this.channel = new apiv1SoapClient(
+                new System.ServiceModel.BasicHttpBinding { Name = "apiv1Soap" },
+                new System.ServiceModel.EndpointAddress(this.uri));
         }
 
         /// <inheritdoc/>
@@ -36,6 +42,7 @@ namespace ITunes.Editor.ChartLyrics
                 return null;
             }
 
+            this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
             var artist = string.Join("; ", tagInformation.Performers);
             var songTitle = tagInformation.Title;
             SearchLyricDirectResponse searchLyricDirectResponse;
@@ -56,11 +63,19 @@ namespace ITunes.Editor.ChartLyrics
 
             return GetLyricsImpl(this.logger, artist, songTitle, searchLyricDirectResponse?.Body?.SearchLyricDirectResult);
         }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (this.channel is System.IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
 
-        private static string GetLyricsImpl(string artist, string song, api.chartlyrics.com.GetLyricResult getLyricResult)
+        private static string? GetLyricsImpl(ILogger logger, string artist, string song, api.chartlyrics.com.GetLyricResult? getLyricResult)
         {
-            if (getLyricResult?.LyricId <= 0)
+            if (getLyricResult is null || getLyricResult.LyricId <= 0)
             {
                 return null;
             }
@@ -71,7 +86,7 @@ namespace ITunes.Editor.ChartLyrics
                 return getLyricResult.Lyric;
             }
 
-            System.Console.WriteLine($"\tChartLyrics - Incorrect Lyrics found, Expected {artist}|{song}, but got {getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
+            logger.LogInformation(Properties.Resources.IncorrectLyricsFound, $"{artist}|{song}", $"{getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
             return null;
         }
     }

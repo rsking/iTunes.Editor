@@ -19,13 +19,9 @@ namespace ITunes.Editor.PurgoMalum
         /// <inheritdoc/>
         public async Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics), cancellationToken).ConfigureAwait(false));
 
-        private static IRestRequest GetRequest(string lyrics)
-        {
-            var request = new RestRequest("containsprofanity", Method.GET);
-            request.AddParameter("text", lyrics);
-            request.AddHeader("Accept", "text/html, application/xhtml+xml, application/xml, text/plain");
-            return request;
-        }
+        private static IRestRequest GetRequest(string lyrics) => new RestRequest("containsprofanity", Method.GET)
+            .AddHeader("Accept", "text/html, application/xhtml+xml, application/xml, text/plain")
+            .AddParameter("text", lyrics);
 
         private static bool? ParseResponse(IRestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : (bool?)null;
     }

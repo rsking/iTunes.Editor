@@ -16,6 +16,7 @@ namespace ITunes.Editor
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The program class.
@@ -112,9 +113,10 @@ namespace ITunes.Editor
             {
                 // Lyrics
                 serviceCollection
-                    .AddApiSeeds(hostingContext.Configuration)
-                    .AddChartLyrics()
                     .AddWikia()
+                    .AddGenius()
+                    .AddChartLyrics()
+                    .AddApiSeeds(hostingContext.Configuration)
                     .AddPurgoMalum();
 
                 // Composers
@@ -143,6 +145,7 @@ namespace ITunes.Editor
         private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default, params string[] property)
         {
             var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type).SetProperties(property);
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
             switch (songsProvider)
             {
                 case IFolderProvider folderProvider:
@@ -155,17 +158,18 @@ namespace ITunes.Editor
 
             await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken))
             {
-                Console.WriteLine($"{performers}|{song.Title}|{song.Name}|{exists}");
+                logger.LogInformation(Console.Properties.Resources.ListLog,  song.Performers.Join("; "), song.Title, song.Name, System.IO.File.Exists(song.Name));
             }
         }
 
         private static async Task Composer(IHost host, string artist, string song, string provider = "apra_amcos", System.Threading.CancellationToken cancellationToken = default)
         {
             var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
             await foreach (var composer in composerProvider
                 .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken))
             {
-                Console.WriteLine(composer);
+                logger.LogInformation(Console.Properties.Resources.ComposerLog, composer);
             }
         }
 
@@ -174,7 +178,7 @@ namespace ITunes.Editor
             var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
                .GetLyricsAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken)
                .ConfigureAwait(false);
-            Console.WriteLine(lyrics);
+            host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.LyricsLog, lyrics);
         }
 
         private static async Task MediaInfo(IHost host, string file, System.Threading.CancellationToken cancellationToken = default)
@@ -221,6 +225,7 @@ namespace ITunes.Editor
                     break;
             }
 
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
             await foreach (var song in songsProvider
                 .GetTagInformationAsync(cancellationToken)
@@ -232,10 +237,10 @@ namespace ITunes.Editor
                 {
                     case "Music":
                     case null:
-                        Console.WriteLine($"Processing {song}");
+                        logger.LogInformation(Console.Properties.Resources.Processing, song);
                         break;
                     default:
-                        Console.WriteLine($"Skipping {song}: {mediaType}");
+                        logger.LogInformation(Console.Properties.Resources.Skipping, song, mediaType);
                         continue;
                 }
 
