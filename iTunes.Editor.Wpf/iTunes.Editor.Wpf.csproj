@@ -16,7 +16,6 @@
   <ItemGroup>
     <None Update="*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
-    <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
     <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />  </ItemGroup>
 
   <ItemGroup>
