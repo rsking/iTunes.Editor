@@ -53,5 +53,13 @@ namespace ITunes.Editor
 
             return subject;
         }
+
+        /// <summary>
+        /// Concatenates the members of the <see cref="System.Collections.Generic.IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
+        /// </summary>
+        /// <param name="sequence">A collection that contains the strings to concatenate.</param>
+        /// <param name="separator">The string to use as a separator.separator is included in the returned string only if values has more than one element.</param>
+        /// <returns>A string that consists of the members of <paramref name="sequence"/> delimited by the <paramref name="separator"/> string.</returns>
+        public static string Join(this System.Collections.Generic.IEnumerable<string?> sequence, string separator) => string.Join(separator, sequence);
     }
 }
