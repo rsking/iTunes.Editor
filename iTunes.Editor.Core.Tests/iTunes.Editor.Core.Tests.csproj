@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <RootNamespace>ITunes.Editor</RootNamespace>
+    <NoWarn>$(NoWarn);SA1600</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

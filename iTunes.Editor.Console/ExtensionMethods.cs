@@ -57,9 +57,18 @@ namespace ITunes.Editor
         /// <summary>
         /// Concatenates the members of the <see cref="System.Collections.Generic.IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
         /// </summary>
-        /// <param name="sequence">A collection that contains the strings to concatenate.</param>
-        /// <param name="separator">The string to use as a separator.separator is included in the returned string only if values has more than one element.</param>
-        /// <returns>A string that consists of the members of <paramref name="sequence"/> delimited by the <paramref name="separator"/> string.</returns>
-        public static string Join(this System.Collections.Generic.IEnumerable<string?> sequence, string separator) => string.Join(separator, sequence);
+        /// <param name="source">A collection that contains the strings to concatenate.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the returned string only if <paramref name="source"/> has more than one element.</param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        public static string? Join(this System.Collections.Generic.IEnumerable<string?> source, string? separator) => source is null ? null : string.Join(separator, source);
+
+        /// <summary>
+        /// Concatenates the members of the <see cref="System.Collections.Generic.IEnumerable{T}"/> collection, using the specified separator between each member.
+        /// </summary>
+        /// <typeparam name="T">The type of the members of values.</typeparam>
+        /// <param name="source">A collection that contains the objects to concatenate.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the returned string only if <paramref name="source"/> has more than one element.</param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        public static string? Join<T>(this System.Collections.Generic.IEnumerable<T> source, string? separator) => source is null ? null : string.Join(separator, source);
     }
 }

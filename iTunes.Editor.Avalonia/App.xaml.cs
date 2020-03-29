@@ -12,9 +12,21 @@ namespace ITunes.Editor
     public class App : Avalonia.Application
     {
         /// <inheritdoc/>
-        public override void Initialize()
+        public override void Initialize() => Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
+
+        public override void OnFrameworkInitializationCompleted()
         {
-            Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
+            switch (this.ApplicationLifetime)
+            {
+                case Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop:
+                    desktop.MainWindow = new Views.ShellView { DataContext = new ViewModels.ShellViewModel() };
+                    break;
+                case Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime singleView:
+                    singleView.MainView = new Views.ShellView { DataContext = new ViewModels.ShellViewModel() };
+                    break;
+            }
+
+            base.OnFrameworkInitializationCompleted();
         }
     }
 }

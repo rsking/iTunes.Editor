@@ -15,6 +15,7 @@
     <ProjectReference Include="..\iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iPod\iTunes.Editor.iPod.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Genius\iTunes.Editor.Lyrics.Genius.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Wikia\iTunes.Editor.Lyrics.Wikia.csproj" />
     <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />

@@ -107,40 +107,38 @@ namespace ITunes.Editor
             return builder.Build().InvokeAsync(args);
         }
 
-        private static void ConfigureHost(IHostBuilder hostBuilder)
+        private static void ConfigureHost(IHostBuilder hostBuilder) => hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
         {
-            hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
-            {
-                // Lyrics
-                serviceCollection
-                    .AddWikia()
-                    .AddGenius()
-                    .AddChartLyrics()
-                    .AddApiSeeds(hostingContext.Configuration)
-                    .AddPurgoMalum();
+            // Lyrics
+            serviceCollection
+                .AddWikia()
+                .AddAZ()
+                .AddGenius()
+                .AddChartLyrics()
+                .AddApiSeeds(hostingContext.Configuration)
+                .AddPurgoMalum();
 
-                // Composers
-                serviceCollection
-                    .AddApraAmcos();
+            // Composers
+            serviceCollection
+                .AddApraAmcos();
 
-                // song providers
-                serviceCollection
-                    .AddFolder()
-                    .AddIPod()
-                    .AddPList()
-                    .AddITunes();
+            // song providers
+            serviceCollection
+                .AddFolder()
+                .AddIPod()
+                .AddPList()
+                .AddITunes();
 
-                // tag provider
-                serviceCollection
-                    .AddTagLib()
-                    .AddMediaInfo();
+            // tag provider
+            serviceCollection
+                .AddTagLib()
+                .AddMediaInfo();
 
-                // add services
-                serviceCollection
-                    .AddTransient<IUpdateComposerService, UpdateComposerService>()
-                    .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
-            });
-        }
+            // add services
+            serviceCollection
+                .AddTransient<IUpdateComposerService, UpdateComposerService>()
+                .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+        });
 
         private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default, params string[] property)
         {

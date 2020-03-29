@@ -8,17 +8,16 @@ namespace ITunes.Editor
 {
     using Avalonia;
     using Avalonia.Logging.Serilog;
-    using ITunes.Editor.Models;
-    using ITunes.Editor.ViewModels;
-    using ITunes.Editor.Views;
-    using Ninject;
+    using Avalonia.ReactiveUI;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// The program entry.
     /// </summary>
     internal static class Program
     {
-        private static IKernel container;
+        private static IHost host;
 
         /// <summary>
         /// Builds the Avalonia application.
@@ -27,35 +26,59 @@ namespace ITunes.Editor
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .UseReactiveUI()
                 .LogToDebug()
-                .UseNinject();
+                .UseHost(Host.CreateDefaultBuilder, ConfigureHost)
+                .UseReactiveUI();
 
         /// <summary>
         /// The main entry point.
         /// </summary>
-        private static void Main() => BuildAvaloniaApp().Start<ShellView>(() => container.Get<IShell>());
+        private static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
-        /// <summary>
-        /// Use Ninject.
-        /// </summary>
-        /// <typeparam name="TAppBuilder">The type of app builder.</typeparam>
-        /// <param name="builder">The builder.</param>
-        /// <returns>The updated builder.</returns>
-        private static TAppBuilder UseNinject<TAppBuilder>(this TAppBuilder builder)
-            where TAppBuilder : Avalonia.Controls.AppBuilderBase<TAppBuilder>, new()
-            => builder.AfterSetup(_ =>
+        private static TAppBuilder UseHost<TAppBuilder>(this TAppBuilder builder, System.Func<IHostBuilder> hostBuilderFactory, System.Action<IHostBuilder> configure)
+            where TAppBuilder : Avalonia.Controls.AppBuilderBase<TAppBuilder>, new() =>
+            builder.AfterSetup(_ =>
             {
-                container = new StandardKernel();
-                container.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+                var hostBuilder = hostBuilderFactory();
 
-                container.Bind<IShell>().To<ShellViewModel>();
-                container.Bind<ILoad>().To<LoadViewModel>();
-                container.Bind<ISongs>().To<SongsViewModel>();
+                ConfigureHost(hostBuilder);
 
-                // Services
-                container.Bind<Services.Contracts.ISelectFolder>().To<Services.SelectFolderDialog>();
-                container.Bind<Services.Contracts.IOpenFile>().To<Services.OpenFileDialog>();
+                hostBuilder.ConfigureServices(serviceCollection => serviceCollection.AddTransient<Models.IShell, ViewModels.ShellViewModel>());
+
+                host = hostBuilder.Build();
             });
+
+        private static void ConfigureHost(IHostBuilder hostBuilder) => hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
+        {
+            // Lyrics
+            serviceCollection
+                .AddWikia()
+                .AddAZ()
+                .AddGenius()
+                .AddChartLyrics()
+                .AddApiSeeds(hostingContext.Configuration)
+                .AddPurgoMalum();
+
+            // Composers
+            serviceCollection
+                .AddApraAmcos();
+
+            // song providers
+            serviceCollection
+                .AddFolder()
+                .AddIPod()
+                .AddPList()
+                .AddITunes();
+
+            // tag provider
+            serviceCollection
+                .AddTagLib()
+                .AddMediaInfo();
+
+            // add services
+            serviceCollection
+                .AddTransient<IUpdateComposerService, UpdateComposerService>()
+                .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+        });
     }
 }

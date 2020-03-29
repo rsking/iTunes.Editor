@@ -50,6 +50,14 @@ namespace Microsoft.Extensions.DependencyInjection
             .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Genius.GeniusLyricsProvider>("genius");
 
         /// <summary>
+        /// Adds AZ.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        /// <returns>The return service collection.</returns>
+        public static IServiceCollection AddAZ(this IServiceCollection serviceCollection) => serviceCollection
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.AZLyrics.AZLyricsProvider>("az");
+
+        /// <summary>
         /// Adds Purgo Malum.
         /// </summary>
         /// <param name="serviceCollection">The service collection.</param>

@@ -2,10 +2,10 @@
   
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>ITunes.Editor</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
-    <RootNamespace>ITunes.Editor</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

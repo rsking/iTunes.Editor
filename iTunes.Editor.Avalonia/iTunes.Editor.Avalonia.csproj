@@ -4,25 +4,24 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net462</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ITunes.Editor</RootNamespace>
   </PropertyGroup>
     
   <ItemGroup>
     <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
     <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
-    <EmbeddedResource Include="**\*.xaml" SubType="Designer" />
-    <EmbeddedResource Include="Assets\*" />
+    <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
+    <AvaloniaResource Include="Assets\*" />
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
   </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="0.9.*" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.*" />
-    <PackageReference Include="ReactiveUI" Version="11.1.*" />
-    <PackageReference Include="System.Reactive" Version="4.3.*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
   </ItemGroup>
       
