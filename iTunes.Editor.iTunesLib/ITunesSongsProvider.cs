@@ -57,7 +57,7 @@ namespace ITunes.Editor.ITunesLib
                         track.Rating);
                 }
             }
-#endif
         }
+#endif
     }
 }
