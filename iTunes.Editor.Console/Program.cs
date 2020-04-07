@@ -104,7 +104,7 @@ namespace ITunes.Editor
                 .AddCommand(mediaInfoCommandBuilder.Command)
                 .AddCommand(updateCommandBuilder.Command);
 
-            return builder.Build().InvokeAsync(args);
+            return builder.Build().InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
         }
 
         private static void ConfigureHost(IHostBuilder hostBuilder) => hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
