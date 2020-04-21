@@ -17,7 +17,7 @@ namespace ITunes.Editor.Core.Tests
         [Theory]
         [InlineData(null)]
         [InlineData("These are the lyrics")]
-        [InlineData("These are the lyrics\r\nWith another line")]
+        [InlineData("These are the lyrics\rWith another line")]
         private void TestUnchangedLyrics(string lyrics)
         {
             var mockTag = new Moq.Mock<TagLib.Tag>();
@@ -30,9 +30,10 @@ namespace ITunes.Editor.Core.Tests
         [Theory]
         [InlineData("", null)]
         [InlineData("   \r\nThese are the lyrics\r\n   ", "These are the lyrics")]
-        [InlineData("These are the lyrics\rWith another line", "These are the lyrics\r\nWith another line")]
-        [InlineData("These are the lyrics\r\nwith another line", "These are the lyrics\r\nWith another line")]
-        [InlineData("These are the lyrics\rWith another line\r", "These are the lyrics\r\nWith another line")]
+        [InlineData("   \rThese are the lyrics\r   ", "These are the lyrics")]
+        [InlineData("These are the lyrics\r\nWith another line", "These are the lyrics\rWith another line")]
+        [InlineData("These are the lyrics\rwith a line starting with lowercase", "These are the lyrics\rWith a line starting with lowercase")]
+        [InlineData("These are the lyrics\r\nWith a trailing new line\r\n", "These are the lyrics\rWith a trailing new line")]
         private void TestChangedLyrics(string input, string expected)
         {
             var mockTag = new Moq.Mock<TagLib.Tag>();
