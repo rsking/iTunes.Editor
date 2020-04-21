@@ -12,6 +12,7 @@ namespace ITunes.Editor.PList
     /// <summary>
     /// Extension methods.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:ClosingSquareBracketsShouldBeSpacedCorrectly", Justification = "This is correct")]
     internal static class ExtensionMethods
     {
         /// <summary>
@@ -20,8 +21,15 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="Nullable{T}"/> <see cref="int"/>.</returns>
-        public static int? GetNullableInt32(this IDictionary<string, object?> dictionary, string key) =>
-            (int?)dictionary.GetNullableInt64(key);
+        public static int? GetNullableInt32(this IDictionary<string, object?> dictionary, string key) => (int?)dictionary.GetNullableInt64(key);
+
+        /// <summary>
+        /// Gets the <see cref="int"/>.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="int"/>.</returns>
+        public static int GetInt32(this IDictionary<string, object?> dictionary, string key) => (int)dictionary.GetInt64(key);
 
         /// <summary>
         /// Gets the <see cref="Nullable{T}"/> <see cref="long"/>.
@@ -33,6 +41,14 @@ namespace ITunes.Editor.PList
             dictionary.ContainsKey(key) ? (long?)dictionary[key] : default;
 
         /// <summary>
+        /// Gets the <see cref="long"/>.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="long"/>.</returns>
+        public static long GetInt64(this IDictionary<string, object?> dictionary, string key) => (long)dictionary[key]!;
+
+        /// <summary>
         /// Gets the <see cref="Nullable{T}"/> <see cref="bool"/>.
         /// </summary>
         /// <param name="dictionary">The dictionary.</param>
@@ -40,6 +56,14 @@ namespace ITunes.Editor.PList
         /// <returns>The <see cref="Nullable{T}"/> <see cref="bool"/>.</returns>
         public static bool? GetNullableBoolean(this IDictionary<string, object?> dictionary, string key) =>
             dictionary.ContainsKey(key) ? (bool?)dictionary[key] : default;
+
+        /// <summary>
+        /// Gets the <see cref="bool"/>.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public static bool GetBoolean(this IDictionary<string, object?> dictionary, string key) => (bool)dictionary[key]!;
 
         /// <summary>
         /// Gets the <see cref="Nullable{T}"/> <see cref="DateTime"/>.
@@ -51,13 +75,29 @@ namespace ITunes.Editor.PList
             dictionary.ContainsKey(key) ? (DateTime?)dictionary[key] : default;
 
         /// <summary>
+        /// Gets the <see cref="DateTime"/>.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="DateTime"/>.</returns>
+        public static DateTime GetDateTime(this IDictionary<string, object?> dictionary, string key) => (DateTime)dictionary[key]!;
+
+        /// <summary>
         /// Gets the <see cref="string"/>.
         /// </summary>
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="string"/> value.</returns>
-        public static string? GetString(this IDictionary<string, object?> dictionary, string key) =>
+        public static string? GetNullableString(this IDictionary<string, object?> dictionary, string key) =>
             dictionary.ContainsKey(key) ? (string?)dictionary[key] : default;
+
+        /// <summary>
+        /// Gets the <see cref="string"/>.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The <see cref="string"/> value.</returns>
+        public static string GetString(this IDictionary<string, object?> dictionary, string key) => (string)dictionary[key]!;
 
         /// <summary>
         /// Gets a range of <see cref="byte" /> from the specified start and length.

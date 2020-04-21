@@ -19,43 +19,43 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// The dictionary.
         /// </summary>
-        private readonly IDictionary<string, object> dict;
+        private readonly IDictionary<string, object?> dict;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Track"/> class.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
-        public Track(IDictionary<string, object> dict) => this.dict = dict;
+        public Track(IDictionary<string, object?> dict) => this.dict = dict;
 
         /// <summary>
         /// Gets the ID.
         /// </summary>
-        public int Id => (int)(long)this.dict["Track ID"];
+        public int Id => this.dict.GetInt32("Track ID");
 
         /// <summary>
         /// Gets the size.
         /// </summary>
-        public int Size => (int)(long)this.dict["Size"];
+        public int Size => this.dict.GetInt32("Size");
 
         /// <summary>
         /// Gets the total time.
         /// </summary>
-        public TimeSpan TotalTime => TimeSpan.FromMilliseconds((long)this.dict["Total Time"]);
+        public TimeSpan TotalTime => TimeSpan.FromMilliseconds((long)this.dict.GetInt64("Total Time"));
 
         /// <summary>
         /// Gets the number.
         /// </summary>
-        public int Number => (int)(long)this.dict["Track Number"];
+        public int Number => this.dict.GetInt32("Track Number");
 
         /// <summary>
         /// Gets the count.
         /// </summary>
-        public int Count => (int)(long)this.dict["Track Count"];
+        public int Count => this.dict.GetInt32("Track Count");
 
         /// <summary>
         /// Gets the year.
         /// </summary>
-        public int Year => (int)(long)this.dict["Year"];
+        public int Year => this.dict.GetInt32("Year");
 
         /// <summary>
         /// Gets the beats per minute.
@@ -65,17 +65,17 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the date modified.
         /// </summary>
-        public DateTime DateModified => (DateTime)this.dict["Date Modified"];
+        public DateTime DateModified => this.dict.GetDateTime("Date Modified");
 
         /// <summary>
         /// Gets the date added.
         /// </summary>
-        public DateTime DateAdded => (DateTime)this.dict["Date Added"];
+        public DateTime DateAdded => this.dict.GetDateTime("Date Added");
 
         /// <summary>
         /// Gets the bit rate.
         /// </summary>
-        public int BitRate => (int)(long)this.dict["Bit Rate"];
+        public int BitRate => this.dict.GetInt32("Bit Rate");
 
         /// <summary>
         /// Gets the play count.
@@ -110,7 +110,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the artwork count.
         /// </summary>
-        public int ArtworkCount => (int)(long)this.dict["Artwork Count"];
+        public int ArtworkCount => this.dict.GetInt32("Artwork Count");
 
         /// <summary>
         /// Gets a value indicating whether this instance is clean.
@@ -120,7 +120,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the track type.
         /// </summary>
-        public string TrackType => (string)this.dict["Track Type"];
+        public string TrackType => this.dict.GetString("Track Type");
 
         /// <summary>
         /// Gets a value indicating whether this instance has video.
@@ -130,62 +130,62 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the file folder count.
         /// </summary>
-        public int FileFolderCount => (int)(long)this.dict["File Folder Count"];
+        public int FileFolderCount => this.dict.GetInt32("File Folder Count");
 
         /// <summary>
         /// Gets the library folder count.
         /// </summary>
-        public int LibraryFolderCount => (int)(long)this.dict["Library Folder Count"];
+        public int LibraryFolderCount => this.dict.GetInt32("Library Folder Count");
 
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name => (string)this.dict["Name"];
+        public string Name => this.dict.GetString("Name");
 
         /// <summary>
         /// Gets the artist.
         /// </summary>
-        public string Artist => this.dict.GetString("Artist");
+        public string? Artist => this.dict.GetNullableString("Artist");
 
         /// <summary>
         /// Gets the composer.
         /// </summary>
-        public string Composer => (string)this.dict["Composer"];
+        public string Composer => this.dict.GetString("Composer");
 
         /// <summary>
         /// Gets the album.
         /// </summary>
-        public string Album => this.dict.GetString("Album");
+        public string? Album => this.dict.GetNullableString("Album");
 
         /// <summary>
         /// Gets the genre.
         /// </summary>
-        public string Genre => (string)this.dict["Genre"];
+        public string Genre => this.dict.GetString("Genre");
 
         /// <summary>
         /// Gets the kind.
         /// </summary>
-        public string Kind => (string)this.dict["Kind"];
+        public string Kind => this.dict.GetString("Kind");
 
         /// <summary>
         /// Gets the sort name.
         /// </summary>
-        public string SortName => (string)this.dict["Sort Name"];
+        public string SortName => this.dict.GetString("Sort Name");
 
         /// <summary>
         /// Gets the sort album.
         /// </summary>
-        public string SortAlbum => this.dict.GetString("Sort Album");
+        public string? SortAlbum => this.dict.GetNullableString("Sort Album");
 
         /// <summary>
         /// Gets the sort artist.
         /// </summary>
-        public string SortArtist => this.dict.GetString("Sort Artist");
+        public string? SortArtist => this.dict.GetNullableString("Sort Artist");
 
         /// <summary>
         /// Gets the location.
         /// </summary>
-        public string Location => this.dict.GetString("Location");
+        public string? Location => this.dict.GetNullableString("Location");
 
         /// <summary>
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
@@ -198,6 +198,11 @@ namespace ITunes.Editor.PList
             {
                 var uri = new Uri(path.Replace(LocalHostString, string.Empty));
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
+            }
+
+            if (track.Artist is null)
+            {
+                throw new ArgumentNullException(nameof(track), $"{nameof(Track.Artist)} cannot be null");
             }
 
             return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
