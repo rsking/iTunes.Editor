@@ -200,11 +200,6 @@ namespace ITunes.Editor.PList
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 
-            if (track.Artist is null)
-            {
-                throw new ArgumentNullException(nameof(track), $"{nameof(Track.Artist)} cannot be null");
-            }
-
             return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
         }
     }

@@ -36,11 +36,12 @@ namespace ITunes.Editor.PList
                 plist = await System.Threading.Tasks.Task.Run(() => (PList)serializer.Deserialize(reader), cancellationToken).ConfigureAwait(false);
             }
 
-            if (plist["Tracks"] is IDictionary<string, object> dictionary)
+            if (plist["Tracks"] is IDictionary<string, object?> dictionary)
             {
                 foreach (var track in dictionary
-                    .Where(kvp => kvp.Value is IDictionary<string, object>)
-                    .Select(value => new Track((IDictionary<string, object>)value.Value)))
+                    .Select(kvp => kvp.Value as IDictionary<string, object?>)
+                    .Where(dict => !(dict is null))
+                    .Select(dict => new Track(dict!)))
                 {
                     yield return (SongInformation)track;
                 }
