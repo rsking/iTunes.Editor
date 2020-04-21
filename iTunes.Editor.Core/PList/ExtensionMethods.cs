@@ -20,7 +20,7 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="Nullable{T}"/> <see cref="int"/>.</returns>
-        public static int? GetNullableInt32(this IDictionary<string, object> dictionary, string key) =>
+        public static int? GetNullableInt32(this IDictionary<string, object?> dictionary, string key) =>
             (int?)dictionary.GetNullableInt64(key);
 
         /// <summary>
@@ -29,8 +29,8 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="Nullable{T}"/> <see cref="long"/>.</returns>
-        public static long? GetNullableInt64(this IDictionary<string, object> dictionary, string key) =>
-            dictionary.ContainsKey(key) ? (long)dictionary[key] : default(long?);
+        public static long? GetNullableInt64(this IDictionary<string, object?> dictionary, string key) =>
+            dictionary.ContainsKey(key) ? (long?)dictionary[key] : default;
 
         /// <summary>
         /// Gets the <see cref="Nullable{T}"/> <see cref="bool"/>.
@@ -38,8 +38,8 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="Nullable{T}"/> <see cref="bool"/>.</returns>
-        public static bool? GetNullableBoolean(this IDictionary<string, object> dictionary, string key) =>
-            dictionary.ContainsKey(key) ? (bool)dictionary[key] : default(bool?);
+        public static bool? GetNullableBoolean(this IDictionary<string, object?> dictionary, string key) =>
+            dictionary.ContainsKey(key) ? (bool?)dictionary[key] : default;
 
         /// <summary>
         /// Gets the <see cref="Nullable{T}"/> <see cref="DateTime"/>.
@@ -47,8 +47,8 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="Nullable{T}"/> <see cref="DateTime"/>.</returns>
-        public static DateTime? GetNullableDateTime(this IDictionary<string, object> dictionary, string key) =>
-            dictionary.ContainsKey(key) ? (DateTime)dictionary[key] : default(DateTime?);
+        public static DateTime? GetNullableDateTime(this IDictionary<string, object?> dictionary, string key) =>
+            dictionary.ContainsKey(key) ? (DateTime?)dictionary[key] : default;
 
         /// <summary>
         /// Gets the <see cref="string"/>.
@@ -56,8 +56,8 @@ namespace ITunes.Editor.PList
         /// <param name="dictionary">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="string"/> value.</returns>
-        public static string GetString(this IDictionary<string, object> dictionary, string key) =>
-            dictionary.ContainsKey(key) ? (string)dictionary[key] : default;
+        public static string? GetString(this IDictionary<string, object?> dictionary, string key) =>
+            dictionary.ContainsKey(key) ? (string?)dictionary[key] : default;
 
         /// <summary>
         /// Gets a range of <see cref="byte" /> from the specified start and length.
