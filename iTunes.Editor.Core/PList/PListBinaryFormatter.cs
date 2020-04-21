@@ -88,12 +88,7 @@ namespace ITunes.Editor.PList
             Write(serializationStream, "bplist00", false);
 
             var offsetTable = new List<int> { (int)serializationStream.Position };
-            Write(serializationStream, offsetTable, referenceSize, graph);
-
-            if (offsetTable.Count != calculatedReferenceCount)
-            {
-                throw new InvalidDataException($"Failed to write correct number of references. Expected to write {calculatedReferenceCount}, but wrote {offsetTable.Count}");
-            }
+            Write(serializationStream, offsetTable, new List<object?>() { null }, referenceSize, graph);
 
             var offsetTableOffset = serializationStream.Length;
             var offsetByteSize = RegulateNullBytes(BitConverter.GetBytes(offsetTable[offsetTable.Count - 1])).Length;

@@ -29,15 +29,15 @@ namespace ITunes.Editor.PList
             }
         }
 
-        private static void Write(Stream stream, IList<int> offsetTable, int objectReferenceSize, object value)
+        private static void Write(Stream stream, IList<int> offsetTable, IList<object?> offsetValues, int objectReferenceSize, object value)
         {
             switch (value)
             {
                 case IDictionary<string, object> dict:
-                    Write(stream, offsetTable, objectReferenceSize, dict);
+                    Write(stream, offsetTable, offsetValues, objectReferenceSize, dict);
                     break;
                 case IList<object> list:
-                    Write(stream, offsetTable, objectReferenceSize, list);
+                    Write(stream, offsetTable, offsetValues, objectReferenceSize, list);
                     break;
                 case byte[] bytes:
                     Write(stream, bytes);
@@ -69,7 +69,7 @@ namespace ITunes.Editor.PList
             }
         }
 
-        private static void Write(Stream stream, IList<int> offsetTable, int referenceSize, IDictionary<string, object> dictionary)
+        private static void Write(Stream stream, IList<int> offsetTable, IList<object?> offsetValues, int referenceSize, IDictionary<string, object> dictionary)
         {
             if (dictionary.Count < 15)
             {
@@ -88,20 +88,33 @@ namespace ITunes.Editor.PList
             var references = new List<int>();
             var keys = new string[dictionary.Count];
             dictionary.Keys.CopyTo(keys, 0);
-            for (int i = 0; i < dictionary.Count; i++)
-            {
-                references.Add(offsetTable.Count);
-                offsetTable.Add((int)stream.Position);
-                Write(stream, offsetTable, referenceSize, keys[i]);
-            }
 
             var values = new object[dictionary.Count];
             dictionary.Values.CopyTo(values, 0);
-            for (int i = 0; i < dictionary.Count; i++)
+
+            for (var i = 0; i < dictionary.Count; i++)
             {
                 references.Add(offsetTable.Count);
                 offsetTable.Add((int)stream.Position);
-                Write(stream, offsetTable, referenceSize, values[i]);
+                offsetValues.Add(null);
+                Write(stream, offsetTable, offsetValues, referenceSize, keys[i]);
+            }
+
+            for (var i = 0; i < dictionary.Count; i++)
+            {
+                var value = values[i];
+                var index = IndexOfPrimitive(offsetValues, value);
+                if (index == -1)
+                {
+                    references.Add(offsetTable.Count);
+                    offsetTable.Add((int)stream.Position);
+                    AddToOffsetValues(offsetValues, value);
+                    Write(stream, offsetTable, offsetValues, referenceSize, value);
+                }
+                else
+                {
+                    references.Add(index);
+                }
             }
 
             var endPosition = stream.Position;
@@ -116,7 +129,7 @@ namespace ITunes.Editor.PList
             stream.Position = endPosition;
         }
 
-        private static void Write(Stream stream, IList<int> offsetTable, int referenceSize, IList<object> values)
+        private static void Write(Stream stream, IList<int> offsetTable, IList<object?> offsetValues, int referenceSize, IList<object> values)
         {
             // write the header
             if (values.Count < 15)
@@ -136,9 +149,18 @@ namespace ITunes.Editor.PList
             var references = new List<int>();
             foreach (var value in values)
             {
-                references.Add(offsetTable.Count);
-                offsetTable.Add((int)stream.Position);
-                Write(stream, offsetTable, referenceSize, value);
+                var index = IndexOfPrimitive(offsetValues, value);
+                if (index == -1)
+                {
+                    references.Add(offsetTable.Count);
+                    offsetTable.Add((int)stream.Position);
+                    AddToOffsetValues(offsetValues, value);
+                    Write(stream, offsetTable, offsetValues, referenceSize, value);
+                }
+                else
+                {
+                    references.Add(index);
+                }
             }
 
             var endPosition = stream.Position;
@@ -185,7 +207,7 @@ namespace ITunes.Editor.PList
             else
             {
                 stream.WriteByte(0x40 | 0xf);
-                stream.Write(GetBinaryInt((long)value.Length));
+                stream.Write(GetBinaryInt(value.Length));
             }
 
             stream.Write(value);
@@ -233,5 +255,9 @@ namespace ITunes.Editor.PList
             buffer.Reverse();
             return buffer.ToArray();
         }
+
+        private static void AddToOffsetValues(IList<object?> offsetValues, object value) => offsetValues.Add(value?.GetType().IsPrimitive != true ? null : value);
+
+        private static int IndexOfPrimitive(IList<object?> offsetValues, object value) => value?.GetType().IsPrimitive != true ? -1 : offsetValues.IndexOf(value);
     }
 }
