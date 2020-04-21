@@ -21,6 +21,11 @@ namespace ITunes.Editor.ITunesLib
         /// </summary>
         public bool UpdateMetadata { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to set the album artist.
+        /// </summary>
+        public bool SetAlbumArtist { get; set; }
+
         /// <inheritdoc />
 
 #if NO_ITUNES
@@ -48,13 +53,35 @@ namespace ITunes.Editor.ITunesLib
                         continue;
                     }
 
-                    yield return new SongInformation(
-                        track.Name,
-                        track.Artist,
-                        track.SortArtist ?? track.Artist,
-                        track.Album,
-                        track.Location,
-                        track.Rating);
+                    bool updated = false;
+                    if (this.SetAlbumArtist && !track.Compilation)
+                    {
+                        if (string.IsNullOrWhiteSpace(track.AlbumArtist)
+                            && !string.IsNullOrWhiteSpace(track.Artist))
+                        {
+                            track.AlbumArtist = track.Artist;
+                            updated = true;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(track.SortAlbumArtist)
+                            && track.AlbumArtist == track.Artist
+                            && !string.IsNullOrWhiteSpace(track.SortArtist))
+                        {
+                            track.SortAlbumArtist = track.SortArtist;
+                            updated = true;
+                        }
+                    }
+
+                    if (updated)
+                    {
+                        yield return new SongInformation(
+                            track.Name,
+                            track.Artist,
+                            track.SortArtist ?? track.Artist,
+                            track.Album,
+                            track.Location,
+                            track.Rating);
+                    }
                 }
             }
         }
