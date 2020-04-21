@@ -15,7 +15,7 @@ namespace ITunes.Editor
         /// Use WPF application lifetime.
         /// </summary>
         /// <param name="hostBuilder">The host builder.</param>
-        /// <returns>The host builder.</returns>
+        /// <returns>The <paramref name="hostBuilder"/>.</returns>
         public static Microsoft.Extensions.Hosting.IHostBuilder UseWpfApplicationLifetime(this Microsoft.Extensions.Hosting.IHostBuilder hostBuilder) => hostBuilder.ConfigureServices(
                 (_, serviceCollection) => serviceCollection.AddSingleton<Microsoft.Extensions.Hosting.IHostLifetime, WpfApplicationLifetime>());
     }

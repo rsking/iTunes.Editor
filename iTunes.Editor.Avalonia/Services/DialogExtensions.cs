@@ -41,7 +41,7 @@ namespace ITunes.Editor.Services
         {
             var split = filter.Split('|');
             var displayName = split[0];
-            var index = displayName.IndexOf('(');
+            var index = displayName.IndexOf("(", System.StringComparison.OrdinalIgnoreCase);
             if (index > 0)
             {
                 displayName = displayName.Substring(0, index);

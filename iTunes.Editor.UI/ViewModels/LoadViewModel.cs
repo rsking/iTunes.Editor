@@ -45,6 +45,11 @@ namespace ITunes.Editor.ViewModels
         /// <inheritdoc />
         public async System.Threading.Tasks.Task LoadAsync(ISongsProvider provider)
         {
+            if (provider is null)
+            {
+                return;
+            }
+
             switch (provider)
             {
                 case IFileProvider fileProvider:

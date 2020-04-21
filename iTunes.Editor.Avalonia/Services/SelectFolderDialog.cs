@@ -16,16 +16,16 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-        public string GetSelectedPath(string path = "") => this.GetSelectedPathAsync(path).Result;
+        public string? GetSelectedPath(string? path = default) => this.GetSelectedPathAsync(path).Result;
 
         /// <summary>
         /// Gets the path using the specified <paramref name="path"/> as a starting point.
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-        public System.Threading.Tasks.Task<string> GetSelectedPathAsync(string path = "")
+        public System.Threading.Tasks.Task<string?> GetSelectedPathAsync(string? path = default)
         {
-            var dialog = new Avalonia.Controls.OpenFolderDialog { InitialDirectory = path };
+            var dialog = new Avalonia.Controls.OpenFolderDialog { Directory = path };
             return dialog.ShowAsync(Avalonia.Application.Current.GetActiveWindow());
         }
     }

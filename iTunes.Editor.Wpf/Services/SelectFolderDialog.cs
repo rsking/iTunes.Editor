@@ -16,7 +16,7 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-        public string? GetSelectedPath(string path = "")
+        public string? GetSelectedPath(string? path = default)
         {
             // use the platform folder dialog
             using var folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog { SelectedPath = string.IsNullOrEmpty(path) ? null : path };
@@ -28,6 +28,6 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-        public System.Threading.Tasks.Task<string?> GetSelectedPathAsync(string path = "") => System.Threading.Tasks.Task.FromResult(this.GetSelectedPath(path));
+        public System.Threading.Tasks.Task<string?> GetSelectedPathAsync(string? path = default) => System.Threading.Tasks.Task.FromResult(this.GetSelectedPath(path));
     }
 }

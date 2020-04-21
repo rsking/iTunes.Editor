@@ -13,6 +13,7 @@ namespace System.Collections.ObjectModel
     /// The observable, sortable collection.
     /// </summary>
     /// <typeparam name="T">The type in the collection.</typeparam>
+    [PropertyChanged.SuppressPropertyChangedWarnings]
     public class ObservableSortableCollection<T> : ObservableRangeCollection<T>
     {
         private IComparer<T> comparer;

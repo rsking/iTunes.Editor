@@ -79,11 +79,13 @@ namespace ITunes.Editor.ApiSeeds
             return null;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class GetLyricsResponse
         {
             public GetLyricsResult? Result { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class GetLyricsResult
         {
             public Artist? Artist { get; set; }
@@ -93,11 +95,13 @@ namespace ITunes.Editor.ApiSeeds
             public Copyright? Copyright { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class Artist
         {
             public string? Name { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class Track
         {
             public string? Name { get; set; }
@@ -107,6 +111,7 @@ namespace ITunes.Editor.ApiSeeds
             public Language? Lang { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class Language
         {
             public string? Code { get; set; }
@@ -114,6 +119,7 @@ namespace ITunes.Editor.ApiSeeds
             public string? Name { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
         private class Copyright
         {
             public string? Notice { get; set; }

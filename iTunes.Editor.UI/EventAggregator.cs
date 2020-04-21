@@ -42,7 +42,15 @@ namespace ITunes.Editor
         /// </summary>
         /// <typeparam name="TEvent">The event to publish.</typeparam>
         /// <param name="sampleEvent">The sample event.</param>
-        public void Publish<TEvent>(TEvent sampleEvent) => this.subject.OnNext(sampleEvent);
+        public void Publish<TEvent>(TEvent sampleEvent)
+        {
+            if (sampleEvent is null)
+            {
+                return;
+            }
+
+            this.subject.OnNext(sampleEvent);
+        }
 
         /// <summary>
         /// Disposes unmanaged, and optionally managed, resources used by this <see cref="IEventAggregator"/>.

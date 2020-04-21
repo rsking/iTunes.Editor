@@ -16,6 +16,7 @@ namespace System.Collections.ObjectModel
     /// when items get added, removed or the whole list is refreshed.
     /// </summary>
     /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    [PropertyChanged.SuppressPropertyChangedWarnings]
     public class ObservableRangeCollection<T> : ObservableCollection<T>
     {
         [NonSerialized]

@@ -25,15 +25,19 @@ namespace ITunes.Editor.Converters
 
                 var method = d.Method;
                 var target = d.Target;
+                if (target is null)
+                {
+                    return default!;
+                }
 
-                Delegate canExecute = default;
-                System.ComponentModel.INotifyPropertyChanged inpc = default;
-                string propertyName = default;
-                System.Reflection.MethodInfo canExecuteMethodInfo;
+                Delegate? canExecute = default;
+                System.ComponentModel.INotifyPropertyChanged? inpc = default;
+                string? propertyName = default;
+                System.Reflection.MethodInfo? canExecuteMethodInfo;
                 var canExecutePropertyInfo = target.GetType().GetProperty("Can" + method.Name);
                 if (canExecutePropertyInfo?.PropertyType == typeof(bool))
                 {
-                    canExecuteMethodInfo = canExecutePropertyInfo.GetGetMethod();
+                    canExecuteMethodInfo = canExecutePropertyInfo!.GetGetMethod();
                     inpc = target as System.ComponentModel.INotifyPropertyChanged;
                     propertyName = canExecutePropertyInfo.Name;
                 }
@@ -50,10 +54,10 @@ namespace ITunes.Editor.Converters
                         : Delegate.CreateDelegate(typeof(Func<,>).MakeGenericType(parameterInfo.ParameterType, typeof(bool)), target, canExecuteMethodInfo);
                 }
 
-                return new DelegateCommand(execute, canExecute, inpc, propertyName);
+                return new DelegateCommand(execute, canExecute!, inpc!, propertyName!);
             }
 
-            return new Avalonia.Data.BindingNotification(new InvalidCastException($"Could not convert '{value}' to '{targetType.Name}'."), Avalonia.Data.BindingErrorType.Error);
+            return new Avalonia.Data.BindingNotification(new InvalidCastException($"Could not convert '{value}' to '{targetType?.Name}'."), Avalonia.Data.BindingErrorType.Error);
         }
 
         /// <inheritdoc/>
@@ -67,7 +71,7 @@ namespace ITunes.Editor.Converters
 
             private readonly System.Reflection.ParameterInfo executeParameterInfo;
 
-            private readonly System.Reflection.ParameterInfo canExecuteParameterInfo;
+            private readonly System.Reflection.ParameterInfo? canExecuteParameterInfo;
 
             public DelegateCommand(Delegate execute, Delegate canExecute, System.ComponentModel.INotifyPropertyChanged inpc, string propertyName)
             {
@@ -89,7 +93,7 @@ namespace ITunes.Editor.Converters
                 }
             }
 
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 
             public bool CanExecute(object parameter)
             {
@@ -100,16 +104,16 @@ namespace ITunes.Editor.Converters
 
                 if (this.canExecuteParameterInfo == null)
                 {
-                    return (bool)this.canExecute.DynamicInvoke();
+                    return (bool)this.canExecute.DynamicInvoke()!;
                 }
 
                 Avalonia.Utilities.TypeUtilities.TryConvert(this.canExecuteParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
-                return (bool)this.canExecute.DynamicInvoke(convertedParameter);
+                return (bool)this.canExecute.DynamicInvoke(convertedParameter)!;
             }
 
             public async void Execute(object parameter)
             {
-                object returnValue;
+                object? returnValue;
 
                 if (this.executeParameterInfo == null)
                 {
@@ -124,7 +128,7 @@ namespace ITunes.Editor.Converters
                 // see if it is awaitable
                 if (returnValue is System.Threading.Tasks.Task task)
                 {
-                    await task;
+                    await task.ConfigureAwait(false);
                 }
             }
         }

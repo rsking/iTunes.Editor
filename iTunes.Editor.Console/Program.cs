@@ -156,7 +156,7 @@ namespace ITunes.Editor
 
             await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken))
             {
-                logger.LogInformation(Console.Properties.Resources.ListLog,  song.Performers.Join("; "), song.Title, song.Name, System.IO.File.Exists(song.Name));
+                logger.LogInformation(Console.Properties.Resources.ListLog, song.Performers.Join("; "), song.Title, song.Name, System.IO.File.Exists(song.Name));
             }
         }
 

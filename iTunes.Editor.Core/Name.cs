@@ -18,7 +18,7 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="first">The first name.</param>
         /// <param name="last">The last name.</param>
-        public Name(string? first, string last) => (this.First, this.Last) = (first.Transform(To.LowerCase).Transform(To.TitleCase), last.Transform(To.LowerCase).Transform(To.TitleCase));
+        public Name(string? first, string last) => (this.First, this.Last) = (first?.Transform(To.LowerCase).Transform(To.TitleCase), last.Transform(To.LowerCase).Transform(To.TitleCase));
 
         /// <summary>
         /// Gets the first name.

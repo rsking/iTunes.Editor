@@ -41,13 +41,13 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The starting file.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public abstract string? GetFileName(string path = "");
+        public abstract string? GetFileName(string? path = default);
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public abstract System.Threading.Tasks.Task<string?> GetFileNameAsync(string path = "");
+        public abstract System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default);
     }
 }

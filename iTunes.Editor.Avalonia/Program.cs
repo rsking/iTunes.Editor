@@ -17,7 +17,7 @@ namespace ITunes.Editor
     /// </summary>
     internal static class Program
     {
-        private static IHost host;
+        private static IHost? host;
 
         /// <summary>
         /// Builds the Avalonia application.
@@ -41,7 +41,7 @@ namespace ITunes.Editor
             {
                 var hostBuilder = hostBuilderFactory();
 
-                ConfigureHost(hostBuilder);
+                configure(hostBuilder);
 
                 hostBuilder.ConfigureServices(serviceCollection => serviceCollection.AddTransient<Models.IShell, ViewModels.ShellViewModel>());
 

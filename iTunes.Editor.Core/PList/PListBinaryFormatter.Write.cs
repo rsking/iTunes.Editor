@@ -16,18 +16,12 @@ namespace ITunes.Editor.PList
     /// </summary>
     public partial class PListBinaryFormatter
     {
-        private static int CountReferences(object value)
+        private static int CountReferences(object value) => value switch
         {
-            switch (value)
-            {
-                case IDictionary<string, object> dict:
-                    return dict.Values.Sum(CountReferences) + dict.Keys.Count + 1;
-                case IList<object> list:
-                    return list.Sum(CountReferences) + 1;
-                default:
-                    return 1;
-            }
-        }
+            IDictionary<string, object> dict => dict.Values.Sum(CountReferences) + dict.Keys.Count + 1,
+            IList<object> list => list.Sum(CountReferences) + 1,
+            _ => 1,
+        };
 
         private static void Write(Stream stream, IList<int> offsetTable, IList<object?> offsetValues, int objectReferenceSize, object value)
         {

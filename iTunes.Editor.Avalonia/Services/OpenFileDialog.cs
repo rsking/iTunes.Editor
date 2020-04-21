@@ -23,14 +23,14 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The starting file.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override string GetFileName(string path = "") => this.GetFileNameAsync(path).Result;
+        public override string? GetFileName(string? path = null) => this.GetFileNameAsync(path).Result;
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public async override System.Threading.Tasks.Task<string> GetFileNameAsync(string path = "") => (await this.GetFileNamesImpl(path, false).ConfigureAwait(false))?.FirstOrDefault();
+        public async override System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default) => (await this.GetFileNamesImpl(path, false).ConfigureAwait(false))?.FirstOrDefault();
 
         /// <summary>
         /// Gets multiple file names.
@@ -50,7 +50,7 @@ namespace ITunes.Editor.Services
         /// <param name="path">The starting file.</param>
         /// <param name="multiselect">Whether to select more than one file.</param>
         /// <returns>The list of file names.</returns>
-        private async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesImpl(string path, bool multiselect)
+        private async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesImpl(string? path, bool multiselect)
         {
             var dialog = new Avalonia.Controls.OpenFileDialog
             {

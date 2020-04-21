@@ -71,10 +71,10 @@ namespace ITunes.Editor
             if (!this.options.SuppressStatusMessages)
             {
                 this.applicationStartedRegistration = this.applicationLifetime.ApplicationStarted.Register(
-                    state => ((WpfApplicationLifetime)state).OnApplicationStarted(),
+                    state => ((WpfApplicationLifetime?)state)?.OnApplicationStarted(),
                     this);
                 this.applicationStoppingRegistration = this.applicationLifetime.ApplicationStopping.Register(
-                    state => ((WpfApplicationLifetime)state).OnApplicationStopping(),
+                    state => ((WpfApplicationLifetime?)state)?.OnApplicationStopping(),
                     this);
             }
 
@@ -107,10 +107,11 @@ namespace ITunes.Editor
                 this.shutdownBlock.Set();
                 this.applicationStartedRegistration.Dispose();
                 this.applicationStoppingRegistration.Dispose();
+                this.shutdownBlock.Dispose();
             }
         }
 
-        private void OnProcessExit(object sender, EventArgs e)
+        private void OnProcessExit(object? sender, EventArgs e)
         {
             this.applicationLifetime.StopApplication();
             this.shutdownBlock.WaitOne();

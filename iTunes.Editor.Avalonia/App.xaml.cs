@@ -14,6 +14,7 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override void Initialize() => Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
 
+        /// <inheritdoc/>
         public override void OnFrameworkInitializationCompleted()
         {
             switch (this.ApplicationLifetime)
