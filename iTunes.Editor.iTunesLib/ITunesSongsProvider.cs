@@ -52,6 +52,7 @@ namespace ITunes.Editor.ITunesLib
                         track.Name,
                         track.Artist,
                         track.SortArtist ?? track.Artist,
+                        track.AlbumArtist,
                         track.Album,
                         track.Location,
                         track.Rating);

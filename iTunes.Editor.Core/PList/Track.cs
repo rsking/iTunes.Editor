@@ -148,6 +148,11 @@ namespace ITunes.Editor.PList
         public string Artist => this.dict.GetString("Artist");
 
         /// <summary>
+        /// Gets the album artist.
+        /// </summary>
+        public string AlbumArtist => this.dict.GetString("Album Artist");
+
+        /// <summary>
         /// Gets the composer.
         /// </summary>
         public string Composer => (string)this.dict["Composer"];
@@ -200,7 +205,7 @@ namespace ITunes.Editor.PList
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 
-            return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.Album, path, track.Rating);
+            return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.AlbumArtist, track.Album, path, track.Rating);
         }
     }
 }
