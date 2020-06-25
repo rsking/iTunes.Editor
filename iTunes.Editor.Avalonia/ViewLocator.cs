@@ -7,8 +7,8 @@
 namespace ITunes.Editor
 {
     using System;
-    using Avalonia.Controls;
-    using Avalonia.Controls.Templates;
+    using global::Avalonia.Controls;
+    using global::Avalonia.Controls.Templates;
 
     /// <summary>
     /// The view locator.
@@ -33,7 +33,7 @@ namespace ITunes.Editor
             if (type != null)
             {
                 var control = (Control)Activator.CreateInstance(type);
-                Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
+                global::Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
                 return control;
             }
             else

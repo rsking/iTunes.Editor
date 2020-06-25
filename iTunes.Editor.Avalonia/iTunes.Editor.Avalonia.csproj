@@ -11,13 +11,13 @@
     <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
     <AvaloniaResource Include="Assets\*" />
-    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" CustomToolNamespace="$(RootNamespace).Avalonia.Properties" />
   </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="0.9.*" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.*" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
   
   <ItemGroup>

@@ -6,9 +6,9 @@
 
 namespace ITunes.Editor.Views
 {
-    using Avalonia;
-    using Avalonia.Controls;
-    using Avalonia.Markup.Xaml;
+    using global::Avalonia;
+    using global::Avalonia.Controls;
+    using global::Avalonia.Markup.Xaml;
 
     /// <summary>
     /// The shell view.

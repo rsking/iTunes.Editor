@@ -13,7 +13,7 @@ namespace ITunes.Editor.Controls
     /// <summary>
     /// Switching content control.
     /// </summary>
-    public class SwitchingContentControl : Avalonia.Controls.ContentControl
+    public class SwitchingContentControl : global::Avalonia.Controls.ContentControl
     {
     }
 }

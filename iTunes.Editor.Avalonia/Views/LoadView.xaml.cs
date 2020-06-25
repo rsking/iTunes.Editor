@@ -9,7 +9,7 @@ namespace ITunes.Editor.Views
     /// <summary>
     /// The load view.
     /// </summary>
-    public class LoadView : Avalonia.Controls.UserControl
+    public class LoadView : global::Avalonia.Controls.UserControl
     {
     }
 }

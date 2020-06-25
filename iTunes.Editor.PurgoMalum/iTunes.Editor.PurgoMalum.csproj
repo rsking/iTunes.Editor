@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ITunes.Editor.PurgoMalum</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>$(RootNamespace).PurgoMalum</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RestSharp" Version="106.10.*" />
+    <PackageReference Include="RestSharp" Version="$(RestSharpVersion).*" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace ITunes.Editor.Views
     /// <summary>
     /// The Songs view.
     /// </summary>
-    public class SongsView : Avalonia.Controls.UserControl
+    public class SongsView : global::Avalonia.Controls.UserControl
     {
     }
 }

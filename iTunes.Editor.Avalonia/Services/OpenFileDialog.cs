@@ -16,7 +16,7 @@ namespace ITunes.Editor.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenFileDialog"/> class.
         /// </summary>
-        public OpenFileDialog() => this.Title = Properties.Resources.OpenFileDialogTitle;
+        public OpenFileDialog() => this.Title = Avalonia.Properties.Resources.OpenFileDialogTitle;
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point.
@@ -52,7 +52,7 @@ namespace ITunes.Editor.Services
         /// <returns>The list of file names.</returns>
         private async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesImpl(string? path, bool multiselect)
         {
-            var dialog = new Avalonia.Controls.OpenFileDialog
+            var dialog = new global::Avalonia.Controls.OpenFileDialog
             {
                 InitialFileName = path,
                 Title = this.Title,
@@ -64,7 +64,7 @@ namespace ITunes.Editor.Services
                 dialog.Filters.Add(filter);
             }
 
-            return await dialog.ShowAsync(Avalonia.Application.Current.GetActiveWindow()).ConfigureAwait(false);
+            return await dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()).ConfigureAwait(false);
         }
     }
 }

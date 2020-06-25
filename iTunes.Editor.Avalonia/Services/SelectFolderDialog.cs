@@ -25,8 +25,8 @@ namespace ITunes.Editor.Services
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
         public System.Threading.Tasks.Task<string?> GetSelectedPathAsync(string? path = default)
         {
-            var dialog = new Avalonia.Controls.OpenFolderDialog { Directory = path };
-            return dialog.ShowAsync(Avalonia.Application.Current.GetActiveWindow());
+            var dialog = new global::Avalonia.Controls.OpenFolderDialog { Directory = path };
+            return dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow());
         }
     }
 }

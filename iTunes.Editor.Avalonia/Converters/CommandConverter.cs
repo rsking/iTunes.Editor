@@ -13,7 +13,7 @@ namespace ITunes.Editor.Converters
     /// <summary>
     /// Command converter.
     /// </summary>
-    public class CommandConverter : Avalonia.Data.Converters.IValueConverter
+    public class CommandConverter : global::Avalonia.Data.Converters.IValueConverter
     {
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -57,7 +57,7 @@ namespace ITunes.Editor.Converters
                 return new DelegateCommand(execute, canExecute!, inpc!, propertyName!);
             }
 
-            return new Avalonia.Data.BindingNotification(new InvalidCastException($"Could not convert '{value}' to '{targetType?.Name}'."), Avalonia.Data.BindingErrorType.Error);
+            return new global::Avalonia.Data.BindingNotification(new InvalidCastException($"Could not convert '{value}' to '{targetType?.Name}'."), global::Avalonia.Data.BindingErrorType.Error);
         }
 
         /// <inheritdoc/>
@@ -107,7 +107,7 @@ namespace ITunes.Editor.Converters
                     return (bool)this.canExecute.DynamicInvoke()!;
                 }
 
-                Avalonia.Utilities.TypeUtilities.TryConvert(this.canExecuteParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
+                global::Avalonia.Utilities.TypeUtilities.TryConvert(this.canExecuteParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
                 return (bool)this.canExecute.DynamicInvoke(convertedParameter)!;
             }
 
@@ -121,7 +121,7 @@ namespace ITunes.Editor.Converters
                 }
                 else
                 {
-                    Avalonia.Utilities.TypeUtilities.TryConvert(this.executeParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
+                    global::Avalonia.Utilities.TypeUtilities.TryConvert(this.executeParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
                     returnValue = this.execute.DynamicInvoke(convertedParameter);
                 }
 

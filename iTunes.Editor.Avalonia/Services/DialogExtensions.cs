@@ -18,7 +18,7 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="application">The application object.</param>
         /// <returns>The active window.</returns>
-        internal static Avalonia.Controls.Window GetActiveWindow(this Avalonia.Application application)
+        internal static global::Avalonia.Controls.Window? GetActiveWindow(this global::Avalonia.Application application)
         {
             var windows = application.Windows;
             var window = windows.SingleOrDefault(x => x.IsActive);
@@ -37,7 +37,7 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="filterCollection">The filter collection.</param>
         /// <param name="filter">The filter to add.</param>
-        internal static void Add(this System.Collections.Generic.IList<Avalonia.Controls.FileDialogFilter> filterCollection, string filter)
+        internal static void Add(this System.Collections.Generic.IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter)
         {
             var split = filter.Split('|');
             var displayName = split[0];
@@ -47,7 +47,7 @@ namespace ITunes.Editor.Services
                 displayName = displayName.Substring(0, index);
             }
 
-            var dialogFilter = new Avalonia.Controls.FileDialogFilter { Name = displayName };
+            var dialogFilter = new global::Avalonia.Controls.FileDialogFilter { Name = displayName };
 
             // get the extensions
             if (split.Length > 1)
