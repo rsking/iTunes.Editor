@@ -31,7 +31,8 @@ namespace ITunes.Editor
         /// <summary>
         /// The main entry point.
         /// </summary>
-        private static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        private static void Main(string[] args) => BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(args);
 
         private static TAppBuilder UseHost<TAppBuilder>(this TAppBuilder builder, System.Func<IHostBuilder> hostBuilderFactory, System.Action<IHostBuilder>? configure = default)
             where TAppBuilder : global::Avalonia.Controls.AppBuilderBase<TAppBuilder>, new() =>

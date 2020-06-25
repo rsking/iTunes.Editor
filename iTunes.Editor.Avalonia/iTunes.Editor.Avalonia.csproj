@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  
   <PropertyGroup>
+    <OutputType>WinExe</OutputType>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net462</TargetFrameworks>
-    <OutputType>Exe</OutputType>
+    <AvaloniaVersion>0.9.*</AvaloniaVersion>
   </PropertyGroup>
     
   <ItemGroup>
-    <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
-    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
-    <AvaloniaResource Include="Assets\*" />
+    <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" CustomToolNamespace="$(RootNamespace).Avalonia.Properties" />
+    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+    <AvaloniaResource Include="Assets\*" />
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.*" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.*" />
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
   

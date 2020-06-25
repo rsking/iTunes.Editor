@@ -30,7 +30,7 @@ namespace ITunes.Editor
         {
             this.host = Host.CreateDefaultBuilder()
                 .UseDefaultITunes()
-                .ConfigureServices((hostingContext, serviceCollection) =>
+                .ConfigureServices(serviceCollection =>
                 {
                     serviceCollection.AddSingleton<Caliburn.Micro.IWindowManager, MetroWindowManager>();
                     serviceCollection.AddSingleton<IEventAggregator, EventAggregator>();
