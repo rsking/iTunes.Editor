@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ITunes.Editor.ApiSeeds</RootNamespace>
+    <RootNamespace>$(RootNamespace).ApiSeeds</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

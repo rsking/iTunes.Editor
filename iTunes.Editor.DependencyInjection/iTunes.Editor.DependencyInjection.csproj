@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.0" />
     <PackageReference Include="Neleus.DependencyInjection.Extensions" Version="1.0.2" />
   </ItemGroup>
 
@@ -17,6 +18,7 @@
     <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Genius\iTunes.Editor.Lyrics.Genius.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.Lyrics.Ovh\iTunes.Editor.Lyrics.Ovh.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Wikia\iTunes.Editor.Lyrics.Wikia.csproj" />
     <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
     <ProjectReference Include="..\iTunes.Editor.PurgoMalum\iTunes.Editor.PurgoMalum.csproj" />

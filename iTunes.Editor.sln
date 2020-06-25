@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.Genius
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.AZLyrics", "iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj", "{E79A4E99-F87D-45EA-95B7-181FFF5E226A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.Lyrics.Ovh", "iTunes.Editor.Lyrics.Ovh\iTunes.Editor.Lyrics.Ovh.csproj", "{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{E79A4E99-F87D-45EA-95B7-181FFF5E226A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E79A4E99-F87D-45EA-95B7-181FFF5E226A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E79A4E99-F87D-45EA-95B7-181FFF5E226A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +130,7 @@ Global
 		{AC165BB4-B1AD-4CFE-9A40-0104026F09F8} = {7400F270-F7FD-41B3-871D-9D16D4C02975}
 		{25D793D0-9AC7-4EBF-AE5A-0D3CD22D47E1} = {7400F270-F7FD-41B3-871D-9D16D4C02975}
 		{E79A4E99-F87D-45EA-95B7-181FFF5E226A} = {7400F270-F7FD-41B3-871D-9D16D4C02975}
+		{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A} = {7400F270-F7FD-41B3-871D-9D16D4C02975}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {07F60490-1F3A-46BF-AE07-3429AF63033A}

@@ -97,7 +97,7 @@ namespace ITunes.Editor
 
             var builder = new CommandLineBuilder()
                 .UseDefaults()
-                .UseHost(Host.CreateDefaultBuilder, ConfigureHost)
+                .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost.UseDefaultITunes())
                 .AddCommand(listCommandBuilder.Command)
                 .AddCommand(composerCommandBuilder.Command)
                 .AddCommand(lyricsCommandBuilder.Command)
@@ -106,39 +106,6 @@ namespace ITunes.Editor
 
             return builder.Build().InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
         }
-
-        private static void ConfigureHost(IHostBuilder hostBuilder) => hostBuilder.ConfigureServices((hostingContext, serviceCollection) =>
-        {
-            // Lyrics
-            serviceCollection
-                .AddWikia()
-                .AddAZ()
-                .AddGenius()
-                .AddChartLyrics()
-                .AddApiSeeds(hostingContext.Configuration)
-                .AddPurgoMalum();
-
-            // Composers
-            serviceCollection
-                .AddApraAmcos();
-
-            // song providers
-            serviceCollection
-                .AddFolder()
-                .AddIPod()
-                .AddPList()
-                .AddITunes();
-
-            // tag provider
-            serviceCollection
-                .AddTagLib()
-                .AddMediaInfo();
-
-            // add services
-            serviceCollection
-                .AddTransient<IUpdateComposerService, UpdateComposerService>()
-                .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
-        });
 
         private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default, params string[] property)
         {

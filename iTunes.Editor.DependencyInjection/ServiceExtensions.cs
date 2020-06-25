@@ -58,6 +58,14 @@ namespace Microsoft.Extensions.DependencyInjection
             .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.AZLyrics.AZLyricsProvider>("az");
 
         /// <summary>
+        /// Adds OVH.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        /// <returns>The return service collection.</returns>
+        public static IServiceCollection AddOvh(this IServiceCollection serviceCollection) => serviceCollection
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Ovh.OvhLyricsProvider>("ovh");
+
+        /// <summary>
         /// Adds Purgo Malum.
         /// </summary>
         /// <param name="serviceCollection">The service collection.</param>

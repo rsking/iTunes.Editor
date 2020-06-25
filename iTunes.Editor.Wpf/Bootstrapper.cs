@@ -29,6 +29,7 @@ namespace ITunes.Editor
         protected override async void Configure()
         {
             this.host = Host.CreateDefaultBuilder()
+                .UseDefaultITunes()
                 .ConfigureServices((hostingContext, serviceCollection) =>
                 {
                     serviceCollection.AddSingleton<Caliburn.Micro.IWindowManager, MetroWindowManager>();
@@ -41,34 +42,6 @@ namespace ITunes.Editor
 
                     serviceCollection.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                     serviceCollection.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
-
-                    // Lyrics
-                    serviceCollection
-                        .AddWikia()
-                        .AddChartLyrics()
-                        .AddApiSeeds(hostingContext.Configuration)
-                        .AddPurgoMalum();
-
-                    // Composers
-                    serviceCollection
-                        .AddApraAmcos();
-
-                    // song providers
-                    serviceCollection
-                        .AddFolder()
-                        .AddIPod()
-                        .AddPList()
-                        .AddITunes();
-
-                    // tag provider
-                    serviceCollection
-                        .AddTagLib()
-                        .AddMediaInfo();
-
-                    // add services
-                    serviceCollection
-                        .AddTransient<IUpdateComposerService, UpdateComposerService>()
-                        .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
                 })
                 .UseWpfApplicationLifetime()
                 .Build();
