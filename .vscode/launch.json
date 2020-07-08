@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "Build UI",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/iTunes.Editor.Avalonia/bin/Debug/netcoreapp2.2/iTunes.Editor.Avalonia.dll",
+            "program": "${workspaceRoot}/iTunes.Editor.Avalonia/bin/Debug/netcoreapp3.1/iTunes.Editor.Avalonia.dll",
             "args": [],
             "cwd": "${workspaceRoot}",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -23,7 +23,7 @@
             "type": "coreclr",
             "request": "launch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.2/iTunes.Editor.Console.dll",
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp3.1/iTunes.Editor.Console.dll",
             "args": [
                 "list",
                 "%OneDriveConsumer%\\Music\\iTunes\\iTunes Library.xml",
@@ -42,7 +42,7 @@
             "type": "coreclr",
             "request": "launch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.2/iTunes.Editor.Console.dll",
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp3.1/iTunes.Editor.Console.dll",
             "args": [
                 "lyrics",
                 "Pink Floyd",
@@ -60,7 +60,7 @@
             "type": "coreclr",
             "request": "launch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.2/iTunes.Editor.Console.dll",
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp3.1/iTunes.Editor.Console.dll",
             "args": [
                 "composer",
                 "Pink Floyd",
@@ -78,7 +78,7 @@
             "type": "coreclr",
             "request": "launch",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp2.2/iTunes.Editor.Console.dll",
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp3.1/iTunes.Editor.Console.dll",
             "args": [
                 "update",
                 "list",
@@ -86,6 +86,27 @@
                 "%OneDriveConsumer%\\Music\\iTunes\\iTunes Library.xml",
                 "--type",
                 "plist"
+            ],
+            "cwd": "${workspaceFolder}/iTunes.Editor.Console",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Update Folder",
+            "preLaunchTask": "Build Console",
+            "type": "coreclr",
+            "request": "launch",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/iTunes.Editor.Console/bin/Debug/netcoreapp3.1/iTunes.Editor.Console.dll",
+            "args": [
+                "update",
+                "list",
+                "all",
+                "%OneDriveConsumer%\\Music\\iTunes\\iTunes Media\\Music\\Billie Eilish\\When We All Fall Asleep, Where Do We Go_",
+                "--type",
+                "folder"
             ],
             "cwd": "${workspaceFolder}/iTunes.Editor.Console",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
