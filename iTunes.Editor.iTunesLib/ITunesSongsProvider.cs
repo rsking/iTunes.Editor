@@ -26,6 +26,11 @@ namespace ITunes.Editor.ITunesLib
         /// </summary>
         public bool SetAlbumArtist { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to update the grouping.
+        /// </summary>
+        public bool UpdateGrouping { get; set; }
+
         /// <inheritdoc />
 
 #if NO_ITUNES
@@ -53,14 +58,12 @@ namespace ITunes.Editor.ITunesLib
                         continue;
                     }
 
-                    bool updated = false;
                     if (this.SetAlbumArtist && !track.Compilation)
                     {
                         if (string.IsNullOrWhiteSpace(track.AlbumArtist)
                             && !string.IsNullOrWhiteSpace(track.Artist))
                         {
                             track.AlbumArtist = track.Artist;
-                            updated = true;
                         }
 
                         if (string.IsNullOrWhiteSpace(track.SortAlbumArtist)
@@ -68,20 +71,27 @@ namespace ITunes.Editor.ITunesLib
                             && !string.IsNullOrWhiteSpace(track.SortArtist))
                         {
                             track.SortAlbumArtist = track.SortArtist;
-                            updated = true;
                         }
                     }
 
-                    if (updated)
+                    if (this.UpdateGrouping
+                        && track.Grouping != null)
                     {
-                        yield return new SongInformation(
-                            track.Name,
-                            track.Artist,
-                            track.SortArtist ?? track.Artist,
-                            track.Album,
-                            track.Location,
-                            track.Rating);
+                        var grouping = track.Grouping.RemoveHasLyrics();
+
+                        if (grouping != track.Grouping)
+                        {
+                            track.Grouping = grouping ?? string.Empty;
+                        }
                     }
+
+                    yield return new SongInformation(
+                        track.Name,
+                        track.Artist,
+                        track.SortArtist ?? track.Artist,
+                        track.Album,
+                        track.Location,
+                        track.Rating);
                 }
             }
         }

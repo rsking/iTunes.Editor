@@ -167,6 +167,20 @@ namespace ITunes.Editor
         public static bool RemoveNoLyrics(this TagLib.Tag appleTag) => appleTag.RemoveTag(NoLyrics, HasLyrics);
 
         /// <summary>
+        /// Removes the "no lyrics" flag from the tags.
+        /// </summary>
+        /// <param name="tags">The tags.</param>
+        /// <returns><paramref name="tags"/> with "no lyrics" removed.</returns>
+        public static string? RemoveNoLyrics(this string? tags) => tags.RemoveTag(NoLyrics);
+
+        /// <summary>
+        /// Removes the "has lyrics" flag from the tags.
+        /// </summary>
+        /// <param name="tags">The tags.</param>
+        /// <returns><paramref name="tags"/> with "has lyrics" removed.</returns>
+        public static string? RemoveHasLyrics(this string? tags) => tags.RemoveTag(HasLyrics);
+
+        /// <summary>
         /// Updates the explicit value.
         /// </summary>
         /// <param name="tag">The tag to update.</param>
@@ -243,6 +257,36 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
         public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(UnratedRatingData) ?? false;
 
+        private static string? RemoveTag(this string? tags, string tag)
+        {
+            if (tags?.Contains(tag) == true)
+            {
+                var grouping = tags.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+                var index = -1;
+
+                // See if the tag is already in there
+                for (var j = 0; j < grouping.Length; j++)
+                {
+                    if (grouping[j] == tag)
+                    {
+                        index = j;
+                        break;
+                    }
+                }
+
+                if (index >= 0)
+                {
+                    var groupingList = new List<string>(grouping);
+                    groupingList.RemoveAt(index);
+                    return groupingList.Count == 0
+                        ? default
+                        : string.Join("; ", groupingList);
+                }
+            }
+
+            return tags;
+        }
+
         private static bool SetRating(this TagLib.Mpeg4.AppleTag appleTag, TagLib.ByteVector rating)
         {
             var rtng = appleTag.DataBoxes(Rating);
@@ -295,28 +339,12 @@ namespace ITunes.Editor
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(appleTag.Grouping) && appleTag.Grouping.Contains(tag))
+            var original = appleTag.Grouping;
+            var updated = original.RemoveTag(tag);
+            if (original != updated)
             {
-                var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-                var index = -1;
-
-                // See if No Lyrics is already in there
-                for (var j = 0; j < grouping.Length; j++)
-                {
-                    if (grouping[j] == tag)
-                    {
-                        index = j;
-                        break;
-                    }
-                }
-
-                if (index >= 0)
-                {
-                    var groupingList = new List<string>(grouping);
-                    groupingList.RemoveAt(index);
-                    appleTag.Grouping = groupingList.Count == 0 ? replacement : string.Join("; ", groupingList);
-                    return true;
-                }
+                appleTag.Grouping = updated ?? replacement;
+                return true;
             }
 
             return false;
