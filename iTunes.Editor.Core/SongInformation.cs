@@ -24,6 +24,7 @@ namespace ITunes.Editor
         /// <param name="title">The title.</param>
         /// <param name="performers">The performers.</param>
         /// <param name="sortPerformers">The sort performers.</param>
+        /// <param name="albumPerformers">The album performers.</param>
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
@@ -32,6 +33,7 @@ namespace ITunes.Editor
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
                 sortPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
+                albumPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
                 album,
                 name,
                 rating)
@@ -44,6 +46,7 @@ namespace ITunes.Editor
         /// <param name="title">The title.</param>
         /// <param name="performers">The performers.</param>
         /// <param name="sortPerformers">The sort performers.</param>
+        /// <param name="albumPerformers">The album performers.</param>
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
@@ -51,13 +54,15 @@ namespace ITunes.Editor
             string title,
             System.Collections.Generic.IEnumerable<string> performers,
             System.Collections.Generic.IEnumerable<string> sortPerformers,
+            System.Collections.Generic.IEnumerable<string> albumPerformers,
             string? album,
             string? name,
             int? rating = null)
         {
             this.Title = title;
-            this.Performers = performers;
-            this.SortPerformers = sortPerformers;
+            this.Performers = performers ?? System.Linq.Enumerable.Empty<string>();
+            this.SortPerformers = sortPerformers ?? System.Linq.Enumerable.Empty<string>();
+            this.AlbumPerformers = albumPerformers ?? System.Linq.Enumerable.Empty<string>();
             this.Album = album;
             this.Name = name;
             this.Rating = rating;
@@ -77,6 +82,11 @@ namespace ITunes.Editor
         /// Gets the sort performers.
         /// </summary>
         public System.Collections.Generic.IEnumerable<string> SortPerformers { get; }
+
+        /// <summary>
+        /// Gets the album performers.
+        /// </summary>
+        public System.Collections.Generic.IEnumerable<string> AlbumPerformers { get; }
 
         /// <summary>
         /// Gets the album.
@@ -103,6 +113,7 @@ namespace ITunes.Editor
                 file.Tag.Title,
                 file.Tag.Performers,
                 file.Tag.PerformersSort ?? file.Tag.Performers,
+                file.Tag.AlbumArtists,
                 file.Tag.Album,
                 file.Name);
 
