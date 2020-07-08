@@ -5,6 +5,7 @@
 namespace Microsoft.Extensions.DependencyInjection
 {
     using System.Linq;
+    using Humanizer;
     using ITunes.Editor;
     using Neleus.DependencyInjection.Extensions;
 
@@ -22,8 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="configuration">The configuration.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddApiSeeds(this IServiceCollection serviceCollection, Configuration.IConfiguration configuration) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>("apiseeds")
-            .Configure<ITunes.Editor.ApiSeeds.ApiSeeds>(configuration?.GetSection("ApiSeeds"));
+            .Configure<ITunes.Editor.ApiSeeds.ApiSeedsOptions>(configuration?.GetSection(nameof(ITunes.Editor.ApiSeeds)))
+            .AddTransient<ILyricsProvider, ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.ApiSeeds)));
 
         /// <summary>
         /// Adds Chart Lyrics.
@@ -31,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddChartLyrics(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.ChartLyrics.ChartLyricsLyricsProvider>("chart");
+            .AddTransient<ILyricsProvider, ITunes.Editor.ChartLyrics.ChartLyricsLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.ChartLyrics)));
 
         /// <summary>
         /// Adds Wikia.
@@ -39,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddWikia(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Wikia.WikiaLyricsProvider>("wikia");
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Wikia.WikiaLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.Wikia)));
 
         /// <summary>
         /// Adds Genius.
@@ -47,7 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddGenius(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Genius.GeniusLyricsProvider>("genius");
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Genius.GeniusLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.Genius)));
 
         /// <summary>
         /// Adds AZ.
@@ -55,7 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddAZ(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.AZLyrics.AZLyricsProvider>("az");
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.AZLyrics.AZLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.AZLyrics)));
 
         /// <summary>
         /// Adds OVH.
@@ -63,7 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddOvh(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Ovh.OvhLyricsProvider>("ovh");
+            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Ovh.OvhLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.Ovh)));
 
         /// <summary>
         /// Adds Purgo Malum.
@@ -71,7 +72,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddPurgoMalum(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<IExplicitLyricsProvider, ITunes.Editor.PurgoMalum.PurgoMalumExplicitLyricsProvider>("purgo_malum");
+            .AddTransient<IExplicitLyricsProvider, ITunes.Editor.PurgoMalum.PurgoMalumExplicitLyricsProvider>(GetProviderName(nameof(ITunes.Editor.PurgoMalum).Underscore()));
 
         /// <summary>
         /// Adds Purgo Malum.
@@ -95,7 +96,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddIPod(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ISongsProvider, ITunes.Editor.IPod.IPodSongsProvider>("ipod");
+            .AddTransient<ISongsProvider, ITunes.Editor.IPod.IPodSongsProvider>(GetProviderName(nameof(ITunes.Editor.IPod)));
 
         /// <summary>
         /// Adds the iTunes provider.
@@ -106,7 +107,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
             {
-                serviceCollection.AddTransient<ISongsProvider, ITunes.Editor.ITunesLib.ITunesSongsProvider>("itunes");
+                serviceCollection.AddTransient<ISongsProvider, ITunes.Editor.ITunesLib.ITunesSongsProvider>(nameof(ITunes).ToLower(System.Globalization.CultureInfo.CurrentCulture));
             }
 
             return serviceCollection;
@@ -118,7 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddPList(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ISongsProvider, ITunes.Editor.PList.PListSongsProvider>("plist");
+            .AddTransient<ISongsProvider, ITunes.Editor.PList.PListSongsProvider>(nameof(ITunes.Editor.PList).ToLower(System.Globalization.CultureInfo.CurrentCulture));
 
         /// <summary>
         /// Adds the MediaInfo provider.
@@ -126,7 +127,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddTagLib(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ITagProvider, TagLibTagProvider>("taglib");
+            .AddTransient<ITagProvider, TagLibTagProvider>(nameof(TagLib).ToLower(System.Globalization.CultureInfo.CurrentCulture));
 
         /// <summary>
         /// Adds the MediaInfo provider.
@@ -134,7 +135,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddMediaInfo(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ITagProvider, ITunes.Editor.MediaInfo.MediaInfoTagProvider>("mediainfo");
+            .AddTransient<ITagProvider, ITunes.Editor.MediaInfo.MediaInfoTagProvider>(nameof(ITunes.Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture));
 
         /// <summary>
         /// Adds the ApraAmcos provider.
@@ -174,6 +175,19 @@ namespace Microsoft.Extensions.DependencyInjection
             .GetMethod(nameof(GetRequiredService), new[] { typeof(System.IServiceProvider), typeof(string) })
             .MakeGenericMethod(serviceType)
             .Invoke(null, new object[] { provider, key });
+
+        private static string GetLyricsProviderName(string name) => GetProviderName(name, nameof(ITunes.Editor.Lyrics));
+
+        private static string GetProviderName(string name, string suffix = "")
+        {
+            var providerName = name;
+            if (!string.IsNullOrEmpty(suffix))
+            {
+                providerName = providerName.Replace(suffix, string.Empty);
+            }
+
+            return providerName.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+        }
 
         private static IServiceCollection AddTransient<TService, TImplementation>(this IServiceCollection serviceCollection, string name)
             where TService : class

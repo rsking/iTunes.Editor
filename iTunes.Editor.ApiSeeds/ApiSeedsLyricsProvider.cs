@@ -39,7 +39,7 @@ namespace ITunes.Editor.ApiSeeds
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="options">The options.</param>
-        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeeds> options)
+        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeedsOptions> options)
             : this(logger, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
         {
         }
@@ -68,9 +68,9 @@ namespace ITunes.Editor.ApiSeeds
             }
 
             if (getLyricResult.Artist?.Name != null
-                && getLyricResult.Artist.Name.Equals((string)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+                && getLyricResult.Artist.Name.Equals((string?)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
                 && getLyricResult.Track?.Name != null
-                && getLyricResult.Track.Name.Equals((string)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
+                && getLyricResult.Track.Name.Equals((string?)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
             {
                 return getLyricResult.Track.Text;
             }

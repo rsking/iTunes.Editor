@@ -86,7 +86,7 @@ namespace ITunes.Editor.ChartLyrics
                 return getLyricResult.Lyric;
             }
 
-            logger.LogInformation(Properties.Resources.IncorrectLyricsFound, $"{artist}|{song}", $"{getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
+            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{artist}|{song}", $"{getLyricResult.LyricArtist}|{getLyricResult.LyricSong}");
             return null;
         }
     }

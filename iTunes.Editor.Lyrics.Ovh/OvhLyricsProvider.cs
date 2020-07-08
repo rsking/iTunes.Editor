@@ -1,8 +1,15 @@
-﻿namespace ITunes.Editor.Lyrics.Ovh
+﻿// <copyright file="OvhLyricsProvider.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+
+namespace ITunes.Editor.Lyrics.Ovh
 {
     using Microsoft.Extensions.Logging;
     using RestSharp;
 
+    /// <summary>
+    /// The <see cref="ILyricsProvider"/> for OVH.
+    /// </summary>
     public class OvhLyricsProvider : ILyricsProvider
     {
         private static readonly System.Uri Uri = new System.Uri("https://api.lyrics.ovh/v1");
@@ -15,7 +22,6 @@
         /// Initializes a new instance of the <see cref="OvhLyricsProvider" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="apiKey">The API key.</param>
         public OvhLyricsProvider(ILogger<OvhLyricsProvider> logger)
         {
             this.logger = logger;

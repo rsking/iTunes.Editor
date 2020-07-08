@@ -52,12 +52,12 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e) => this.DisplayRootViewFor<ViewModels.ShellViewModel>();
 
-        ///// <inheritdoc/>
-        //protected override async void OnExit(object sender, EventArgs e)
-        //{
-        //    await this.host.StopAsync().ConfigureAwait(false);
-        //    base.OnExit(sender, e);
-        //}
+        /////// <inheritdoc/>
+        ////protected override async void OnExit(object sender, EventArgs e)
+        ////{
+        ////    await this.host.StopAsync().ConfigureAwait(false);
+        ////    base.OnExit(sender, e);
+        ////}
 
         /// <inheritdoc/>
         protected override object GetInstance(Type service, string key) => string.IsNullOrEmpty(key)
@@ -67,8 +67,8 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         protected override IEnumerable<object> GetAllInstances(Type service) => this.host.Services.GetServices(service);
 
-        /// <inheritdoc/>
-        //protected override void BuildUp(object instance) => throw new InvalidOperationException();
+        /////// <inheritdoc/>
+        ////protected override void BuildUp(object instance) => throw new InvalidOperationException();
 
         private readonly struct DummyHost : IHost
         {

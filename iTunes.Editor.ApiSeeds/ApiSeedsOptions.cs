@@ -7,7 +7,8 @@ namespace ITunes.Editor.ApiSeeds
     /// <summary>
     /// The API seeds options.
     /// </summary>
-    public class ApiSeeds
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "This is for configuration")]
+    public class ApiSeedsOptions
     {
         /// <summary>
         /// Gets or sets the API key.
