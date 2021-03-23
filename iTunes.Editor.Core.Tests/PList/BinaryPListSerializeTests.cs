@@ -75,7 +75,7 @@ namespace ITunes.Editor.PList
         }
 
         [Fact]
-        private void Serialize()
+        internal void Serialize()
         {
             var formatter = new PListBinaryFormatter();
 
@@ -101,7 +101,7 @@ namespace ITunes.Editor.PList
         }
 
         [Fact]
-        private void TestOutput()
+        internal void TestOutput()
         {
             using var stream = Resources.TestBin;
             using var memoryStream = new System.IO.MemoryStream();

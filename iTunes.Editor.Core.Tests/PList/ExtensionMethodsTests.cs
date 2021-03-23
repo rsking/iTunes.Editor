@@ -29,60 +29,60 @@ namespace ITunes.Editor.PList
             where T : struct => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(_ => function(_, "value")).Should().Throw<InvalidCastException>();
 
         [Fact]
-        private void TestGetNullableInt32WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt32, 1234L);
+        internal void TestGetNullableInt32WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt32, 1234L);
 
         [Fact]
-        private void TestGetNullableInt32WithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableInt32, default(int?));
+        internal void TestGetNullableInt32WithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableInt32, default(int?));
 
         [Fact]
-        private void TestGetNullableInt32WithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableInt32);
+        internal void TestGetNullableInt32WithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableInt32);
 
         [Fact]
-        private void TestGetNullableInt32WithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableInt32);
+        internal void TestGetNullableInt32WithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableInt32);
 
         [Fact]
-        private void TestGetNullableInt64WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt64, 1234L);
+        internal void TestGetNullableInt64WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt64, 1234L);
 
         [Fact]
-        private void TestGetNullableInt64WithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableInt64, default(long?));
+        internal void TestGetNullableInt64WithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableInt64, default(long?));
 
         [Fact]
-        private void TestGetNullableInt64WithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableInt64);
+        internal void TestGetNullableInt64WithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableInt64);
 
         [Fact]
-        private void TestGetNullableInt64WithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableInt64);
+        internal void TestGetNullableInt64WithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableInt64);
 
         [Fact]
-        private void TestGetNullableBooleanWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableBoolean, true);
+        internal void TestGetNullableBooleanWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableBoolean, true);
 
         [Fact]
-        private void TestGetNullableBooleanWithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableBoolean, default(bool?));
+        internal void TestGetNullableBooleanWithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableBoolean, default(bool?));
 
         [Fact]
-        private void TestGetNullableBooleanWithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableBoolean);
+        internal void TestGetNullableBooleanWithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableBoolean);
 
         [Fact]
-        private void TestGetNullableBooleanWithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableBoolean);
+        internal void TestGetNullableBooleanWithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableBoolean);
 
         [Fact]
-        private void TestGetNullableDateTimeWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableDateTime, DateTime.Now);
+        internal void TestGetNullableDateTimeWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableDateTime, DateTime.Now);
 
         [Fact]
-        private void TestGetNullableDateTimeWithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableDateTime, default(DateTime?));
+        internal void TestGetNullableDateTimeWithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableDateTime, default(DateTime?));
 
         [Fact]
-        private void TestGetNullableDateTimeWithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableDateTime);
+        internal void TestGetNullableDateTimeWithNoKey() => TestGetWithNoKey(ExtensionMethods.GetNullableDateTime);
 
         [Fact]
-        private void TestGetNullableDateTimeWithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableDateTime);
+        internal void TestGetNullableDateTimeWithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableDateTime);
 
         [Fact]
-        private void TestGetStringWithValidData() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value").Should().Be("value");
+        internal void TestGetStringWithValidData() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value").Should().Be("value");
 
         [Fact]
-        private void TestGetStringWithNoKey() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default);
+        internal void TestGetStringWithNoKey() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default);
 
         [Fact]
-        private void TestGetStringWithInvalidData() => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
+        internal void TestGetStringWithInvalidData() => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
     }
 }
