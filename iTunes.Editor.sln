@@ -36,6 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		nuget.config = nuget.config
+		Settings.XamlStyler = Settings.XamlStyler
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
@@ -43,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.Genius
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.AZLyrics", "iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj", "{E79A4E99-F87D-45EA-95B7-181FFF5E226A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.Lyrics.Ovh", "iTunes.Editor.Lyrics.Ovh\iTunes.Editor.Lyrics.Ovh.csproj", "{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Lyrics.Ovh", "iTunes.Editor.Lyrics.Ovh\iTunes.Editor.Lyrics.Ovh.csproj", "{1092FB9C-A4E4-47B0-9F22-18520CA0BB2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -16,7 +16,7 @@ namespace ITunes.Editor
         /// <summary>
         /// An empty song information.
         /// </summary>
-        public static readonly SongInformation Empty = new SongInformation(string.Empty, default(string), default, default, default);
+        public static readonly SongInformation Empty = new SongInformation(string.Empty, default(string), default, default, default, default);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongInformation"/> class.
@@ -28,7 +28,7 @@ namespace ITunes.Editor
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
-        public SongInformation(string title, string? performers, string? sortPerformers, string? album, string? name, int? rating = null)
+        public SongInformation(string title, string? performers, string? sortPerformers, string? album, string? albumPerformers, string? name, int? rating = null)
             : this(
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),

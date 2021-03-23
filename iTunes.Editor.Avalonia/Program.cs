@@ -7,7 +7,6 @@
 namespace ITunes.Editor
 {
     using global::Avalonia;
-    using global::Avalonia.Logging.Serilog;
     using global::Avalonia.ReactiveUI;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -24,7 +23,7 @@ namespace ITunes.Editor
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToDebug()
+                .LogToTrace()
                 .UseHost(Host.CreateDefaultBuilder)
                 .UseReactiveUI();
 

@@ -17,13 +17,15 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override void OnFrameworkInitializationCompleted()
         {
+            var viewModel = new ViewModels.ShellViewModel();
+
             switch (this.ApplicationLifetime)
             {
                 case global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop:
-                    desktop.MainWindow = new Views.ShellView { DataContext = new ViewModels.ShellViewModel() };
+                    desktop.MainWindow = new Views.ShellView { DataContext = viewModel };
                     break;
                 case global::Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime singleView:
-                    singleView.MainView = new Views.ShellView { DataContext = new ViewModels.ShellViewModel() };
+                    singleView.MainView = new Views.ShellView { DataContext = viewModel };
                     break;
             }
 

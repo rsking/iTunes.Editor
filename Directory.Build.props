@@ -6,9 +6,18 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
-    <DotnetCoreBaseVersion>3.1</DotnetCoreBaseVersion>
-    <DotnetCoreVersion>$(DotnetCoreBaseVersion).5</DotnetCoreVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analysis">
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Versions">
+    <DotnetCoreVersion>5.0.0</DotnetCoreVersion>
     <RestSharpVersion>106.11</RestSharpVersion>
+    <PropertyChangedVersion>3.3.*</PropertyChangedVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
+    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -67,7 +67,7 @@ namespace ITunes.Editor.Converters
         {
             private readonly Delegate execute;
 
-            private readonly Delegate canExecute;
+            private readonly Delegate? canExecute;
 
             private readonly System.Reflection.ParameterInfo executeParameterInfo;
 
@@ -95,23 +95,28 @@ namespace ITunes.Editor.Converters
 
             public event EventHandler? CanExecuteChanged;
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 if (this.canExecute is null)
                 {
                     return true;
                 }
 
+                object? result;
                 if (this.canExecuteParameterInfo is null)
                 {
-                    return (bool)this.canExecute.DynamicInvoke()!;
+                    result = this.canExecute.DynamicInvoke();
+                }
+                else
+                {
+                    global::Avalonia.Utilities.TypeUtilities.TryConvert(this.canExecuteParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
+                    result = this.canExecute.DynamicInvoke(convertedParameter);
                 }
 
-                global::Avalonia.Utilities.TypeUtilities.TryConvert(this.canExecuteParameterInfo.ParameterType, parameter, CultureInfo.CurrentCulture, out object convertedParameter);
-                return (bool)this.canExecute.DynamicInvoke(convertedParameter)!;
+                return (bool)result!;
             }
 
-            public async void Execute(object parameter)
+            public async void Execute(object? parameter)
             {
                 object? returnValue;
 

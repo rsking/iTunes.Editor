@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net462</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;netcoreapp3.1;net462</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <UseWpf>true</UseWpf>
-    
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +15,13 @@
   <ItemGroup>
     <None Update="*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
-    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />  </ItemGroup>
+    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
+    <EmbeddedResource Update="Properties\Resources.resx" CustomToolNamespace="$(Rootnamespace).Wpf.Properties" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
   </ItemGroup>
-  
+
 </Project>

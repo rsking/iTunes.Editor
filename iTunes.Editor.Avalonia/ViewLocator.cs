@@ -27,18 +27,28 @@ namespace ITunes.Editor
         /// <returns>The created control.</returns>
         public IControl Build(object data)
         {
-            var name = data.GetType().FullName.Replace("ViewModel", "View");
-            var type = Type.GetType(name);
-
-            if (type is not null)
+            if (data is null)
             {
-                var control = (Control)Activator.CreateInstance(type);
+                return new TextBlock { Text = Avalonia.Properties.Resources.NotFoundLabel };
+            }
+
+            var name = data.GetType().FullName?
+#if NETCOREAPP
+                .Replace("ViewModel", "View", StringComparison.InvariantCulture);
+#else
+                .Replace("ViewModel", "View");
+#endif
+
+            if (name is not null
+                && Type.GetType(name) is Type type
+                && Activator.CreateInstance(type) is Control control)
+            {
                 global::Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
                 return control;
             }
             else
             {
-                return new TextBlock { Text = "Not Found: " + name };
+                return new TextBlock { Text = $"Not Found: {name}" };
             }
         }
 
@@ -54,8 +64,13 @@ namespace ITunes.Editor
                 return false;
             }
 
-            var name = data.GetType().FullName.Replace("ViewModel", "View");
-            return Type.GetType(name) is not null;
+            var name = data.GetType().FullName?
+#if NETCOREAPP
+                .Replace("ViewModel", "View", StringComparison.InvariantCulture);
+#else
+                .Replace("ViewModel", "View");
+#endif
+            return name is not null && Type.GetType(name) is not null;
         }
     }
 }
