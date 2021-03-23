@@ -117,7 +117,7 @@ namespace System.Collections.ObjectModel
                 return;
             }
 
-            if (e != null)
+            if (e is not null)
             {
                 switch (e.Action)
                 {

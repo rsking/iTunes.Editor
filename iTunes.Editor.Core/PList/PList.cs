@@ -198,7 +198,7 @@ namespace ITunes.Editor.PList
                 if (reader.Name == KeyElementName)
                 {
                     reader.Read();
-                    if (key != null)
+                    if (key is not null)
                     {
                         AddToDictionary();
                     }
@@ -248,7 +248,7 @@ namespace ITunes.Editor.PList
                             return stringValue ?? string.Empty;
                         }
 
-                        if (stringValue != null)
+                        if (stringValue is not null)
                         {
                             stringValue += System.Environment.NewLine;
                         }

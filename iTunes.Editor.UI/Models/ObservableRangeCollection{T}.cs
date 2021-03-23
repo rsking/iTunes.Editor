@@ -78,7 +78,7 @@ namespace System.Collections.ObjectModel
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is not in the collection range.</exception>
         public void InsertRange(int index, IEnumerable<T> collection)
         {
-            if (collection == null)
+            if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
@@ -128,7 +128,7 @@ namespace System.Collections.ObjectModel
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         public void RemoveRange(IEnumerable<T> collection)
         {
-            if (collection == null)
+            if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
@@ -171,7 +171,7 @@ namespace System.Collections.ObjectModel
 
                 this.Items.RemoveAt(index);
 
-                if (lastIndex == index && lastCluster != null)
+                if (lastIndex == index && lastCluster is not null)
                 {
                     lastCluster.Add(item);
                 }
@@ -233,7 +233,7 @@ namespace System.Collections.ObjectModel
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            if (match == null)
+            if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
@@ -407,12 +407,12 @@ namespace System.Collections.ObjectModel
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            if (collection == null)
+            if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            if (comparer == null)
+            if (comparer is null)
             {
                 throw new ArgumentNullException(nameof(comparer));
             }
@@ -550,7 +550,7 @@ namespace System.Collections.ObjectModel
         /// <inheritdoc/>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (this.deferredEvents != null)
+            if (this.deferredEvents is not null)
             {
                 this.deferredEvents.Add(e);
                 return;
@@ -585,7 +585,7 @@ namespace System.Collections.ObjectModel
 
         private void OnRangeReplaced(int followingItemIndex, ICollection<T> newCluster, ICollection<T>? oldCluster)
         {
-            if (oldCluster == null || oldCluster.Count == 0)
+            if (oldCluster is null || oldCluster.Count == 0)
             {
                 return;
             }

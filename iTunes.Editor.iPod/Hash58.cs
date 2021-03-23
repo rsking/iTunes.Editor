@@ -26,7 +26,7 @@ namespace IPod
         
         public static byte [] GenerateHash(string fwid, byte [] iTunesDB, int sizeOfHeaders)
         {
-            if(fwid == null || fwid.Length != 16) {
+            if(fwid is null || fwid.Length != 16) {
                 throw new Exception("String FWID must be 16 characters long");
             }
             

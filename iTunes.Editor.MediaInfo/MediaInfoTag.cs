@@ -145,7 +145,7 @@ namespace ITunes.Editor.MediaInfo
 
         private void SetString(string category, string key, string? value)
         {
-            if (value == null)
+            if (value is null)
             {
                 this.lookup[category].Remove(key);
                 return;
@@ -160,12 +160,12 @@ namespace ITunes.Editor.MediaInfo
             return string.IsNullOrEmpty(stringValue) ? Array.Empty<string>() : stringValue!.Split(';').Select(_ => _.Trim()).ToArray();
         }
 
-        private void SetStringArray(string category, string key, string[] value) => this.SetString(category, key, value == null ? null : string.Join("; ", value));
+        private void SetStringArray(string category, string key, string[] value) => this.SetString(category, key, value is null ? null : string.Join("; ", value));
 
         private uint GetUInt32(string category, string key)
         {
             var stringValue = this.GetString(category, key);
-            if (stringValue != null && uint.TryParse(stringValue, out var value))
+            if (stringValue is not null && uint.TryParse(stringValue, out var value))
             {
                 return value;
             }

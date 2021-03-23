@@ -216,7 +216,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .Add<TImplementation>(name);
 
             var service = serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(IServiceByNameFactory<TService>));
-            if (service != null)
+            if (service is not null)
             {
                 serviceCollection.Remove(service);
             }

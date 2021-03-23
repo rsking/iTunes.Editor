@@ -23,7 +23,7 @@ namespace ITunes.Editor.Services
             var windows = application.Windows.OfType<System.Windows.Window>().ToList();
             var window = windows.SingleOrDefault(x => x.IsActive);
 
-            if (window == null)
+            if (window is null)
             {
                 return null;
             }

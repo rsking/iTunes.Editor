@@ -1,4 +1,4 @@
-﻿// <copyright file="ApiSeeds.cs" company="RossKing">
+﻿// <copyright file="ApiSeedsOptions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 

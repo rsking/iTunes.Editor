@@ -28,7 +28,7 @@ namespace ITunes.Editor.ApiSeeds
         public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, string? apiKey)
         {
             this.logger = logger;
-            if (apiKey != null)
+            if (apiKey is not null)
             {
                 this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
             }
@@ -62,14 +62,14 @@ namespace ITunes.Editor.ApiSeeds
 
         private static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? getLyricResult)
         {
-            if (getLyricResult == null)
+            if (getLyricResult is null)
             {
                 return null;
             }
 
-            if (getLyricResult.Artist?.Name != null
+            if (getLyricResult.Artist?.Name is not null
                 && getLyricResult.Artist.Name.Equals((string?)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
-                && getLyricResult.Track?.Name != null
+                && getLyricResult.Track?.Name is not null
                 && getLyricResult.Track.Name.Equals((string?)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
             {
                 return getLyricResult.Track.Text;

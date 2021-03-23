@@ -143,7 +143,7 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override string ToString()
         {
-            var performers = this.Performers == null ? null : string.Join("; ", this.Performers);
+            var performers = this.Performers is null ? null : string.Join("; ", this.Performers);
             return $"{performers}|{this.Album}|{this.Title}";
         }
     }

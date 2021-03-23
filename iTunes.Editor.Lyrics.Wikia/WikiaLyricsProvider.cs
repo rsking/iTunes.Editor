@@ -113,7 +113,7 @@ namespace ITunes.Editor.Lyrics.Wikia
             document.LoadHtml(pageText);
 
             // select the div
-            var nodes = PossibleNodes.Select(document.DocumentNode.SelectNodes).FirstOrDefault(node => node != null);
+            var nodes = PossibleNodes.Select(document.DocumentNode.SelectNodes).FirstOrDefault(node => node is not null);
 
             return nodes is null ? null : ScrapeNode(nodes[0]);
         }

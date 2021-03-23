@@ -30,7 +30,7 @@ namespace ITunes.Editor
             var name = data.GetType().FullName.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
-            if (type != null)
+            if (type is not null)
             {
                 var control = (Control)Activator.CreateInstance(type);
                 global::Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
@@ -49,13 +49,13 @@ namespace ITunes.Editor
         /// <returns>Whether the data is matched.</returns>
         public bool Match(object data)
         {
-            if (data == null)
+            if (data is null)
             {
                 return false;
             }
 
             var name = data.GetType().FullName.Replace("ViewModel", "View");
-            return Type.GetType(name) != null;
+            return Type.GetType(name) is not null;
         }
     }
 }

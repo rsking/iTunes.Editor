@@ -94,7 +94,7 @@ namespace IPod
 
             string n = Encoding.ASCII.GetString(nameBytes);
 
-            if (this.Name != null && this.Name != n)
+            if (this.Name is not null && this.Name != n)
             {
                 throw new DatabaseReadException("Expected record name of '{0}', got '{1}'", this.Name, n);
             }
@@ -256,7 +256,7 @@ namespace IPod
             get { return nameRecord.Value; }
             set
             {
-                if (nameRecord == null)
+                if (nameRecord is null)
                 {
                     nameRecord = new DetailRecord(IsBE);
                     nameRecord.Type = DetailType.Title;
@@ -439,7 +439,7 @@ namespace IPod
             foreach (Record rec in otherDetails)
             {
                 DetailRecord detail = rec as DetailRecord;
-                if (detail != null && detail.Type != DetailType.LibraryIndex &&
+                if (detail is not null && detail.Type != DetailType.LibraryIndex &&
                     detail.Type != DetailType.LibraryIndex2)
                 {
                     details.Add(rec);
@@ -474,7 +474,7 @@ namespace IPod
                 TrackRecord trackA = tracks.LookupTrack(a.TrackId);
                 TrackRecord trackB = tracks.LookupTrack(b.TrackId);
 
-                if (trackA == null || trackB == null)
+                if (trackA is null || trackB is null)
                     return 0;
 
                 switch (type)
@@ -1225,7 +1225,7 @@ namespace IPod
         {
             get
             {
-                if (PlaylistList != null)
+                if (PlaylistList is not null)
                 {
                     return PlaylistList[0];
                 }
@@ -1385,7 +1385,7 @@ namespace IPod
             {
                 foreach (PlaylistItemRecord item in pl.Items)
                 {
-                    if (oldids[item.TrackId] == null)
+                    if (oldids[item.TrackId] is null)
                         continue;
 
                     item.TrackId = (int)oldids[item.TrackId];
@@ -1565,14 +1565,14 @@ namespace IPod
         {
             get
             {
-                if (dbrec == null)
+                if (dbrec is null)
                     return null;
 
                 return dbrec[DataSetIndex.Playlist].Library.PlaylistName;
             }
             set
             {
-                if (dbrec == null)
+                if (dbrec is null)
                     return;
 
                 dbrec[DataSetIndex.Playlist].Library.PlaylistName = value;
@@ -1781,7 +1781,7 @@ namespace IPod
                 // Load the On-The-Go playlist
                 LoadOnTheGo();
 
-                if (Reloaded != null)
+                if (Reloaded is not null)
                     Reloaded(this, new EventArgs());
             }
         }
@@ -1823,7 +1823,7 @@ namespace IPod
 
         internal string GetFilesystemPath(string ipodPath)
         {
-            if (ipodPath == null)
+            if (ipodPath is null)
                 return null;
             else if (ipodPath == String.Empty)
                 return String.Empty;
@@ -1833,7 +1833,7 @@ namespace IPod
 
         internal string GetPodPath(string path)
         {
-            if (path == null || !path.StartsWith(Directory.GetParent(this.controlPath).FullName))
+            if (path is null || !path.StartsWith(Directory.GetParent(this.controlPath).FullName))
                 return null;
 
             string ret = path.Replace(Directory.GetParent(this.controlPath).FullName, "");
@@ -1842,7 +1842,7 @@ namespace IPod
 
         internal string GetUniquePodPath(string path)
         {
-            if (path == null)
+            if (path is null)
                 return null;
 
             return String.Format(":{0}:Music:{1}", ControlDirectoryName, MakeUniquePodTrackPath(path));

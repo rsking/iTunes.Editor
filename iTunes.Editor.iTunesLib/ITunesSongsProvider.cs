@@ -32,7 +32,6 @@ namespace ITunes.Editor.ITunesLib
         public bool UpdateGrouping { get; set; }
 
         /// <inheritdoc />
-
 #if NO_ITUNES
         public IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken) => throw new System.NotImplementedException("Compiled without iTunes support");
 #else
@@ -53,7 +52,7 @@ namespace ITunes.Editor.ITunesLib
                         track.UpdateInfoFromFile();
                     }
 
-                    if (track.Location == null)
+                    if (track.Location is null)
                     {
                         continue;
                     }
@@ -75,7 +74,7 @@ namespace ITunes.Editor.ITunesLib
                     }
 
                     if (this.UpdateGrouping
-                        && track.Grouping != null)
+                        && track.Grouping is not null)
                     {
                         var grouping = track.Grouping.RemoveHasLyrics();
 

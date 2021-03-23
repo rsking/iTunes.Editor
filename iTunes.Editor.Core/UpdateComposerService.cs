@@ -41,7 +41,7 @@ namespace ITunes.Editor
                 foreach (var provider in this.providers)
                 {
                     var composers = provider.GetComposersAsync(songInformation, cancellationToken);
-                    if (composers != null)
+                    if (composers is not null)
                     {
                         return await updater.UpdateAsync(composers).ConfigureAwait(false);
                     }
@@ -68,13 +68,13 @@ namespace ITunes.Editor
                 }
 
                 this.file = TagLib.File.Create(this.songInformation.Name);
-                if (this.file != null)
+                if (this.file is not null)
                 {
                     this.appleTag = this.file.GetTag(TagLib.TagTypes.Apple);
                 }
             }
 
-            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
+            public bool ShouldUpdate(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
 
             public SongInformation Update(IEnumerable<Name> composers)
             {

@@ -49,7 +49,7 @@ namespace ITunes.Editor.Converters
                 if (canExecuteMethodInfo?.ReturnType == typeof(bool) && canExecuteMethodInfo.GetParameters().Length <= 1)
                 {
                     var parameterInfo = canExecuteMethodInfo.GetParameters().FirstOrDefault();
-                    canExecute = parameterInfo == null
+                    canExecute = parameterInfo is null
                         ? Delegate.CreateDelegate(typeof(Func<bool>), target, canExecuteMethodInfo)
                         : Delegate.CreateDelegate(typeof(Func<,>).MakeGenericType(parameterInfo.ParameterType, typeof(bool)), target, canExecuteMethodInfo);
                 }
@@ -81,7 +81,7 @@ namespace ITunes.Editor.Converters
                 this.canExecute = canExecute;
                 this.canExecuteParameterInfo = this.canExecute?.Method.GetParameters().FirstOrDefault();
 
-                if (inpc != null)
+                if (inpc is not null)
                 {
                     inpc.PropertyChanged += (sender, args) =>
                     {
@@ -97,12 +97,12 @@ namespace ITunes.Editor.Converters
 
             public bool CanExecute(object parameter)
             {
-                if (this.canExecute == null)
+                if (this.canExecute is null)
                 {
                     return true;
                 }
 
-                if (this.canExecuteParameterInfo == null)
+                if (this.canExecuteParameterInfo is null)
                 {
                     return (bool)this.canExecute.DynamicInvoke()!;
                 }
@@ -115,7 +115,7 @@ namespace ITunes.Editor.Converters
             {
                 object? returnValue;
 
-                if (this.executeParameterInfo == null)
+                if (this.executeParameterInfo is null)
                 {
                     returnValue = this.execute.DynamicInvoke();
                 }

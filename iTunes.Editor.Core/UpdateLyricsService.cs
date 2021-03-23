@@ -81,13 +81,13 @@ namespace ITunes.Editor
                 }
 
                 this.file = TagLib.File.Create(this.songInformation.Name);
-                if (this.file != null)
+                if (this.file is not null)
                 {
                     this.appleTag = this.file.GetTag(TagLib.TagTypes.Apple) as TagLib.Mpeg4.AppleTag;
                 }
             }
 
-            public bool ShouldUpdate(bool force) => this.appleTag != null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
+            public bool ShouldUpdate(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
 
             public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, System.Threading.CancellationToken cancellationToken = default)
             {

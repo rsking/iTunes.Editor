@@ -216,7 +216,7 @@ namespace ITunes.Editor
 
             await foreach (var song in songsProvider
                 .GetTagInformationAsync(cancellationToken)
-                .Where(_ => _.Name != null && System.IO.File.Exists(_.Name)))
+                .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name)))
             {
                 // check the location
                 var mediaType = song.GetMediaType();

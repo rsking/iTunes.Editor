@@ -49,7 +49,7 @@ namespace ITunes.Editor
                 // ignore the error
             }
 
-            if (file == null)
+            if (file is null)
             {
                 try
                 {

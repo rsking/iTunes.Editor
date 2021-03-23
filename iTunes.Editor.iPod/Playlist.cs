@@ -44,7 +44,7 @@ namespace IPod {
                 foreach (PlaylistItemRecord item in record.Items) {
                     Track track = db.GetTrackById (item.TrackId);
 
-                    if (track == null) {
+                    if (track is null) {
                         Console.Error.WriteLine ("Playlist '{0}' contains invalid track id '{0}'",
                                                  Name, item.TrackId);
                         continue;
@@ -67,7 +67,7 @@ namespace IPod {
 
         public string Name {
             get {
-                if (otgtitle != null)
+                if (otgtitle is not null)
                     return otgtitle;
                 
                 return record.PlaylistName;
@@ -80,7 +80,7 @@ namespace IPod {
         }
 
         public bool IsOnTheGo {
-            get { return otgtracks != null; }
+            get { return otgtracks is not null; }
         }
 
         public void InsertTrack (int index, Track track) {
@@ -92,7 +92,7 @@ namespace IPod {
 
             record.InsertItem (index, item);
 
-            if (TrackAdded != null)
+            if (TrackAdded is not null)
                 TrackAdded (this, index, track);
         }
 
@@ -111,7 +111,7 @@ namespace IPod {
             Track track = this[index];
             record.RemoveItem (index);
 
-            if (TrackRemoved != null)
+            if (TrackRemoved is not null)
                 TrackRemoved (this, index, track);
         }
 

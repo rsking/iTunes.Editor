@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.Hosting
         /// <returns>The host builder.</returns>
         public static IHostBuilder UseDefaultITunes(this IHostBuilder builder)
         {
-            if (builder == null)
+            if (builder is null)
             {
                 throw new System.ArgumentNullException(nameof(builder));
             }

@@ -53,7 +53,7 @@ namespace IPod {
 
         public string FileName {
             get {
-                if (this.Uri == null)
+                if (this.Uri is null)
                     return null;
                 else 
                     return this.Uri.LocalPath;
@@ -64,14 +64,14 @@ namespace IPod {
 
         public Uri Uri {
             get {
-                if (uri == null) {
+                if (uri is null) {
                     DetailRecord detail = record.GetDetail (DetailType.Location);
                     uri = PathToFileUri (db.GetFilesystemPath (detail.Value));
                 }
 
                 return uri;
             } set {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException ("Uri cannot be null");
 
                 if (value.Equals (uri)) {
@@ -314,7 +314,7 @@ namespace IPod {
         public override bool Equals (object a) {
             Track song = a as Track;
 
-            if (song == null)
+            if (song is null)
                 return false;
 
             return this.Id == song.Id;
@@ -325,7 +325,7 @@ namespace IPod {
         }
 
         private static Uri PathToFileUri (string path) {
-            if (path == null)
+            if (path is null)
                 return null;
 
             path = Path.GetFullPath (path).Replace('\\','/');

@@ -199,7 +199,7 @@ namespace ITunes.Editor.PList
         public static explicit operator SongInformation(Track track)
         {
             var path = track.Location;
-            if (path != null)
+            if (path is not null)
             {
                 var uri = new Uri(path.Replace(LocalHostString, string.Empty));
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
