@@ -6,6 +6,7 @@ namespace ITunes.Editor.Lyrics.Ovh
 {
     using Microsoft.Extensions.Logging;
     using RestSharp;
+    using RestSharp.Serializers.SystemTextJson;
 
     /// <summary>
     /// The <see cref="ILyricsProvider"/> for OVH.
@@ -16,7 +17,7 @@ namespace ITunes.Editor.Lyrics.Ovh
 
         private readonly ILogger logger;
 
-        private readonly IRestClient client = new RestClient(Uri);
+        private readonly IRestClient client = new RestClient(Uri).UseSystemTextJson();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OvhLyricsProvider" /> class.
@@ -43,10 +44,6 @@ namespace ITunes.Editor.Lyrics.Ovh
             return response?.Data?.Lyrics;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class GetLyricsResponse
-        {
-            public string? Lyrics { get; set; }
-        }
+        private record GetLyricsResponse(string? Lyrics);
     }
 }

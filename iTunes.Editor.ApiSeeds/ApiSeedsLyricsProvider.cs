@@ -8,6 +8,7 @@ namespace ITunes.Editor.ApiSeeds
 {
     using Microsoft.Extensions.Logging;
     using RestSharp;
+    using RestSharp.Serializers.SystemTextJson;
 
     /// <summary>
     /// Represents an <see cref="ILyricsProvider"/> using the API Seeds Lyrics service.
@@ -18,7 +19,7 @@ namespace ITunes.Editor.ApiSeeds
 
         private readonly ILogger logger;
 
-        private readonly IRestClient client = new RestClient(Uri);
+        private readonly IRestClient client = new RestClient(Uri).UseSystemTextJson();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
@@ -79,54 +80,16 @@ namespace ITunes.Editor.ApiSeeds
             return null;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class GetLyricsResponse
-        {
-            public GetLyricsResult? Result { get; set; }
-        }
+        private record GetLyricsResponse(GetLyricsResult? Result);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class GetLyricsResult
-        {
-            public Artist? Artist { get; set; }
+        private record GetLyricsResult(Artist? Artist, Track? Track, Copyright? Copyright);
 
-            public Track? Track { get; set; }
+        private record Artist(string? Name);
 
-            public Copyright? Copyright { get; set; }
-        }
+        private record Track(string? Name, string? Text, Language? Lang);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class Artist
-        {
-            public string? Name { get; set; }
-        }
+        private record Language(string? Code, string? Name);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class Track
-        {
-            public string? Name { get; set; }
-
-            public string? Text { get; set; }
-
-            public Language? Lang { get; set; }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class Language
-        {
-            public string? Code { get; set; }
-
-            public string? Name { get; set; }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is done via reflection")]
-        private class Copyright
-        {
-            public string? Notice { get; set; }
-
-            public string? Artist { get; set; }
-
-            public string? Text { get; set; }
-        }
+        private record Copyright(string? Notice, string? Artist, string? Text);
     }
 }

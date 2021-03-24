@@ -6,8 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IsExternalInit" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
-    <PackageReference Include="RestSharp" Version="$(RestSharpVersion).*" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion).*" />
   </ItemGroup>
 
   <ItemGroup>
