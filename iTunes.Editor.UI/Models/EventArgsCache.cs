@@ -12,16 +12,16 @@ namespace System.Collections.ObjectModel
         /// <summary>
         /// The <see cref="ICollection.Count"/> <see cref="ComponentModel.PropertyChangedEventArgs"/>.
         /// </summary>
-        internal static readonly ComponentModel.PropertyChangedEventArgs CountPropertyChanged = new ComponentModel.PropertyChangedEventArgs("Count");
+        internal static readonly ComponentModel.PropertyChangedEventArgs CountPropertyChanged = new("Count");
 
         /// <summary>
         /// The index <see cref="ComponentModel.PropertyChangedEventArgs"/>.
         /// </summary>
-        internal static readonly ComponentModel.PropertyChangedEventArgs IndexerPropertyChanged = new ComponentModel.PropertyChangedEventArgs("Item[]");
+        internal static readonly ComponentModel.PropertyChangedEventArgs IndexerPropertyChanged = new("Item[]");
 
         /// <summary>
         /// The reset collection <see cref="Specialized.NotifyCollectionChangedEventArgs"/>.
         /// </summary>
-        internal static readonly Specialized.NotifyCollectionChangedEventArgs ResetCollectionChanged = new Specialized.NotifyCollectionChangedEventArgs(Specialized.NotifyCollectionChangedAction.Reset);
+        internal static readonly Specialized.NotifyCollectionChangedEventArgs ResetCollectionChanged = new(Specialized.NotifyCollectionChangedAction.Reset);
     }
 }

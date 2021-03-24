@@ -14,7 +14,7 @@ namespace ITunes.Editor
         /// <summary>
         /// The subject.
         /// </summary>
-        private readonly System.Reactive.Subjects.Subject<object> subject = new System.Reactive.Subjects.Subject<object>();
+        private readonly System.Reactive.Subjects.Subject<object> subject = new();
 
         /// <summary>
         /// Whether this instance has been disposed.

@@ -30,9 +30,21 @@ namespace ITunes.Editor
         {
             this.host = Host.CreateDefaultBuilder()
                 .UseDefaultITunes()
-                .ConfigureServices((context, services) =>
+                .ConfigureServices((_, services) =>
                 {
-                    ConfigureServices(context.Configuration, services);
+                    // services
+                    services.AddSingleton<IEventAggregator, EventAggregator>();
+                    services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
+                    services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
+
+                    // view models
+                    services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();
+                    services.AddSingleton<Models.ISongs, ViewModels.SongsViewModel>();
+
+                    // views
+                    services.AddSingleton<ShellView>();
+                    services.AddTransient<Views.LoadView>();
+                    services.AddTransient<Views.SongsView>();
                 })
                 .Build();
 
@@ -105,23 +117,6 @@ namespace ITunes.Editor
             }
 
             base.OnExit(e);
-        }
-
-        private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
-        {
-            // services
-            services.AddSingleton<IEventAggregator, EventAggregator>();
-            services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
-            services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
-
-            // view models
-            services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();
-            services.AddSingleton<Models.ISongs, ViewModels.SongsViewModel>();
-
-            // views
-            services.AddSingleton<ShellView>();
-            services.AddTransient<Views.LoadView>();
-            services.AddTransient<Views.SongsView>();
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace ITunes.Editor.PList
             for (var i = 0; i < referenceCount; i++)
             {
                 buffer.Add(
-                    (string)Read(stream, offsetTable, references[i], referenceSize) !,
+                    (string)Read(stream, offsetTable, references[i], referenceSize)!,
                     Read(stream, offsetTable, references[i + referenceCount], referenceSize));
             }
 

@@ -151,13 +151,13 @@ namespace ITunes.Editor.PList
 
             public static DateTime ConvertFromAppleTimeStamp(double timestamp)
             {
-                DateTime origin = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+                DateTime origin = new(2001, 1, 1, 0, 0, 0, 0);
                 return origin.AddSeconds(timestamp);
             }
 
             public static double ConvertToAppleTimeStamp(DateTime date)
             {
-                DateTime begin = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+                DateTime begin = new(2001, 1, 1, 0, 0, 0, 0);
                 TimeSpan diff = date - begin;
                 return Math.Floor(diff.TotalSeconds);
             }

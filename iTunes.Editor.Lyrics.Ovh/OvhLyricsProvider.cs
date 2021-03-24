@@ -12,7 +12,7 @@ namespace ITunes.Editor.Lyrics.Ovh
     /// </summary>
     public class OvhLyricsProvider : ILyricsProvider
     {
-        private static readonly System.Uri Uri = new System.Uri("https://api.lyrics.ovh/v1");
+        private static readonly System.Uri Uri = new("https://api.lyrics.ovh/v1");
 
         private readonly ILogger logger;
 

@@ -16,7 +16,7 @@ namespace ITunes.Editor
         /// <summary>
         /// An empty song information.
         /// </summary>
-        public static readonly SongInformation Empty = new SongInformation(string.Empty, default(string), default, default, default, default);
+        public static readonly SongInformation Empty = new(string.Empty, default(string), default, default, default, default);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongInformation"/> class.

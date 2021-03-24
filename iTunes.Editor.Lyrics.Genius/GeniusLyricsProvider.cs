@@ -14,7 +14,7 @@ namespace ITunes.Editor.Lyrics.Genius
     /// </summary>
     public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
     {
-        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+        private readonly System.Net.Http.HttpClient client = new();
 
         /// <inheritdoc/>
         public void Dispose() => this.client.Dispose();

@@ -23,7 +23,7 @@ namespace ITunes.Editor.Lyrics.Wikia
                                                                    "//p[@id='songLyricsDiv']",
                                                                };
 
-        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+        private readonly System.Net.Http.HttpClient client = new();
 
         /// <inheritdoc/>
         public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)

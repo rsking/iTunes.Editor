@@ -16,7 +16,7 @@ namespace ITunes.Editor.ChartLyrics
     /// </summary>
     public sealed class ChartLyricsLyricsProvider : ILyricsProvider, System.IDisposable
     {
-        private readonly System.Uri uri = new System.Uri("http://api.chartlyrics.com/apiv1.asmx");
+        private readonly System.Uri uri = new("http://api.chartlyrics.com/apiv1.asmx");
 
         private readonly ILogger logger;
 

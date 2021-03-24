@@ -14,7 +14,7 @@ namespace ITunes.Editor.Lyrics.AZLyrics
     /// </summary>
     public sealed class AZLyricsProvider : ILyricsProvider, IDisposable
     {
-        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+        private readonly System.Net.Http.HttpClient client = new();
 
         /// <inheritdoc/>
         public void Dispose() => this.client.Dispose();

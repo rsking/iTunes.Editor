@@ -23,10 +23,10 @@ namespace ITunes.Editor
 
         private const string HasLyrics = "Has Lyrics";
 
-        private static readonly TagLib.ByteVector Rating = new TagLib.ByteVector(new byte[] { 114, 116, 110, 103 });
-        private static readonly TagLib.ByteVector ExplicitRatingData = new TagLib.ByteVector(new byte[] { 0x04 });
-        private static readonly TagLib.ByteVector CleanRatingData = new TagLib.ByteVector(new byte[] { 0x02 });
-        private static readonly TagLib.ByteVector UnratedRatingData = new TagLib.ByteVector(new byte[] { 0x00 });
+        private static readonly TagLib.ByteVector Rating = new(new byte[] { 114, 116, 110, 103 });
+        private static readonly TagLib.ByteVector ExplicitRatingData = new(new byte[] { 0x04 });
+        private static readonly TagLib.ByteVector CleanRatingData = new(new byte[] { 0x02 });
+        private static readonly TagLib.ByteVector UnratedRatingData = new(new byte[] { 0x00 });
 
         /// <summary>
         /// Gets the media type.

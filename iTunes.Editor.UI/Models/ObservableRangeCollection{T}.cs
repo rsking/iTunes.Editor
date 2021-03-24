@@ -113,10 +113,7 @@ namespace System.Collections.ObjectModel
 
             this.OnEssentialPropertiesChanged();
 
-            if (!(collection is IList list))
-            {
-                list = new List<T>(collection);
-            }
+            var list = collection as IList ?? new List<T>(collection);
 
             this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list, index));
         }

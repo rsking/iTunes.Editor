@@ -19,7 +19,7 @@ namespace ITunes.Editor
     /// </summary>
     public sealed class ApraAmcosComposerProvider : IComposerProvider, IDisposable
     {
-        private readonly Uri uri = new Uri("https://apraamcos.com.au/search");
+        private readonly Uri uri = new("https://apraamcos.com.au/search");
 
         private readonly HttpClient client;
 

@@ -14,7 +14,7 @@ namespace ITunes.Editor.ApiSeeds
     /// </summary>
     public class ApiSeedsLyricsProvider : ILyricsProvider
     {
-        private static readonly System.Uri Uri = new System.Uri("https://orion.apiseeds.com/api/music/lyric");
+        private static readonly System.Uri Uri = new("https://orion.apiseeds.com/api/music/lyric");
 
         private readonly ILogger logger;
 
