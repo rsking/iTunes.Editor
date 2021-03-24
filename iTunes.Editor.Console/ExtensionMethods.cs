@@ -39,15 +39,15 @@ namespace ITunes.Editor
 
                 if (propertyInfo.PropertyType == typeof(bool) && bool.TryParse(value, out var boolValue))
                 {
-                    propertyInfo.SetValue(subject, boolValue, null);
+                    propertyInfo.SetValue(subject, boolValue, index: null);
                 }
-                else if (propertyInfo.PropertyType == typeof(int) && int.TryParse(value, out var intValue))
+                else if (propertyInfo.PropertyType == typeof(int) && int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out var intValue))
                 {
-                    propertyInfo.SetValue(subject, intValue, null);
+                    propertyInfo.SetValue(subject, intValue, index: null);
                 }
                 else if (propertyInfo.PropertyType == typeof(string))
                 {
-                    propertyInfo.SetValue(subject, value, null);
+                    propertyInfo.SetValue(subject, value, index: null);
                 }
             }
 

@@ -135,7 +135,7 @@ namespace ITunes.Editor
         /// <param name="path">The path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The song information.</returns>
-        public static System.Threading.Tasks.Task<SongInformation> FromFileAsync(string path, System.Threading.CancellationToken cancellationToken) =>
+        public static System.Threading.Tasks.Task<SongInformation> FromFileAsync(string path, System.Threading.CancellationToken cancellationToken = default) =>
             System.Threading.Tasks.Task.Run(
                 () => FromFile(path),
                 cancellationToken);

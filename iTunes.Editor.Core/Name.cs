@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="Name.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -98,17 +98,25 @@ namespace ITunes.Editor
         }
 
         /// <inheritdoc/>
-        public override string ToString() => string.IsNullOrEmpty(this.First)
-            ? this.Last
-            : string.Concat(this.First, this.First?.Length == 1 ? ". " : " ", this.Last);
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(this.First))
+            {
+                return this.Last;
+            }
+
+            var joiner = this.First?.Length == 1 ? ". " : " ";
+            return string.Concat(this.First, joiner, this.Last);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.InvariantCulture)
+            && string.Equals(this.Last, other.Last, System.StringComparison.InvariantCulture);
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => obj is Name name ? this.Equals(name) : base.Equals(obj);
 
         /// <inheritdoc/>
         public override int GetHashCode() => (this.First, this.Last).GetHashCode();
-
-        /// <inheritdoc/>
-        public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.InvariantCulture) && string.Equals(this.Last, other.Last, System.StringComparison.InvariantCulture);
     }
 }

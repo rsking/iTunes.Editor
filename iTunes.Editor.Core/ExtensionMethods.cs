@@ -45,7 +45,7 @@ namespace ITunes.Editor
 
             for (var i = 0; i < values.Length; i++)
             {
-                if (values[i] == "iTunes Media")
+                if (string.Equals(values[i], "iTunes Media", StringComparison.Ordinal))
                 {
                     if (i + 1 < values.Length)
                     {
@@ -103,7 +103,7 @@ namespace ITunes.Editor
 
             var lyrics = appleTag.Lyrics.CleanLyrics(newLine);
 
-            if (lyrics != appleTag.Lyrics)
+            if (!string.Equals(lyrics, appleTag.Lyrics, StringComparison.Ordinal))
             {
                 appleTag.Lyrics = lyrics;
                 return true;
@@ -118,14 +118,33 @@ namespace ITunes.Editor
         /// <param name="lyrics">The lyrics.</param>
         /// <param name="newLine">The newline.</param>
         /// <returns>The cleaned lyrics.</returns>
-        public static string? CleanLyrics(this string? lyrics, string newLine = "\r") => string.IsNullOrEmpty(lyrics)
-                ? null
-                : string.Join(
+        public static string? CleanLyrics(this string? lyrics, string newLine = "\r")
+        {
+            if (lyrics is null)
+            {
+                return null;
+            }
+
+            return string.Join(
                     newLine,
-                    lyrics!
+                    RemoveMultipleNull(lyrics
                         .SplitLines()
-                        .Select(line => line.Trim().Capitalize())
-                        .RemoveMultipleNull());
+                        .Select(line => line.Trim().Capitalize())));
+
+            static IEnumerable<string?> RemoveMultipleNull(IEnumerable<string?> source)
+            {
+                var last = false;
+                foreach (var item in source)
+                {
+                    var current = string.IsNullOrEmpty(item);
+                    if (!current || !last)
+                    {
+                        last = current;
+                        yield return item;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the lyrics are title cased.
@@ -142,7 +161,7 @@ namespace ITunes.Editor
 
             var original = appleTag.Lyrics;
             var titleCase = string.Join(newLine, original.SplitLines().Select(line => Humanizer.To.TitleCase.Transform(line)));
-            return original == titleCase;
+            return string.Equals(original, titleCase, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -171,14 +190,14 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="tags">The tags.</param>
         /// <returns><paramref name="tags"/> with "no lyrics" removed.</returns>
-        public static string? RemoveNoLyrics(this string? tags) => tags.RemoveTag(NoLyrics);
+        public static string? RemoveNoLyrics(this string? tags) => tags.RemoveTagImpl(NoLyrics);
 
         /// <summary>
         /// Removes the "has lyrics" flag from the tags.
         /// </summary>
         /// <param name="tags">The tags.</param>
         /// <returns><paramref name="tags"/> with "has lyrics" removed.</returns>
-        public static string? RemoveHasLyrics(this string? tags) => tags.RemoveTag(HasLyrics);
+        public static string? RemoveHasLyrics(this string? tags) => tags.RemoveTagImpl(HasLyrics);
 
         /// <summary>
         /// Updates the explicit value.
@@ -257,7 +276,7 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
         public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(UnratedRatingData) ?? false;
 
-        private static string? RemoveTag(this string? tags, string tag)
+        private static string? RemoveTagImpl(this string? tags, string tag)
         {
             if (tags?.Contains(tag) == true)
             {
@@ -267,7 +286,7 @@ namespace ITunes.Editor
                 // See if the tag is already in there
                 for (var j = 0; j < grouping.Length; j++)
                 {
-                    if (grouping[j] == tag)
+                    if (string.Equals(grouping[j], tag, StringComparison.Ordinal))
                     {
                         index = j;
                         break;
@@ -313,7 +332,7 @@ namespace ITunes.Editor
             }
 
             var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-            if (grouping.Contains(tag))
+            if (grouping.Contains(tag, StringComparer.Ordinal))
             {
                 return false;
             }
@@ -323,7 +342,7 @@ namespace ITunes.Editor
 
             var update = string.Join("; ", grouping);
 
-            if (update != appleTag.Grouping)
+            if (!string.Equals(update, appleTag.Grouping, StringComparison.Ordinal))
             {
                 appleTag.Grouping = update;
                 return true;
@@ -340,28 +359,14 @@ namespace ITunes.Editor
             }
 
             var original = appleTag.Grouping;
-            var updated = original.RemoveTag(tag);
-            if (original != updated)
+            var updated = original.RemoveTagImpl(tag);
+            if (!string.Equals(original, updated, StringComparison.Ordinal))
             {
                 appleTag.Grouping = updated ?? replacement;
                 return true;
             }
 
             return false;
-        }
-
-        private static IEnumerable<string> RemoveMultipleNull(this IEnumerable<string> source)
-        {
-            var last = false;
-            foreach (var item in source)
-            {
-                var current = string.IsNullOrEmpty(item);
-                if (!current || !last)
-                {
-                    last = current;
-                    yield return item;
-                }
-            }
         }
 
         private static IEnumerable<string> SplitLines(this string lyrics)

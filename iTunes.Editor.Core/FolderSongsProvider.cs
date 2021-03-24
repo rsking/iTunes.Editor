@@ -21,7 +21,7 @@ namespace ITunes.Editor
         public string Name => Properties.Resources.FolderName;
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             var directoryInfo = new System.IO.DirectoryInfo(this.Folder);
             if (!directoryInfo.Exists)

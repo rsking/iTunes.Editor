@@ -26,7 +26,7 @@ namespace ITunes.Editor.Lyrics.Wikia
         private readonly System.Net.Http.HttpClient client = new();
 
         /// <inheritdoc/>
-        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)
+        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {

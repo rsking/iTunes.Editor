@@ -88,7 +88,7 @@ namespace System.Collections.ObjectModel
         /// <summary>
         /// Sorts the list.
         /// </summary>
-        public void Sort() // TODO, concern change index so no need to walk the whole list
+        public void Sort()
         {
             var query = this
               .Select((item, index) => (Item: item, Index: index));

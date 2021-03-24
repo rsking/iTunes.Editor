@@ -19,6 +19,7 @@ namespace ITunes.Editor.PList
     /// </summary>
     [XmlRoot(PListElementName)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "This is the correct name")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0049:Type name should not match containing namespace", Justification = "This is by design")]
     public class PList : IDictionary<string, object>, IXmlSerializable
     {
         private const string ArrayElementName = "array";
@@ -80,7 +81,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the implementation.
         /// </summary>
-        protected IDictionary<string, object> DictionaryImplementation { get; private set; } = new Dictionary<string, object>();
+        protected IDictionary<string, object> DictionaryImplementation { get; private set; } = new Dictionary<string, object>(System.StringComparer.Ordinal);
 
         /// <inheritdoc />
         public object this[string key]
@@ -128,7 +129,7 @@ namespace ITunes.Editor.PList
         /// <inheritdoc />
         public void ReadXml(XmlReader reader)
         {
-            if (reader?.Name != PListElementName || reader.NodeType != XmlNodeType.Element)
+            if (reader is null || !string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) || reader.NodeType != XmlNodeType.Element)
             {
                 return;
             }
@@ -142,7 +143,7 @@ namespace ITunes.Editor.PList
             }
 
             // read through the dictionary
-            if (reader.Name != DictionaryElementName)
+            if (!string.Equals(reader.Name, DictionaryElementName, System.StringComparison.Ordinal))
             {
                 return;
             }
@@ -151,12 +152,12 @@ namespace ITunes.Editor.PList
 
             reader.Read();
 
-            if (reader.Name == PListElementName && reader.NodeType == XmlNodeType.EndElement)
+            if (string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
             {
                 return;
             }
 
-            throw new System.ArgumentException(Properties.Resources.InvalidXml);
+            throw new System.ArgumentException(Properties.Resources.InvalidXml, nameof(reader));
         }
 
         /// <inheritdoc />
@@ -177,7 +178,7 @@ namespace ITunes.Editor.PList
         /// <returns>The dictionary.</returns>
         private static IDictionary<string, object> ReadDictionary(XmlReader reader)
         {
-            IDictionary<string, object> dictionary = new Dictionary<string, object>();
+            IDictionary<string, object> dictionary = new Dictionary<string, object>(System.StringComparer.Ordinal);
             string? key = null;
             object? value = null;
 
@@ -190,12 +191,12 @@ namespace ITunes.Editor.PList
 
             while (reader.Read())
             {
-                if (reader.Name == DictionaryElementName && reader.NodeType == XmlNodeType.EndElement)
+                if (string.Equals(reader.Name, DictionaryElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
                 {
                     return dictionary;
                 }
 
-                if (reader.Name == KeyElementName)
+                if (string.Equals(reader.Name, KeyElementName, System.StringComparison.Ordinal))
                 {
                     reader.Read();
                     if (key is not null)
@@ -215,11 +216,6 @@ namespace ITunes.Editor.PList
             return dictionary;
         }
 
-        /// <summary>
-        /// Reads the value.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <returns>The value from <paramref name="reader"/>.</returns>
         private static object? ReadValue(XmlReader reader)
         {
             switch (reader.Name)
@@ -240,23 +236,25 @@ namespace ITunes.Editor.PList
                     return doubleValue;
                 case StringElementName:
                     // read until the end
-                    string? stringValue = null;
+                    var builder = new System.Text.StringBuilder();
+                    var first = true;
                     while (reader.Read())
                     {
                         if (reader.NodeType == XmlNodeType.EndElement)
                         {
-                            return stringValue ?? string.Empty;
+                            return builder.ToString();
                         }
 
-                        if (stringValue is not null)
+                        if (!first)
                         {
-                            stringValue += System.Environment.NewLine;
+                            builder.AppendLine();
                         }
 
-                        stringValue += reader.Value;
+                        first = false;
+                        builder.Append(reader.Value);
                     }
 
-                    return stringValue;
+                    return first ? null : builder.ToString();
                 case DateElementName:
                     reader.Read();
                     var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
@@ -269,7 +267,7 @@ namespace ITunes.Editor.PList
 
                     while (reader.Read())
                     {
-                        if (reader.Name == ArrayElementName && reader.NodeType == XmlNodeType.EndElement)
+                        if (string.Equals(reader.Name, ArrayElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
                         {
                             break;
                         }

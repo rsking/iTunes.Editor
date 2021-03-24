@@ -20,7 +20,7 @@ namespace ITunes.Editor.Lyrics.AZLyrics
         public void Dispose() => this.client.Dispose();
 
         /// <inheritdoc/>
-        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)
+        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {
@@ -95,7 +95,7 @@ namespace ITunes.Editor.Lyrics.AZLyrics
                 .SelectSingleNode("//div[@class='lyricsh']")?
                 .ParentNode?
                 .SelectNodes("div")
-                .FirstOrDefault(div => div.Attributes.Count == 0 || div.Attributes.All(attribute => attribute.Name != "class"));
+                .FirstOrDefault(div => div.Attributes.Count == 0 || div.Attributes.All(attribute => !string.Equals(attribute.Name, "class", StringComparison.Ordinal)));
 
             return lyricsNode is null ? null : ScrapeNode(lyricsNode);
         }

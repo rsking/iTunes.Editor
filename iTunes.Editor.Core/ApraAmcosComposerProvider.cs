@@ -26,7 +26,6 @@ namespace ITunes.Editor
         /// <summary>
         /// Initializes a new instance of the <see cref="ApraAmcosComposerProvider"/> class.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "This is disposed in the HttpClient")]
         public ApraAmcosComposerProvider()
         {
             var clientHandler = new HttpClientHandler();
@@ -35,7 +34,7 @@ namespace ITunes.Editor
                 clientHandler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             }
 
-            this.client = new HttpClient(clientHandler, true);
+            this.client = new HttpClient(clientHandler, disposeHandler: true);
             this.client.DefaultRequestHeaders.Pragma.Add(new NameValueHeaderValue("no-cache"));
             this.client.DefaultRequestHeaders.ExpectContinue = false;
             this.client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
@@ -79,8 +78,8 @@ namespace ITunes.Editor
             var content = $"keywords={System.Web.HttpUtility.UrlEncode(title)}&writer={System.Web.HttpUtility.UrlEncode(writer)}&performer={System.Web.HttpUtility.UrlEncode(performer)}&searchtype=works";
             using (var stringContent = new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"))
             {
-                var uri = new Uri(this.uri, $"?{query}");
-                result = await this.client.PostAsync(this.uri, stringContent, cancellationToken).ConfigureAwait(false);
+                var uriWithQuery = new Uri(this.uri, $"?{query}");
+                result = await this.client.PostAsync(uriWithQuery, stringContent, cancellationToken).ConfigureAwait(false);
             }
 
             var pageText = await result.Content.ReadAsStringAsync().ConfigureAwait(false);

@@ -16,6 +16,7 @@ namespace ITunes.Editor.PList
     /// </summary>
     public class ExtensionMethodsTests
     {
+#pragma warning disable S2699 // Tests should include assertions
         [Fact]
         internal void TestGetNullableInt32WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt32, 1234L);
 
@@ -41,7 +42,7 @@ namespace ITunes.Editor.PList
         internal void TestGetNullableInt64WithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableInt64);
 
         [Fact]
-        internal void TestGetNullableBooleanWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableBoolean, true);
+        internal void TestGetNullableBooleanWithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableBoolean, value: true);
 
         [Fact]
         internal void TestGetNullableBooleanWithNullData() => TestGetWithNullData(ExtensionMethods.GetNullableBoolean, default(bool?));
@@ -65,24 +66,25 @@ namespace ITunes.Editor.PList
         internal void TestGetNullableDateTimeWithInvalidData() => TestGetWithInvalidData(ExtensionMethods.GetNullableDateTime);
 
         [Fact]
-        internal void TestGetStringWithValidData() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value").Should().Be("value");
+        internal void TestGetStringWithValidData() => ExtensionMethods.GetNullableString(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", "value" } }, "value").Should().Be("value");
 
         [Fact]
-        internal void TestGetStringWithNoKey() => ExtensionMethods.GetNullableString(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default);
+        internal void TestGetStringWithNoKey() => ExtensionMethods.GetNullableString(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", "value" } }, "value_bad").Should().Be(default);
 
         [Fact]
-        internal void TestGetStringWithInvalidData() => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
+        internal void TestGetStringWithInvalidData() => new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
+#pragma warning restore S2699 // Tests should include assertions
 
         private static void TestGetWithValidData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
-            where T1 : struct => function(new Dictionary<string, object?> { { "value", value } }, "value").Should().Be(value);
+            where T1 : struct => function(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", value } }, "value").Should().Be(value);
 
         private static void TestGetWithNullData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
-            where T1 : struct => function(new Dictionary<string, object?> { { "value", null } }, "value").Should().Be(value);
+            where T1 : struct => function(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", null } }, "value").Should().Be(value);
 
         private static void TestGetWithNoKey<T>(Func<IDictionary<string, object?>, string, T?> function)
-            where T : struct => function(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default(T?));
+            where T : struct => function(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", "value" } }, "value_bad").Should().Be(default(T?));
 
         private static void TestGetWithInvalidData<T>(Func<IDictionary<string, object?>, string, T?> function)
-            where T : struct => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(_ => function(_, "value")).Should().Throw<InvalidCastException>();
+            where T : struct => new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", 123456M } }.Invoking(_ => function(_, "value")).Should().Throw<InvalidCastException>();
     }
 }

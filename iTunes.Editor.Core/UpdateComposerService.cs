@@ -76,25 +76,6 @@ namespace ITunes.Editor
 
             public bool ShouldUpdate(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
 
-            public SongInformation Update(IEnumerable<Name> composers)
-            {
-                if (this.file is null || this.appleTag is null)
-                {
-                    return this.songInformation;
-                }
-
-                var valueToSet = composers.Select(_ => _.ToString()).ToArray();
-
-                if (this.appleTag.Composers.SequenceEqual(valueToSet))
-                {
-                    return this.songInformation;
-                }
-
-                this.appleTag.Composers = valueToSet;
-                this.file.Save();
-                return this.songInformation = (SongInformation)this.file;
-            }
-
             public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(IAsyncEnumerable<Name> composers)
             {
                 if (this.file is null || this.appleTag is null)
@@ -106,7 +87,7 @@ namespace ITunes.Editor
                     .ToArrayAsync()
                     .ConfigureAwait(false);
 
-                if (this.appleTag.Composers.SequenceEqual(valueToSet))
+                if (this.appleTag.Composers.SequenceEqual(valueToSet, StringComparer.Ordinal))
                 {
                     return this.songInformation;
                 }

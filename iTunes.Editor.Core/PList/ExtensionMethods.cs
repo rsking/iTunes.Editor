@@ -12,7 +12,6 @@ namespace ITunes.Editor.PList
     /// <summary>
     /// Extension methods.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:ClosingSquareBracketsShouldBeSpacedCorrectly", Justification = "This is correct")]
     internal static class ExtensionMethods
     {
         /// <summary>
@@ -127,7 +126,7 @@ namespace ITunes.Editor.PList
         }
 
         /// <summary>
-        /// Reads a sequence of bytes from the stream at the specified offset and advances the position within the stream by by the number of bytes read.
+        /// Reads a sequence of bytes from the stream at the specified offset and advances the position within the stream by the number of bytes read.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="length">A number of bytes to read.</param>
@@ -135,7 +134,7 @@ namespace ITunes.Editor.PList
         public static byte[] Read(this System.IO.Stream stream, int length) => stream.Read(0L, length, System.IO.SeekOrigin.Current);
 
         /// <summary>
-        /// Reads a sequence of bytes from the stream at the specified offset and advances the position within the stream by by the number of bytes read.
+        /// Reads a sequence of bytes from the stream at the specified offset and advances the position within the stream by the number of bytes read.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter.</param>
@@ -146,7 +145,7 @@ namespace ITunes.Editor.PList
         {
             var bytes = new byte[length];
             stream.Seek(offset, origin);
-            stream.Read(bytes, 0, length);
+            _ = stream.Read(bytes, 0, length);
             return bytes;
         }
 

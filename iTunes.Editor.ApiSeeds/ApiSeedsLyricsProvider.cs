@@ -45,7 +45,7 @@ namespace ITunes.Editor.ApiSeeds
         }
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {

@@ -134,13 +134,15 @@ namespace System.Collections.ObjectModel
             {
                 return;
             }
-            else if (collection is ICollection<T> countable)
+
+            if (collection is ICollection<T> countable)
             {
                 if (countable.Count == 0)
                 {
                     return;
                 }
-                else if (countable.Count == 1)
+
+                if (countable.Count == 1)
                 {
                     using var enumerator = countable.GetEnumerator();
                     enumerator.MoveNext();
@@ -174,7 +176,9 @@ namespace System.Collections.ObjectModel
                 }
                 else
                 {
-                    clusters[lastIndex = index] = lastCluster = new List<T> { item };
+                    lastIndex = index;
+                    lastCluster = new List<T> { item };
+                    clusters[index] = lastCluster;
                 }
             }
 
@@ -190,6 +194,60 @@ namespace System.Collections.ObjectModel
                 {
                     this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, cluster.Value, cluster.Key));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Removes a range of elements from the <see cref="ObservableCollection{T}"/>>.
+        /// </summary>
+        /// <param name="index">The zero-based starting index of the range of elements to remove.</param>
+        /// <param name="count">The number of elements to remove.</param>
+        /// <exception cref="ArgumentOutOfRangeException">The specified range is exceeding the collection.</exception>
+        public void RemoveRange(int index, int count)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
+            if (index + count > this.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (count == 0)
+            {
+                return;
+            }
+
+            if (count == 1)
+            {
+                this.RemoveItem(index);
+                return;
+            }
+
+            // Items will always be List<T>, see constructors
+            var items = (List<T>)this.Items;
+            var removedItems = items.GetRange(index, count);
+
+            this.CheckReentrancy();
+
+            items.RemoveRange(index, count);
+
+            this.OnEssentialPropertiesChanged();
+
+            if (this.Count == 0)
+            {
+                this.OnCollectionReset();
+            }
+            else
+            {
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems, index));
             }
         }
 
@@ -289,60 +347,6 @@ namespace System.Collections.ObjectModel
             }
 
             return removedCount;
-        }
-
-        /// <summary>
-        /// Removes a range of elements from the <see cref="ObservableCollection{T}"/>>.
-        /// </summary>
-        /// <param name="index">The zero-based starting index of the range of elements to remove.</param>
-        /// <param name="count">The number of elements to remove.</param>
-        /// <exception cref="ArgumentOutOfRangeException">The specified range is exceeding the collection.</exception>
-        public void RemoveRange(int index, int count)
-        {
-            if (index < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
-
-            if (index + count > this.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            if (count == 0)
-            {
-                return;
-            }
-
-            if (count == 1)
-            {
-                this.RemoveItem(index);
-                return;
-            }
-
-            // Items will always be List<T>, see constructors
-            var items = (List<T>)this.Items;
-            var removedItems = items.GetRange(index, count);
-
-            this.CheckReentrancy();
-
-            items.RemoveRange(index, count);
-
-            this.OnEssentialPropertiesChanged();
-
-            if (this.Count == 0)
-            {
-                this.OnCollectionReset();
-            }
-            else
-            {
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems, index));
-            }
         }
 
         /// <summary>
@@ -461,23 +465,21 @@ namespace System.Collections.ObjectModel
                             this.OnRangeReplaced(i, newCluster!, oldCluster!);
                             continue;
                         }
+
+                        this.Items[i] = @new;
+
+                        if (newCluster is null || oldCluster is null)
+                        {
+                            newCluster = new List<T> { @new };
+                            oldCluster = new List<T> { old };
+                        }
                         else
                         {
-                            this.Items[i] = @new;
-
-                            if (newCluster is null || oldCluster is null)
-                            {
-                                newCluster = new List<T> { @new };
-                                oldCluster = new List<T> { old };
-                            }
-                            else
-                            {
-                                newCluster.Add(@new);
-                                oldCluster.Add(old);
-                            }
-
-                            changesMade = true;
+                            newCluster.Add(@new);
+                            oldCluster.Add(old);
                         }
+
+                        changesMade = true;
                     }
 
                     this.OnRangeReplaced(i, newCluster!, oldCluster!);

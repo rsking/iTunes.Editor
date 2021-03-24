@@ -126,7 +126,7 @@ namespace ITunes.Editor
         /// <param name="e">Details about the navigation failure.</param>
         private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.Exception);
+            throw new InvalidOperationException("Failed to load Page " + e.Exception);
         }
     }
 }

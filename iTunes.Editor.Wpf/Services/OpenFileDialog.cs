@@ -23,33 +23,27 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The starting file.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override string? GetFileName(string? path = default) => this.GetFileNamesImpl(path, false)?.FirstOrDefault();
+        public override string? GetFileName(string? path = default) => this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault();
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default) => System.Threading.Tasks.Task.FromResult(this.GetFileName(path));
+        public override System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default) => System.Threading.Tasks.Task.FromResult(this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault());
 
         /// <summary>
         /// Gets multiple file names.
         /// </summary>
         /// <returns>The list of file names.</returns>
-        public System.Collections.Generic.IEnumerable<string> GetFileNames() => this.GetFileNamesImpl(null, true);
+        public System.Collections.Generic.IEnumerable<string> GetFileNames() => this.GetFileNamesImpl(path: null, multiselect: true);
 
         /// <summary>
         /// Gets multiple file names asynchronously.
         /// </summary>
         /// <returns>The list of file names.</returns>
-        public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => System.Threading.Tasks.Task.FromResult(this.GetFileNames());
+        public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => System.Threading.Tasks.Task.FromResult(this.GetFileNamesImpl(path: null, multiselect: true));
 
-        /// <summary>
-        /// Internal implementation to get the filenames.
-        /// </summary>
-        /// <param name="path">The starting file.</param>
-        /// <param name="multiselect">Whether to select more than one file.</param>
-        /// <returns>The list of file names.</returns>
         private System.Collections.Generic.IEnumerable<string> GetFileNamesImpl(string? path, bool multiselect)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog

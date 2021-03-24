@@ -96,55 +96,53 @@ namespace ITunes.Editor
                     return this.songInformation;
                 }
 
-                var appleTag = this.appleTag!;
-
                 var updated = false;
-                lyrics = (lyrics ?? this.appleTag?.Lyrics)?.Replace("\r\n", NewLine);
+                lyrics = (lyrics ?? this.appleTag.Lyrics)?.Replace("\r\n", NewLine);
 
                 if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     this.logger.LogDebug(Properties.Resources.NoLyricsFound, this.songInformation);
 
                     // this has no lyrics, so update
-#pragma warning disable RCS1233 // Use short-circuiting operator.
-                    if (appleTag.AddNoLyrics() | appleTag.SetUnrated())
-#pragma warning restore RCS1233 // Use short-circuiting operator.
+#pragma warning disable RCS1233, S2178
+                    if (this.appleTag.AddNoLyrics() | this.appleTag.SetUnrated())
+#pragma warning restore RCS1233, S2178
                     {
                         updated = true;
                         this.logger.LogDebug(Properties.Resources.SavingWithNoLyricsAndUnrated, this.songInformation);
                         this.file.Save();
                     }
 
-                    if (!string.IsNullOrEmpty(appleTag.Lyrics))
+                    if (!string.IsNullOrEmpty(this.appleTag.Lyrics))
                     {
                         this.logger.LogDebug(Properties.Resources.SettingLyricsToNull, this.songInformation);
                         updated = true;
-                        appleTag.Lyrics = null;
+                        this.appleTag.Lyrics = null;
                         this.file.Save();
                     }
                 }
                 else
                 {
-                    if (appleTag.Lyrics != lyrics)
+                    if (!string.Equals(this.appleTag.Lyrics, lyrics, StringComparison.Ordinal))
                     {
                         updated = true;
-                        appleTag.Lyrics = lyrics;
+                        this.appleTag.Lyrics = lyrics;
                         this.logger.LogDebug(Properties.Resources.UpdatedLyrics, this.songInformation);
                     }
 
-                    if (appleTag.CleanLyrics(NewLine))
+                    if (this.appleTag.CleanLyrics(NewLine))
                     {
                         updated = true;
                         this.logger.LogDebug(Properties.Resources.UpdatedCleanedLyrics, this.songInformation);
                     }
 
-                    if (appleTag.RemoveNoLyrics())
+                    if (this.appleTag.RemoveNoLyrics())
                     {
                         updated = true;
                         this.logger.LogDebug(Properties.Resources.RemovedNoLyricsTag, this.songInformation);
                     }
 
-                    if (await appleTag.UpdateRatingAsync(explicitLyricsProvider, cancellationToken).ConfigureAwait(false))
+                    if (await this.appleTag.UpdateRatingAsync(explicitLyricsProvider, cancellationToken).ConfigureAwait(false))
                     {
                         updated = true;
                         this.logger.LogDebug(Properties.Resources.UpdatedRating, this.songInformation);
@@ -156,7 +154,12 @@ namespace ITunes.Editor
                     }
                 }
 
-                return !updated ? this.songInformation : this.songInformation = (SongInformation)this.file;
+                if (updated)
+                {
+                    this.songInformation = (SongInformation)this.file;
+                }
+
+                return this.songInformation;
             }
 
             // This code added to correctly implement the disposable pattern.

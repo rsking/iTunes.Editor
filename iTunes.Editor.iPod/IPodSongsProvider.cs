@@ -12,6 +12,7 @@ namespace ITunes.Editor.IPod
     /// <summary>
     /// The iPod <see cref="ISongsProvider"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "This is for iPod")]
     public class IPodSongsProvider : ISongsProvider, IFolderProvider
     {
         /// <inheritdoc />
@@ -21,7 +22,7 @@ namespace ITunes.Editor.IPod
         public string Name => Properties.Resources.IPodName;
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             // see if this has the requisit parts
             var controlDirectory = System.IO.Path.Combine(this.Folder, "iPod_Control");

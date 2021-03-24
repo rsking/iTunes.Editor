@@ -40,7 +40,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the total time.
         /// </summary>
-        public TimeSpan TotalTime => TimeSpan.FromMilliseconds((long)this.dict.GetInt64("Total Time"));
+        public TimeSpan TotalTime => TimeSpan.FromMilliseconds(this.dict.GetInt64("Total Time"));
 
         /// <summary>
         /// Gets the number.

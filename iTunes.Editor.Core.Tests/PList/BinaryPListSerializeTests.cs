@@ -28,7 +28,7 @@ namespace ITunes.Editor.PList
             { "testDouble", 1.34223 },
             { "testImage", ImageBytes },
             {
-                "testDictLarge", new Dictionary<string, object>()
+                "testDictLarge", new Dictionary<string, object>(StringComparer.Ordinal)
                 {
                     { "15", 15 },
                     { "03", 3 },
@@ -51,7 +51,7 @@ namespace ITunes.Editor.PList
                 }
             },
             { "testDate", new DateTime(2011, 9, 25, 2, 31, 04, DateTimeKind.Utc) },
-            { "testDict", new Dictionary<string, object> { { "test string", "inner dict item" } } },
+            { "testDict", new Dictionary<string, object>(StringComparer.Ordinal) { { "test string", "inner dict item" } } },
             { "testInt", -3455 },
             { "testBoolFalse", false },
             { "testArray", new List<object> { 34, "string item in array" } },

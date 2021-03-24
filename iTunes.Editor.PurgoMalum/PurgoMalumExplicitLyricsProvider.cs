@@ -14,7 +14,7 @@ namespace ITunes.Editor.PurgoMalum
     /// </summary>
     public class PurgoMalumExplicitLyricsProvider : IExplicitLyricsProvider
     {
-        private readonly IRestClient client = new RestClient("https://www.purgomalum.com/service/");
+        private readonly IRestClient client = new RestClient(new System.Uri("https://www.purgomalum.com/service/"));
 
         /// <inheritdoc/>
         public async Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics), cancellationToken).ConfigureAwait(false));

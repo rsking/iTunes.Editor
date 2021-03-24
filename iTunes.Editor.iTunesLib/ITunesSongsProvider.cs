@@ -11,6 +11,7 @@ namespace ITunes.Editor.ITunesLib
     /// <summary>
     /// The iTunes song loader.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "This is for iTunes")]
     public class ITunesSongsProvider : ISongsProvider
     {
         /// <inheritdoc />
@@ -33,9 +34,9 @@ namespace ITunes.Editor.ITunesLib
 
         /// <inheritdoc />
 #if NO_ITUNES
-        public IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken) => throw new System.NotImplementedException("Compiled without iTunes support");
+        public IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default) => throw new System.NotImplementedException("Compiled without iTunes support");
 #else
-        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             var library = await System.Threading.Tasks.Task.Run(() =>
             {
@@ -66,7 +67,7 @@ namespace ITunes.Editor.ITunesLib
                         }
 
                         if (string.IsNullOrWhiteSpace(track.SortAlbumArtist)
-                            && track.AlbumArtist == track.Artist
+                            && string.Equals(track.AlbumArtist, track.Artist, System.StringComparison.Ordinal)
                             && !string.IsNullOrWhiteSpace(track.SortArtist))
                         {
                             track.SortAlbumArtist = track.SortArtist;
@@ -78,7 +79,7 @@ namespace ITunes.Editor.ITunesLib
                     {
                         var grouping = track.Grouping.RemoveHasLyrics();
 
-                        if (grouping != track.Grouping)
+                        if (!string.Equals(grouping, track.Grouping, System.StringComparison.Ordinal))
                         {
                             track.Grouping = grouping ?? string.Empty;
                         }

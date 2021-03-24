@@ -86,7 +86,7 @@ namespace ITunes.Editor.Converters
                 {
                     inpc.PropertyChanged += (sender, args) =>
                     {
-                        if (args.PropertyName == propertyName)
+                        if (string.Equals(args.PropertyName, propertyName, StringComparison.Ordinal))
                         {
                             this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
                         }

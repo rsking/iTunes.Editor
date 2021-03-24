@@ -52,7 +52,7 @@ namespace ITunes.Editor.PList
                     Write(stream, longValue);
                     break;
                 case string stringValue:
-                    Write(stream, stringValue, true);
+                    Write(stream, stringValue, head: true);
                     break;
                 case DateTime dateTime:
                     Write(stream, dateTime);
@@ -90,7 +90,7 @@ namespace ITunes.Editor.PList
             {
                 references.Add(offsetTable.Count);
                 offsetTable.Add((int)stream.Position);
-                offsetValues.Add(null);
+                offsetValues.Add(item: null);
                 Write(stream, offsetTable, offsetValues, referenceSize, keys[i]);
             }
 

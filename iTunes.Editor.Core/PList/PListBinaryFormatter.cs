@@ -38,7 +38,7 @@ namespace ITunes.Editor.PList
 
             if (BitConverter.ToInt64(header, 0) != 3472403351741427810)
             {
-                throw new ArgumentException(Properties.Resources.StreamDoesNotContainAPList);
+                throw new ArgumentException(Properties.Resources.StreamDoesNotContainAPList, nameof(serializationStream));
             }
 
             // get the last 32 bytes
@@ -85,7 +85,7 @@ namespace ITunes.Editor.PList
             var referenceSize = RegulateNullBytes(BitConverter.GetBytes(calculatedReferenceCount)).Length;
 
             // write the header
-            Write(serializationStream, "bplist00", false);
+            Write(serializationStream, "bplist00", head: false);
 
             var offsetTable = new List<int> { (int)serializationStream.Position };
             Write(serializationStream, offsetTable, new List<object?>() { null }, referenceSize, graph);
@@ -143,22 +143,13 @@ namespace ITunes.Editor.PList
 
         private static class PlistDateConverter
         {
-            private const long TimeDifference = 978307200;
+            private static readonly DateTime Origin = new(2001, 1, 1, 0, 0, 0, 0);
 
-            public static long GetAppleTime(long unixTime) => unixTime - TimeDifference;
-
-            public static long GetUnixTime(long appleTime) => appleTime + TimeDifference;
-
-            public static DateTime ConvertFromAppleTimeStamp(double timestamp)
-            {
-                DateTime origin = new(2001, 1, 1, 0, 0, 0, 0);
-                return origin.AddSeconds(timestamp);
-            }
+            public static DateTime ConvertFromAppleTimeStamp(double timestamp) => Origin.AddSeconds(timestamp);
 
             public static double ConvertToAppleTimeStamp(DateTime date)
             {
-                DateTime begin = new(2001, 1, 1, 0, 0, 0, 0);
-                TimeSpan diff = date - begin;
+                var diff = date - Origin;
                 return Math.Floor(diff.TotalSeconds);
             }
         }

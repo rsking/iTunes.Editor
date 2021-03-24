@@ -36,7 +36,7 @@ namespace ITunes.Editor.PList
 
         private static object ReadDictionary(Stream stream, IList<int> offsetTable, int index, int referenceSize)
         {
-            var buffer = new Dictionary<string, object?>();
+            var buffer = new Dictionary<string, object?>(StringComparer.Ordinal);
             var referenceCount = GetCount(stream, offsetTable[index], out _);
 
             // Check if the following integer has a header aswell so we increase the referenceStartPosition by two to account for that.

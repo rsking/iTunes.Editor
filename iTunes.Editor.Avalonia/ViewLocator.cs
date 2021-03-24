@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="ViewLocator.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
@@ -23,16 +23,16 @@ namespace ITunes.Editor
         /// <summary>
         /// Builds the control.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="param">The data.</param>
         /// <returns>The created control.</returns>
-        public IControl Build(object data)
+        public IControl Build(object param)
         {
-            if (data is null)
+            if (param is null)
             {
                 return new TextBlock { Text = Avalonia.Properties.Resources.NotFoundLabel };
             }
 
-            var name = data.GetType().FullName?
+            var name = param.GetType().FullName?
 #if NETCOREAPP
                 .Replace("ViewModel", "View", StringComparison.InvariantCulture);
 #else

@@ -21,7 +21,7 @@ namespace ITunes.Editor
     /// <summary>
     /// The program class.
     /// </summary>
-    internal class Program
+    internal sealed class Program
     {
         private const bool DefaultForce = false;
 
@@ -30,6 +30,10 @@ namespace ITunes.Editor
         private const string DefaultLyricProvider = "wikia";
 
         private const string DefaultComposerProvider = "apra_amcos";
+
+        private Program()
+        {
+        }
 
         private static Task<int> Main(string[] args)
         {
@@ -142,7 +146,7 @@ namespace ITunes.Editor
 
             //// await System.IO.File.WriteAllLinesAsync("C:\\Temp\\itunes.txt", songsProvider.GetTagInformationAsync(cancellationToken).Where(song => song.Name?.Length > 0).OrderBy(song => song.Name).Select(song => song.Name).ToEnumerable()).ConfigureAwait(false);
             //// using var stream = new System.IO.StreamWriter("C:\\Temp\\itunes.txt");
-            await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken))
+            await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken).ConfigureAwait(false))
             {
                 //// await stream.WriteLineAsync(song.Name).ConfigureAwait(false);
                 logger.LogInformation(Console.Properties.Resources.ListLog, song.Performers.Join("; "), song.Title, song.Name, System.IO.File.Exists(song.Name));
@@ -154,7 +158,8 @@ namespace ITunes.Editor
             var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
             var logger = host.Services.GetRequiredService<ILogger<Program>>();
             await foreach (var composer in composerProvider
-                .GetComposersAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken))
+                .GetComposersAsync(new SongInformation(song, artist, artist, albumPerformers: null, album: null, name: null), cancellationToken)
+                .ConfigureAwait(false))
             {
                 logger.LogInformation(Console.Properties.Resources.ComposerLog, composer);
             }
@@ -163,7 +168,7 @@ namespace ITunes.Editor
         private static async Task Lyrics(IHost host, string artist, string song, string provider = DefaultLyricProvider, System.Threading.CancellationToken cancellationToken = default)
         {
             var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
-               .GetLyricsAsync(new SongInformation(song, artist, artist, null, null, null), cancellationToken)
+               .GetLyricsAsync(new SongInformation(song, artist, artist, albumPerformers: null, album: null, name: null), cancellationToken)
                .ConfigureAwait(false);
             host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.LyricsLog, lyrics);
         }
@@ -180,21 +185,23 @@ namespace ITunes.Editor
             host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
         }
 
-        private static Task UpdateComposerFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
+        private static async Task UpdateComposerFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var service = host.Services.GetRequiredService<IUpdateComposerService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force, cancellationToken);
+            var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
+            await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
         }
 
-        private static Task UpdateLyricsFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
+        private static async Task UpdateLyricsFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
             var service = host.Services.GetRequiredService<IUpdateLyricsService>();
-            return service.UpdateAsync(SongInformation.FromFile(file.FullName), force, cancellationToken);
+            var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
+            await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
         }
 
         private static async Task UpdateAllFile(IHost host, System.IO.FileInfo file, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
-            var songInformation = SongInformation.FromFile(file.FullName);
+            var songInformation = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
             await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
             await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
         }
@@ -216,7 +223,8 @@ namespace ITunes.Editor
 
             await foreach (var song in songsProvider
                 .GetTagInformationAsync(cancellationToken)
-                .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name)))
+                .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name))
+                .ConfigureAwait(false))
             {
                 // check the location
                 var mediaType = song.GetMediaType();

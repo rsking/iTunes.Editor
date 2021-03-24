@@ -39,7 +39,7 @@ namespace ITunes.Editor.MediaInfo
         /// <param name="tags">The tags string.</param>
         public MediaInfoTag(string tags)
         {
-            this.lookup = new Dictionary<string, IDictionary<string, string>>();
+            this.lookup = new Dictionary<string, IDictionary<string, string>>(StringComparer.Ordinal);
             if (tags is null)
             {
                 return;
@@ -59,7 +59,8 @@ namespace ITunes.Editor.MediaInfo
                 var index = line.IndexOf(":", StringComparison.InvariantCulture);
                 if (index == -1)
                 {
-                    this.lookup.Add(line, currentMainValue = new Dictionary<string, string>());
+                    currentMainValue = new Dictionary<string, string>(StringComparer.Ordinal);
+                    this.lookup.Add(line, currentMainValue);
                     continue;
                 }
 
@@ -68,7 +69,7 @@ namespace ITunes.Editor.MediaInfo
 
                 if (currentMainValue is null)
                 {
-                    throw new Exception();
+                    throw new InvalidOperationException();
                 }
 
                 currentMainValue.Add(key, value);
@@ -164,13 +165,11 @@ namespace ITunes.Editor.MediaInfo
 
         private uint GetUInt32(string category, string key)
         {
-            var stringValue = this.GetString(category, key);
-            if (stringValue is not null && uint.TryParse(stringValue, out var value))
+            return this.GetString(category, key) switch
             {
-                return value;
-            }
-
-            return 0;
+                string stringValue when uint.TryParse(stringValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out var value) => value,
+                _ => 0,
+            };
         }
 
         private void SetUInt32(string category, string key, uint value) => this.SetString(category, key, value == 0 ? null : value.ToString(System.Globalization.CultureInfo.InvariantCulture));
