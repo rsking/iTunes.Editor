@@ -44,6 +44,19 @@ namespace ITunes.Editor
         {
             base.OnActivated(e);
 
+            if (this.MainWindow is System.Windows.Navigation.NavigationWindow navigationWindow)
+            {
+                if (navigationWindow.Content is null)
+                {
+                    navigationWindow.NavigationFailed += this.OnNavigationFailed;
+                    navigationWindow.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
+                }
+
+                this.MainWindow.Activate();
+
+                return;
+            }
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (this.MainWindow.Content is not Frame rootFrame)
@@ -78,8 +91,7 @@ namespace ITunes.Editor
         {
             await this.host.StartAsync().ConfigureAwait(true);
 
-            var mainWindow = this.host.Services.GetRequiredService<ShellView>();
-            mainWindow.Show();
+            this.host.Services.GetRequiredService<ShellView>().Show();
 
             base.OnStartup(e);
         }

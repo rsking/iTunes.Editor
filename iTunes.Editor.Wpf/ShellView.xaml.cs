@@ -21,7 +21,7 @@ namespace ITunes.Editor
     /// <summary>
     /// Interaction logic for <c>ShellView.xaml</c>.
     /// </summary>
-    public partial class ShellView : Window
+    public partial class ShellView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellView"/> class.
