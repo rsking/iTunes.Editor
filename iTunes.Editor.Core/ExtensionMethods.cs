@@ -120,7 +120,7 @@ namespace ITunes.Editor
         /// <returns>The cleaned lyrics.</returns>
         public static string? CleanLyrics(this string? lyrics, string newLine = "\r")
         {
-            if (lyrics is null)
+            if (lyrics is null || lyrics.Length == 0)
             {
                 return null;
             }
