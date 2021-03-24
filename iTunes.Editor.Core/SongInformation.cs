@@ -28,7 +28,7 @@ namespace ITunes.Editor
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
-        public SongInformation(string title, string? performers, string? sortPerformers, string? album, string? albumPerformers, string? name, int? rating = null)
+        public SongInformation(string title, string? performers, string? sortPerformers, string? albumPerformers, string? album, string? name, int? rating = null)
             : this(
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
@@ -60,9 +60,9 @@ namespace ITunes.Editor
             int? rating = null)
         {
             this.Title = title;
-            this.Performers = performers ?? System.Linq.Enumerable.Empty<string>();
-            this.SortPerformers = sortPerformers ?? System.Linq.Enumerable.Empty<string>();
-            this.AlbumPerformers = albumPerformers ?? System.Linq.Enumerable.Empty<string>();
+            this.Performers = performers ?? Enumerable.Empty<string>();
+            this.SortPerformers = sortPerformers ?? Enumerable.Empty<string>();
+            this.AlbumPerformers = albumPerformers ?? Enumerable.Empty<string>();
             this.Album = album;
             this.Name = name;
             this.Rating = rating;

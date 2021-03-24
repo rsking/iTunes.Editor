@@ -16,7 +16,7 @@ namespace ITunes.Editor.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenFileDialog"/> class.
         /// </summary>
-        public OpenFileDialog() => this.Title = Properties.Resources.OpenFileDialogTitle;
+        public OpenFileDialog() => this.Title = Wpf.Properties.Resources.OpenFileDialogTitle;
 
         /// <summary>
         /// Gets the file name using the specified <paramref name="path"/> as a starting point.

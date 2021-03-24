@@ -121,6 +121,10 @@
     <value>iTunes Editor</value>
     <comment>Title for the main screen</comment>
   </data>
+  <data name="NotFoundLabel" xml:space="preserve">
+    <value>Not Found</value>
+    <comment>Label for Not Found.</comment>
+  </data>
   <data name="OpenFileDialogTitle" xml:space="preserve">
     <value>Open File</value>
     <comment>Title for the Open File Dialog</comment>

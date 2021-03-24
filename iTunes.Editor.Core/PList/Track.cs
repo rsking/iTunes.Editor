@@ -150,7 +150,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the album artist.
         /// </summary>
-        public string AlbumArtist => this.dict.GetString("Album Artist");
+        public string? AlbumArtist => this.dict.GetNullableString("Album Artist");
 
         /// <summary>
         /// Gets the composer.

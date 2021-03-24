@@ -73,10 +73,11 @@ namespace ITunes.Editor.Converters
 
             private readonly System.Reflection.ParameterInfo? canExecuteParameterInfo;
 
-            public DelegateCommand(Delegate execute, Delegate canExecute, System.ComponentModel.INotifyPropertyChanged inpc, string propertyName)
+            public DelegateCommand(Delegate execute, Delegate? canExecute, System.ComponentModel.INotifyPropertyChanged inpc, string propertyName)
             {
                 this.execute = execute;
-                this.executeParameterInfo = this.execute.Method.GetParameters().FirstOrDefault();
+                this.executeParameterInfo = this.execute.Method.GetParameters().FirstOrDefault()
+                    ?? throw new ArgumentException("Cannot find parameter", nameof(execute));
 
                 this.canExecute = canExecute;
                 this.canExecuteParameterInfo = this.canExecute?.Method.GetParameters().FirstOrDefault();

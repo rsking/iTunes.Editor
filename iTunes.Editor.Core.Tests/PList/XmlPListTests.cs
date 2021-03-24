@@ -24,7 +24,8 @@ namespace ITunes.Editor.PList
         {
             using var stream = Resources.TestXml;
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-            this.plist = (PList)serializer.Deserialize(stream);
+            var plist = serializer.Deserialize(stream);
+            this.plist = (PList)plist!;
         }
 
         [Fact]

@@ -16,18 +16,6 @@ namespace ITunes.Editor.PList
     /// </summary>
     public class ExtensionMethodsTests
     {
-        private static void TestGetWithValidData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
-            where T1 : struct => function(new Dictionary<string, object?> { { "value", value } }, "value").Should().Be(value);
-
-        private static void TestGetWithNullData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
-            where T1 : struct => function(new Dictionary<string, object?> { { "value", null } }, "value").Should().Be(value);
-
-        private static void TestGetWithNoKey<T>(Func<IDictionary<string, object?>, string, T?> function)
-            where T : struct => function(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default(T?));
-
-        private static void TestGetWithInvalidData<T>(Func<IDictionary<string, object?>, string, T?> function)
-            where T : struct => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(_ => function(_, "value")).Should().Throw<InvalidCastException>();
-
         [Fact]
         internal void TestGetNullableInt32WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt32, 1234L);
 
@@ -84,5 +72,17 @@ namespace ITunes.Editor.PList
 
         [Fact]
         internal void TestGetStringWithInvalidData() => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
+
+        private static void TestGetWithValidData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
+            where T1 : struct => function(new Dictionary<string, object?> { { "value", value } }, "value").Should().Be(value);
+
+        private static void TestGetWithNullData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
+            where T1 : struct => function(new Dictionary<string, object?> { { "value", null } }, "value").Should().Be(value);
+
+        private static void TestGetWithNoKey<T>(Func<IDictionary<string, object?>, string, T?> function)
+            where T : struct => function(new Dictionary<string, object?> { { "value", "value" } }, "value_bad").Should().Be(default(T?));
+
+        private static void TestGetWithInvalidData<T>(Func<IDictionary<string, object?>, string, T?> function)
+            where T : struct => new Dictionary<string, object?> { { "value", 123456M } }.Invoking(_ => function(_, "value")).Should().Throw<InvalidCastException>();
     }
 }

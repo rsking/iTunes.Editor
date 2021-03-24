@@ -7,16 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro" Version="4.0.136-rc" />
-    <PackageReference Include="MahApps.Metro" Version="2.1.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.3" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
+    <PackageReference Include="PropertyChanged.Fody" Version="$(PropertyChangedVersion)" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
-    <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
-    <EmbeddedResource Update="Properties\Resources.resx" CustomToolNamespace="$(Rootnamespace).Wpf.Properties" />
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" CustomToolNamespace="$(RootNamespace).Wpf.Properties" />
+    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
   </ItemGroup>
 
   <ItemGroup>

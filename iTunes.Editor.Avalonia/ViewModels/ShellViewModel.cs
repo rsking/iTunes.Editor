@@ -22,6 +22,7 @@ namespace ITunes.Editor.ViewModels
         /// </summary>
         public ShellViewModel()
         {
+            this.eventAggregator = default!;
         }
 
         /// <summary>

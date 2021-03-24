@@ -70,6 +70,15 @@ namespace ITunes.Editor.Avalonia.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Found.
+        /// </summary>
+        internal static string NotFoundLabel {
+            get {
+                return ResourceManager.GetString("NotFoundLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open File.
         /// </summary>
         internal static string OpenFileDialogTitle {

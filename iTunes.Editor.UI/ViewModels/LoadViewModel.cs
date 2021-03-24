@@ -60,7 +60,7 @@ namespace ITunes.Editor.ViewModels
                     break;
             }
 
-            this.eventAggregator.Publish(Models.SongsLoadedEvent.FromAysnc(provider.GetTagInformationAsync()));
+            this.eventAggregator.Publish(new Models.SongsLoadedEvent(provider.GetTagInformationAsync()));
         }
     }
 }

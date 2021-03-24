@@ -433,86 +433,89 @@ namespace System.Collections.ObjectModel
 
             if (index + count == 0)
             {
-                this.InsertRange(0, collection);
+                using (this.DeferEvents())
+                {
+                    this.InsertRange(0, collection);
+                }
+
                 return;
             }
 
-            if (!(collection is IList<T> list))
-            {
-                list = new List<T>(collection);
-            }
-
             using (this.BlockReentrancy())
-            using (this.DeferEvents())
             {
-                var rangeCount = index + count;
-                var addedCount = list.Count;
-
-                var changesMade = false;
-                IList<T>? newCluster = null;
-                IList<T>? oldCluster = null;
-
-                var i = index;
-                for (; i < rangeCount && i - index < addedCount; i++)
+                using (this.DeferEvents())
                 {
-                    // parallel position
-                    T old = this[i], @new = list[i - index];
-                    if (comparer.Equals(old, @new))
-                    {
-                        this.OnRangeReplaced(i, newCluster!, oldCluster!);
-                        continue;
-                    }
-                    else
-                    {
-                        this.Items[i] = @new;
+                    IList<T> list = collection as IList<T> ?? new List<T>(collection);
 
-                        if (newCluster is null || oldCluster is null)
+                    var rangeCount = index + count;
+                    var addedCount = list.Count;
+
+                    var changesMade = false;
+                    IList<T>? newCluster = null;
+                    IList<T>? oldCluster = null;
+
+                    var i = index;
+                    for (; i < rangeCount && i - index < addedCount; i++)
+                    {
+                        // parallel position
+                        T old = this[i], @new = list[i - index];
+                        if (comparer.Equals(old, @new))
                         {
-                            newCluster = new List<T> { @new };
-                            oldCluster = new List<T> { old };
+                            this.OnRangeReplaced(i, newCluster!, oldCluster!);
+                            continue;
                         }
                         else
                         {
-                            newCluster.Add(@new);
-                            oldCluster.Add(old);
+                            this.Items[i] = @new;
+
+                            if (newCluster is null || oldCluster is null)
+                            {
+                                newCluster = new List<T> { @new };
+                                oldCluster = new List<T> { old };
+                            }
+                            else
+                            {
+                                newCluster.Add(@new);
+                                oldCluster.Add(old);
+                            }
+
+                            changesMade = true;
                         }
-
-                        changesMade = true;
                     }
-                }
 
-                this.OnRangeReplaced(i, newCluster!, oldCluster!);
+                    this.OnRangeReplaced(i, newCluster!, oldCluster!);
 
-                // exceeding position
-                if (count != addedCount)
-                {
-                    var items = (List<T>)this.Items;
-                    if (count > addedCount)
+                    // exceeding position
+                    if (count != addedCount)
                     {
-                        var removedCount = rangeCount - addedCount;
-                        var removed = new T[removedCount];
-                        items.CopyTo(i, removed, 0, removed.Length);
-                        items.RemoveRange(i, removedCount);
-                        this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, i));
-                    }
-                    else
-                    {
-                        var k = i - index;
-                        var added = new T[addedCount - k];
-                        for (var j = k; j < addedCount; j++)
+                        var items = (List<T>)this.Items;
+                        if (count > addedCount)
                         {
-                            added[j - k] = list[j];
+                            var removedCount = rangeCount - addedCount;
+                            var removed = new T[removedCount];
+                            items.CopyTo(i, removed, 0, removed.Length);
+                            items.RemoveRange(i, removedCount);
+                            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, i));
+                        }
+                        else
+                        {
+                            var k = i - index;
+                            var added = new T[addedCount - k];
+                            for (var j = k; j < addedCount; j++)
+                            {
+                                added[j - k] = list[j];
+                            }
+
+                            items.InsertRange(i, added);
+                            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, i));
                         }
 
-                        items.InsertRange(i, added);
-                        this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, i));
+                        this.OnEssentialPropertiesChanged();
                     }
-
-                    this.OnEssentialPropertiesChanged();
-                }
-                else if (changesMade)
-                {
-                    this.OnIndexerPropertyChanged();
+                    else if (changesMade)
+                    {
+                        this.OnIndexerPropertyChanged();
+                    }
                 }
             }
         }
