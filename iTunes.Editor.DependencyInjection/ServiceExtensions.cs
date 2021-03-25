@@ -143,7 +143,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceCollection">The service collection.</param>
         /// <returns>The return service collection.</returns>
         public static IServiceCollection AddApraAmcos(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<IComposerProvider, ApraAmcosComposerProvider>("apra_amcos");
+            .AddTransient<IComposerProvider, ITunes.Editor.Composers.ApraAmcos.ApraAmcosComposerProvider>("apra_amcos");
 
         /// <summary>
         /// Get service of type <typeparamref name="T"/> from the <see cref="System.IServiceProvider"/> with the specified key.

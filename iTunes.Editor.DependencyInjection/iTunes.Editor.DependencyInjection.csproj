@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.ApiSeeds\iTunes.Editor.ApiSeeds.csproj" />
     <ProjectReference Include="..\iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.Composers.ApraAmcos\iTunes.Editor.Composers.ApraAmcos.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iPod\iTunes.Editor.iPod.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj" />

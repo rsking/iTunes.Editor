@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>$(RootNamespace).Composers.ApraAmcos</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IsExternalInit" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion).*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
+  </ItemGroup>
+
+</Project>
