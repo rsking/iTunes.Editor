@@ -8,47 +8,71 @@ namespace ITunes.Editor.ViewModels
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The songs view model.
     /// </summary>
     public class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISongs
     {
-        private readonly System.Collections.ObjectModel.ObservableCollection<SongInformation> songs = new ();
+        private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
+
+        private readonly System.Collections.Generic.ICollection<Models.IArtist> artists = Collections.ObservableHelper.CreateObservableCollection<Models.IArtist>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
-        public SongsViewModel(IEventAggregator eventAggregator) => eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
+        public SongsViewModel(IEventAggregator eventAggregator)
         {
-            this.songs.Clear();
-            await foreach (var song in evt.Information)
+            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(async () =>
             {
-                if (song.GetMediaType() == "Music")
+                var selectedSongs = this.GetSelectedSongs().ToArray();
+
+                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
+
+                foreach (var song in selectedSongs)
                 {
-                    this.songs.Add(song);
+                    await service.UpdateAsync(song).ConfigureAwait(false);
                 }
-            }
+            });
 
-            var performers = this.songs
-                .SelectMany(SelectPerfomers).ToArray();
-            var groupedPerformers = performers.GroupBy(p => p.Performer);
-            var artists = groupedPerformers.Select(group => new ArtistViewModel(group.Key, this.songs.Where(song => song.AlbumPerformers.Contains(group.Key) || song.Performers.Contains(group.Key))));
-            this.Artists = artists;
-
-            static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
+            eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
             {
-                return song.AlbumPerformers.Any()
-                    ? SelectPerfomersImpl(song.AlbumPerformers, song)
-                    : SelectPerfomersImpl(song.Performers, song);
-
-                static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
+                this.songs.Clear();
+                await foreach (var song in evt.Information.ConfigureAwait(false))
                 {
-                    return performers.Select(performer => (performer, song));
+                    if (string.Equals(song.GetMediaType(), "Music", StringComparison.Ordinal))
+                    {
+                        this.songs.Add(song);
+                    }
                 }
-            }
-        });
+
+                var query = this.songs
+                    .SelectMany(SelectPerfomers)
+                    .GroupBy(p => p.Performer, StringComparer.Ordinal)
+                    .Select(group => new ArtistViewModel(
+                        group.Key,
+                        this.songs.Where(song => song.AlbumPerformers.Contains(group.Key, StringComparer.Ordinal) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+
+                foreach (var artist in query)
+                {
+                    this.artists.Add(artist);
+                }
+
+                static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
+                {
+                    return song.AlbumPerformers.Any()
+                        ? SelectPerfomersImpl(song.AlbumPerformers, song)
+                        : SelectPerfomersImpl(song.Performers, song);
+
+                    static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
+                    {
+                        return performers.Select(performer => (performer, song));
+                    }
+                }
+            });
+        }
 
         /// <summary>
         /// Gets the songs.
@@ -58,7 +82,49 @@ namespace ITunes.Editor.ViewModels
         /// <summary>
         /// Gets the artists.
         /// </summary>
-        public System.Collections.Generic.IEnumerable<Models.IArtist> Artists { get; private set; } = Enumerable.Empty<Models.IArtist>();
+        public System.Collections.Generic.IEnumerable<Models.IArtist> Artists => this.artists;
+
+        /// <summary>
+        /// Gets a command to update the lyrics.
+        /// </summary>
+        public System.Windows.Input.ICommand UpdateLyrics { get; }
+
+        private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
+        {
+            return this.Artists
+                .Cast<SelectableViewModel>()
+                .SelectMany(selectable => Select(selectable));
+
+            static System.Collections.Generic.IEnumerable<SongInformation> Select(Models.ISelectable selectable, bool forceSelected = false)
+            {
+                if (!selectable.IsSelected && !forceSelected)
+                {
+                    foreach (var subSelectable in selectable.Children)
+                    {
+                        foreach (var item in Select(subSelectable))
+                        {
+                            yield return item;
+                        }
+                    }
+
+                    yield break;
+                }
+
+                if (selectable is SongViewModel song)
+                {
+                    yield return song.Song;
+                    yield break;
+                }
+
+                foreach (var subSelectable in selectable.Children)
+                {
+                    foreach (var item in Select(subSelectable, forceSelected: true))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+        }
 
         private abstract class SelectableViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISelectable
         {
@@ -80,7 +146,7 @@ namespace ITunes.Editor.ViewModels
                 set => this.SetProperty(ref this.isExpanded, value);
             }
 
-            public System.Collections.Generic.IEnumerable<Models.ISelectable> Children { get; internal protected set; } = System.Linq.Enumerable.Empty<Models.ISelectable>();
+            public System.Collections.Generic.IEnumerable<Models.ISelectable> Children { get; protected internal set; } = Enumerable.Empty<Models.ISelectable>();
 
             public Models.ISelectable? Parent { get; }
         }
@@ -92,8 +158,9 @@ namespace ITunes.Editor.ViewModels
             {
                 this.Name = name;
                 var viewModels = songs
-                    .GroupBy(song => song.Album)
-                    .Select(group => new AlbumViewModel(this, group.Key, group));
+                    .GroupBy(song => song.Album, StringComparer.Ordinal)
+                    .Select(group => new AlbumViewModel(this, group.Key, group))
+                    .ToArray();
                 this.Children = viewModels;
                 this.Albums = viewModels;
             }
@@ -110,7 +177,9 @@ namespace ITunes.Editor.ViewModels
             {
                 this.Name = name;
                 this.Artist = artist;
-                var viewModels = songs.Select(song => new SongViewModel(this, song));
+                var viewModels = songs
+                    .Select(song => new SongViewModel(this, song))
+                    .ToArray();
                 this.Children = viewModels;
                 this.Songs = viewModels;
             }
@@ -124,18 +193,18 @@ namespace ITunes.Editor.ViewModels
 
         private class SongViewModel : SelectableViewModel, Models.ISong
         {
-            private readonly SongInformation song;
-
             public SongViewModel(AlbumViewModel album, SongInformation song)
                 : base(album)
             {
                 this.Album = album;
-                this.song = song;
+                this.Song = song;
             }
 
-            public string? Name => this.song.Title;
+            public string? Name => this.Song.Title;
 
             public Models.IAlbum Album { get; }
+
+            public SongInformation Song { get; }
         }
     }
 }

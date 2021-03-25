@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
+    <PackageReference Include="Nullable" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="PropertyChanged.Fody" Version="$(PropertyChangedVersion)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <PackageReference Include="System.Collections.Immutable" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +31,19 @@
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
+  </ItemGroup>
+
+  <!--
+    Determine whether the project is WPF temp project.
+    Since .NET Framework 4.7.2 WPF temp project name ends with _wpftmp suffix and keeps the language specific extension (e.g. csproj). 
+  -->
+  <PropertyGroup Label="WPF Temp Project">
+    <IsWpfTempProject>false</IsWpfTempProject>
+    <IsWpfTempProject Condition="$(MSBuildProjectName.EndsWith('_wpftmp'))">true</IsWpfTempProject>
+  </PropertyGroup>
+
+  <ItemGroup Label="WPF Temp Project" Condition="'$(IsWpfTempProject)' == 'true'">
+    <Compile Include="$(ProjectDir)\$(IntermediateOutputPath)\NuGet\**\*.cs" />
   </ItemGroup>
 
 </Project>

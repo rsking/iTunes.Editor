@@ -12,12 +12,11 @@
       ShowsNavigationUI="False"
       mc:Ignorable="d">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock Text="Songs!" />
-        <TreeView Grid.Row="1" ItemsSource="{Binding Artists}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TreeView ItemsSource="{Binding Artists}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -36,12 +35,8 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <!--<ListBox Grid.Row="1" ItemsSource="{Binding Artists}">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:IArtist}">
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>-->
+        <StackPanel Grid.Column="1">
+            <Button Command="{Binding UpdateLyrics}" Content="Update Lyrics" />
+        </StackPanel>
     </Grid>
 </Page>

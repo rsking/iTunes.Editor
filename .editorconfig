@@ -15,3 +15,5 @@ charset = utf-8-bom
 
 # MA0051 - Method is too long
 MA0051.maximum_lines_per_method = 180
+MA0051.maximum_statements_per_method = 80
+MA0051.skip_local_functions = true

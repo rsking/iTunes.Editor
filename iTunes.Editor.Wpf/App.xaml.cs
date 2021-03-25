@@ -48,6 +48,9 @@ namespace ITunes.Editor
                 })
                 .Build();
 
+            Collections.ObservableHelper.SetObservableCollectionType(typeof(Collections.ObservableImmutableList<>));
+            Collections.ObservableHelper.SetObservableListType(typeof(Collections.ObservableImmutableList<>));
+
             Ioc.Default.ConfigureServices(this.host.Services);
         }
 
