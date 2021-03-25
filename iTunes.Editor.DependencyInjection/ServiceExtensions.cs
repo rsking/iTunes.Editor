@@ -35,14 +35,6 @@ namespace Microsoft.Extensions.DependencyInjection
             .AddTransient<ILyricsProvider, ITunes.Editor.ChartLyrics.ChartLyricsLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.ChartLyrics)));
 
         /// <summary>
-        /// Adds Wikia.
-        /// </summary>
-        /// <param name="serviceCollection">The service collection.</param>
-        /// <returns>The return service collection.</returns>
-        public static IServiceCollection AddWikia(this IServiceCollection serviceCollection) => serviceCollection
-            .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Wikia.WikiaLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.Wikia)));
-
-        /// <summary>
         /// Adds Genius.
         /// </summary>
         /// <param name="serviceCollection">The service collection.</param>

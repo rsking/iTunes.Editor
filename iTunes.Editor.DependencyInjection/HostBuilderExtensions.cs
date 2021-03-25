@@ -28,7 +28,6 @@ namespace Microsoft.Extensions.Hosting
             {
                 // Lyrics
                 serviceCollection
-                    .AddWikia()
                     .AddAZ()
                     .AddGenius()
                     .AddChartLyrics()
