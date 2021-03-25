@@ -24,10 +24,7 @@ namespace ITunes.Editor.Lyrics.Ovh
         /// Initializes a new instance of the <see cref="OvhLyricsProvider" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public OvhLyricsProvider(ILogger<OvhLyricsProvider> logger)
-        {
-            this.logger = logger;
-        }
+        public OvhLyricsProvider(ILogger<OvhLyricsProvider> logger) => this.logger = logger;
 
         /// <inheritdoc />
         public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
@@ -41,6 +38,7 @@ namespace ITunes.Editor.Lyrics.Ovh
             var request = new RestRequest("{artist}/{title}", Method.GET)
                 .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
                 .AddUrlSegment("title", tagInformation.Title);
+            request.ReadWriteTimeout = 3000;
             var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessful)
             {
