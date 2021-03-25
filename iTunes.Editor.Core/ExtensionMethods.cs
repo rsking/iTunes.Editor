@@ -120,9 +120,9 @@ namespace ITunes.Editor
         /// <returns>The cleaned lyrics.</returns>
         public static string? CleanLyrics(this string? lyrics, string newLine = "\r")
         {
-            if (lyrics is null || lyrics.Length == 0)
+            if (string.IsNullOrEmpty(lyrics))
             {
-                return null;
+                return default;
             }
 
             return string.Join(
@@ -369,8 +369,13 @@ namespace ITunes.Editor
             return false;
         }
 
-        private static IEnumerable<string> SplitLines(this string lyrics)
+        private static IEnumerable<string> SplitLines(this string? lyrics)
         {
+            if (lyrics is null)
+            {
+                yield break;
+            }
+
             var returnString = new System.Text.StringBuilder();
 
             // find the first and last actual characters
