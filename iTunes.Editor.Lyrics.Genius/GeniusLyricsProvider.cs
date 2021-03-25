@@ -51,27 +51,34 @@ namespace ITunes.Editor.Lyrics.Genius
 
         private static string ScrapeNode(HtmlAgilityPack.HtmlNode node)
         {
-            var lyrics = new System.Text.StringBuilder();
+            return ScrapeNodeBuilder(node).ToString();
 
-            foreach (var childNode in node.ChildNodes)
+            static System.Text.StringBuilder ScrapeNodeBuilder(HtmlAgilityPack.HtmlNode node, System.Text.StringBuilder? builder = default)
             {
-                switch (childNode.Name)
+                builder ??= new();
+                foreach (var childNode in node.ChildNodes)
                 {
-                    case "i":
-                    case "b":
-                        lyrics.Append(ScrapeNode(childNode));
-                        break;
-                    case "#text":
-                        // scrape this
-                        lyrics.Append(childNode.InnerText.Trim('\n'));
-                        break;
-                    case "br":
-                        lyrics.AppendLine();
-                        break;
+                    switch (childNode.Name)
+                    {
+                        case "i":
+                        case "b":
+                        case "a":
+                        case "span":
+                            ScrapeNodeBuilder(childNode, builder);
+                            break;
+                        case "#text":
+                            // scrape this
+                            var text = HtmlAgilityPack.HtmlEntity.DeEntitize(childNode.InnerText.Trim('\n'));
+                            builder.Append(text);
+                            break;
+                        case "br":
+                            builder.AppendLine();
+                            break;
+                    }
                 }
-            }
 
-            return lyrics.ToString();
+                return builder;
+            }
         }
 
         private async Task<string?> ScrapeLyricsAsync(string address, System.Threading.CancellationToken cancellationToken)
@@ -93,12 +100,34 @@ namespace ITunes.Editor.Lyrics.Genius
             document.LoadHtml(pageText);
 
             // select the div
-            var paragraphNode = document.DocumentNode
-                .SelectNodes("//div[@class='lyrics']")
-                .FirstOrDefault()?
-                .SelectSingleNode("p");
+            var paragraphNode = GetExactNode(document.DocumentNode, "lyrics") ?? SearchNodes(document.DocumentNode, "Lyrics__Container");
 
             return paragraphNode is null ? null : ScrapeNode(paragraphNode);
+
+            static HtmlAgilityPack.HtmlNode? GetExactNode(HtmlAgilityPack.HtmlNode documentNode, string @class)
+            {
+                var nodes = documentNode
+                    .SelectNodes($"//div[@class='{@class}']");
+                if (nodes is null)
+                {
+                    return default;
+                }
+
+                var node = nodes.FirstOrDefault();
+                if (node is null)
+                {
+                    return default;
+                }
+
+                return node.SelectSingleNode("p");
+            }
+
+            static HtmlAgilityPack.HtmlNode? SearchNodes(HtmlAgilityPack.HtmlNode documentNode, string prefix)
+            {
+                return documentNode
+                    .SelectNodes("//div")
+                    .FirstOrDefault(div => div.GetClasses().Any(@class => @class.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)));
+            }
         }
     }
 }
