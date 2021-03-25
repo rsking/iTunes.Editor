@@ -19,7 +19,8 @@ namespace ITunes.Editor.ApiSeeds
 
         private readonly ILogger logger;
 
-        private readonly IRestClient client = new RestClient(Uri).UseSystemTextJson();
+        private readonly IRestClient client = new RestClient(Uri)
+            .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
@@ -57,27 +58,33 @@ namespace ITunes.Editor.ApiSeeds
             var request = new RestRequest("{artist}/{track}", Method.GET)
                 .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
                 .AddUrlSegment("track", tagInformation.Title);
-            var response = await this.client.ExecuteAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
-            return GetLyricsImpl(this.logger, request, response?.Data?.Result);
-        }
-
-        private static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? getLyricResult)
-        {
-            if (getLyricResult is null)
+            var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessful)
             {
+                this.logger.LogError(response.ErrorMessage);
+                return default;
+            }
+
+            return GetLyricsImpl(this.logger, request, response.Data.Result);
+
+            static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? result)
+            {
+                if (result is null)
+                {
+                    return null;
+                }
+
+                if (result.Artist?.Name is not null
+                    && result.Artist.Name.Equals((string?)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+                    && result.Track?.Name is not null
+                    && result.Track.Name.Equals((string?)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return result.Track.Text;
+                }
+
+                logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{result.Artist?.Name}|{result.Track?.Name}");
                 return null;
             }
-
-            if (getLyricResult.Artist?.Name is not null
-                && getLyricResult.Artist.Name.Equals((string?)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
-                && getLyricResult.Track?.Name is not null
-                && getLyricResult.Track.Name.Equals((string?)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
-            {
-                return getLyricResult.Track.Text;
-            }
-
-            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{getLyricResult.Artist?.Name}|{getLyricResult.Track?.Name}");
-            return null;
         }
 
         private record GetLyricsResponse(GetLyricsResult? Result);

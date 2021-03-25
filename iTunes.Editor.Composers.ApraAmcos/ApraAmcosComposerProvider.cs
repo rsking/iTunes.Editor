@@ -14,7 +14,7 @@ namespace ITunes.Editor.Composers.ApraAmcos
     /// </summary>
     public sealed class ApraAmcosComposerProvider : IComposerProvider
     {
-        private readonly IRestClient client = new RestClient("https://apraamcos.com.au/api/")
+        private readonly IRestClient client = new RestClient("https://www.apraamcos.com.au/api/")
             .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             .UseQueryEncoder((value, encoding) => System.Web.HttpUtility.UrlEncode(value.ToLowerInvariant(), encoding));
 

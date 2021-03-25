@@ -17,7 +17,8 @@ namespace ITunes.Editor.Lyrics.Ovh
 
         private readonly ILogger logger;
 
-        private readonly IRestClient client = new RestClient(Uri).UseSystemTextJson();
+        private readonly IRestClient client = new RestClient(Uri)
+            .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OvhLyricsProvider" /> class.
@@ -40,8 +41,14 @@ namespace ITunes.Editor.Lyrics.Ovh
             var request = new RestRequest("{artist}/{title}", Method.GET)
                 .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
                 .AddUrlSegment("title", tagInformation.Title);
-            var response = await this.client.ExecuteAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
-            return response?.Data?.Lyrics;
+            var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessful)
+            {
+                this.logger.LogError(response.ErrorMessage);
+                return default;
+            }
+
+            return response.Data.Lyrics;
         }
 
         private record GetLyricsResponse(string? Lyrics);
