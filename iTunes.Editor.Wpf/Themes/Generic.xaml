@@ -1,24 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:pg="clr-namespace:Xceed.Wpf.Toolkit.PropertyGrid;assembly=DotNetProjects.Wpf.Extended.Toolkit"
-                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="NavigationWindows.xaml" />
         <ResourceDictionary Source="PropertyGrid.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <Style TargetType="{x:Type NavigationWindow}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type NavigationWindow}">
-
-                    <AdornerDecorator>
-                        <ContentPresenter Name="PART_NavWinCP" ClipToBounds="true" />
-                    </AdornerDecorator>
-
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
 </ResourceDictionary>
