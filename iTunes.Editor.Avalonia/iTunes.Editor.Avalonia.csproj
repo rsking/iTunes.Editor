@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp2.1;net462</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Versions">
     <AvaloniaVersion>0.10.*</AvaloniaVersion>
   </PropertyGroup>
-    
+
   <ItemGroup>
     <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
     <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
@@ -13,18 +16,19 @@
     <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
-    
+
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
     <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
   </ItemGroup>
-      
+
 </Project>

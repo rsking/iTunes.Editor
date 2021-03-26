@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackBaseVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
   </ItemGroup>
 

@@ -109,7 +109,6 @@ namespace ITunes.Editor.ViewModels
         /// <inheritdoc/>
         public TagLib.Tag? SelectedTag => this.selectedFile?.Tag;
 
-
         /// <summary>
         /// Gets the artists.
         /// </summary>
