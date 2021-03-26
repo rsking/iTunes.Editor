@@ -21,10 +21,4 @@
         </Setter>
     </Style>
 
-    <!--<Style BasedOn="{StaticResource {x:Type pg:PropertyGrid}}" TargetType="{x:Type pg:PropertyGrid}">
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-    </Style>-->
-
 </ResourceDictionary>

@@ -861,19 +861,19 @@
                             <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/Local11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}" Value="{x:Static pg:StringConstants.Resource}">
-                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid//Images/Resource11.png" />
+                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/Resource11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}" Value="{x:Static pg:StringConstants.Databinding}">
-                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid//Images/Database11.png" />
+                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/Database11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}" Value="{x:Static pg:StringConstants.Inheritance}">
-                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid//Images/Inheritance11.png" />
+                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/Inheritance11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}" Value="{x:Static pg:StringConstants.StyleSetter}">
-                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid//Images/Style11.png" />
+                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/Style11.png" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=_optionsImage, Path=ToolTip}" Value="{x:Static pg:StringConstants.Default}">
-                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid//Images/AdvancedProperties11.png" />
+                            <Setter TargetName="_optionsImage" Property="Source" Value="pack://application:,,,/DotNetProjects.Wpf.Extended.Toolkit;component/PropertyGrid/Images/AdvancedProperties11.png" />
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

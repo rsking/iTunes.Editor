@@ -81,6 +81,7 @@ namespace ITunes.Editor
                 {
                     // Set the default language
                     Language = System.Windows.Markup.XmlLanguage.GetLanguage(System.Globalization.CultureInfo.CurrentUICulture.Name),
+                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden,
                 };
 
                 rootFrame.NavigationFailed += this.OnNavigationFailed;
