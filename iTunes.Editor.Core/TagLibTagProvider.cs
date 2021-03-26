@@ -31,11 +31,6 @@ namespace ITunes.Editor
                 cancellationToken);
         }
 
-        /// <summary>
-        /// Gets the file.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>The file.</returns>
         private static TagLib.File? GetFile(string path)
         {
             TagLib.File? file = null;

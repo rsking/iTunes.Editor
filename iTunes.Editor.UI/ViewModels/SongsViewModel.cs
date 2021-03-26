@@ -7,6 +7,7 @@
 namespace ITunes.Editor.ViewModels
 {
     using System;
+    using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -18,6 +19,10 @@ namespace ITunes.Editor.ViewModels
         private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
 
         private readonly System.Collections.Generic.ICollection<Models.IArtist> artists = Collections.ObservableHelper.CreateObservableCollection<Models.IArtist>();
+
+        private SongInformation? selectedSong;
+
+        private TagLib.File? selectedFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
@@ -52,6 +57,7 @@ namespace ITunes.Editor.ViewModels
                     .SelectMany(SelectPerfomers)
                     .GroupBy(p => p.Performer, StringComparer.Ordinal)
                     .Select(group => new ArtistViewModel(
+                        this,
                         group.Key,
                         this.songs.Where(song => song.AlbumPerformers.Contains(group.Key, StringComparer.Ordinal) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
 
@@ -74,19 +80,42 @@ namespace ITunes.Editor.ViewModels
             });
         }
 
-        /// <summary>
-        /// Gets the songs.
-        /// </summary>
+        /// <inheritdoc/>
         public System.Collections.Generic.IEnumerable<SongInformation> Songs => this.songs;
+
+        /// <inheritdoc/>
+        public SongInformation? SelectedSong
+        {
+            get => this.selectedSong;
+            set
+            {
+                this.SetProperty(ref this.selectedSong, value);
+
+                if (this.selectedFile is not null)
+                {
+                    this.selectedFile.Dispose();
+                    this.selectedFile = default;
+                }
+
+                if (this.selectedSong is not null)
+                {
+                    this.selectedFile = TagLib.File.Create(this.selectedSong.Name);
+                }
+
+                this.OnPropertyChanged(nameof(this.SelectedTag));
+            }
+        }
+
+        /// <inheritdoc/>
+        public TagLib.Tag? SelectedTag => this.selectedFile?.Tag;
+
 
         /// <summary>
         /// Gets the artists.
         /// </summary>
         public System.Collections.Generic.IEnumerable<Models.IArtist> Artists => this.artists;
 
-        /// <summary>
-        /// Gets a command to update the lyrics.
-        /// </summary>
+        /// <inheritdoc/>
         public System.Windows.Input.ICommand UpdateLyrics { get; }
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
@@ -153,9 +182,12 @@ namespace ITunes.Editor.ViewModels
 
         private class ArtistViewModel : SelectableViewModel, Models.IArtist
         {
-            public ArtistViewModel(string name, System.Collections.Generic.IEnumerable<SongInformation> songs)
+            private readonly Models.ISongs parent;
+
+            public ArtistViewModel(Models.ISongs parent, string name, System.Collections.Generic.IEnumerable<SongInformation> songs)
                 : base(default)
             {
+                this.parent = parent;
                 this.Name = name;
                 var viewModels = songs
                     .GroupBy(song => song.Album, StringComparer.Ordinal)
@@ -168,6 +200,8 @@ namespace ITunes.Editor.ViewModels
             public string? Name { get; }
 
             public System.Collections.Generic.IEnumerable<Models.IAlbum> Albums { get; }
+
+            internal void SelectSong(SongInformation songInformation) => this.parent.SelectedSong = songInformation;
         }
 
         private class AlbumViewModel : SelectableViewModel, Models.IAlbum
@@ -189,6 +223,14 @@ namespace ITunes.Editor.ViewModels
             public Models.IArtist Artist { get; }
 
             public System.Collections.Generic.IEnumerable<Models.ISong> Songs { get; }
+
+            internal void SelectSong(SongInformation songInformation)
+            {
+                if (this.Parent is ArtistViewModel artist)
+                {
+                    artist.SelectSong(songInformation);
+                }
+            }
         }
 
         private class SongViewModel : SelectableViewModel, Models.ISong
@@ -205,6 +247,17 @@ namespace ITunes.Editor.ViewModels
             public Models.IAlbum Album { get; }
 
             public SongInformation Song { get; }
+
+            protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+            {
+                if (string.Equals(e.PropertyName, nameof(this.IsSelected), StringComparison.Ordinal)
+                    && this.Parent is AlbumViewModel viewModel)
+                {
+                    viewModel.SelectSong(this.Song);
+                }
+
+                base.OnPropertyChanged(e);
+            }
         }
     }
 }

@@ -12,8 +12,23 @@ namespace ITunes.Editor.Models
     public interface ISongs
     {
         /// <summary>
+        /// Gets a command to update the lyrics.
+        /// </summary>
+        System.Windows.Input.ICommand UpdateLyrics { get; }
+
+        /// <summary>
         /// Gets the songs.
         /// </summary>
         System.Collections.Generic.IEnumerable<SongInformation> Songs { get; }
+
+        /// <summary>
+        /// Gets or sets the selected song.
+        /// </summary>
+        SongInformation? SelectedSong { get; set; }
+
+        /// <summary>
+        /// Gets the selected tag.
+        /// </summary>
+        TagLib.Tag? SelectedTag { get; }
     }
 }
