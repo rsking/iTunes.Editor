@@ -21,6 +21,7 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
 

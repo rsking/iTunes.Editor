@@ -117,7 +117,9 @@ namespace ITunes.Editor
 
             var builder = new CommandLineBuilder()
                 .UseDefaults()
-                .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost.UseDefaultITunes())
+                .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
+                    .UseDefaultITunes()
+                    .ConfigureServices(services => services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true)))
                 .AddCommand(listCommandBuilder.Command)
                 .AddCommand(composerCommandBuilder.Command)
                 .AddCommand(lyricsCommandBuilder.Command)

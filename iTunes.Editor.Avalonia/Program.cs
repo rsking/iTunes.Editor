@@ -10,6 +10,7 @@ namespace ITunes.Editor
     using global::Avalonia;
     using global::Avalonia.Controls.ApplicationLifetimes;
     using global::Avalonia.ReactiveUI;
+    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// The program entry.
@@ -40,7 +41,7 @@ namespace ITunes.Editor
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .UseHost(Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder)
+                .UseHost(Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder, builder => builder.ConfigureServices((_, services) => services.Configure<Microsoft.Extensions.Hosting.ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true)))
                 .UseReactiveUI();
     }
 }

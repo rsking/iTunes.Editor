@@ -45,6 +45,8 @@ namespace ITunes.Editor
                     services.AddSingleton<Views.ShellView>();
                     services.AddTransient<Views.LoadView>();
                     services.AddTransient<Views.SongsView>();
+
+                    services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
                 })
                 .Build();
 
