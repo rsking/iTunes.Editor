@@ -5,13 +5,8 @@
 namespace ITunes.Editor
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -130,9 +125,6 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="sender">The Frame which failed navigation.</param>
         /// <param name="e">Details about the navigation failure.</param>
-        private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e)
-        {
-            throw new InvalidOperationException("Failed to load Page " + e.Exception);
-        }
+        private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) => throw new InvalidOperationException("Failed to load Page " + e.Exception);
     }
 }

@@ -6,9 +6,7 @@
 
 namespace ITunes.Editor
 {
-    using System;
     using global::Avalonia;
-    using global::Avalonia.Controls.ApplicationLifetimes;
     using global::Avalonia.ReactiveUI;
     using Microsoft.Extensions.DependencyInjection;
 

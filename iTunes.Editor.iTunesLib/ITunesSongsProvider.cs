@@ -44,7 +44,7 @@ namespace ITunes.Editor.ITunesLib
                 return app.LibraryPlaylist;
             }).ConfigureAwait(false);
 
-            for (int i = 1; i <= library.Tracks.Count; i++)
+            for (var i = 1; i <= library.Tracks.Count; i++)
             {
                 if (library.Tracks[i] is iTunesLib.IITFileOrCDTrack track)
                 {

@@ -5,7 +5,6 @@
 namespace ITunes.Editor.Views
 {
     using global::Avalonia;
-    using global::Avalonia.Controls;
     using global::Avalonia.Markup.Xaml;
     using ReactiveUI;
 

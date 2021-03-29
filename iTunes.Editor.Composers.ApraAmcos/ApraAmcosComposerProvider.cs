@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor.Composers.ApraAmcos
 {
-    using System;
     using System.Linq;
     using RestSharp;
     using RestSharp.Serializers.SystemTextJson;

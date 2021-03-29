@@ -4,10 +4,6 @@
 
 namespace ITunes.Editor.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// Represents a song.
     /// </summary>

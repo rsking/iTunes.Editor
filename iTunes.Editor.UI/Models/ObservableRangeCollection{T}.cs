@@ -446,7 +446,7 @@ namespace System.Collections.ObjectModel
             {
                 using (this.DeferEvents())
                 {
-                    IList<T> list = collection as IList<T> ?? new List<T>(collection);
+                    var list = collection as IList<T> ?? new List<T>(collection);
 
                     var rangeCount = index + count;
                     var addedCount = list.Count;

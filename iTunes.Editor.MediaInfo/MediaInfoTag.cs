@@ -163,14 +163,11 @@ namespace ITunes.Editor.MediaInfo
 
         private void SetStringArray(string category, string key, string[] value) => this.SetString(category, key, value is null ? null : string.Join("; ", value));
 
-        private uint GetUInt32(string category, string key)
+        private uint GetUInt32(string category, string key) => this.GetString(category, key) switch
         {
-            return this.GetString(category, key) switch
-            {
-                string stringValue when uint.TryParse(stringValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out var value) => value,
-                _ => 0,
-            };
-        }
+            string stringValue when uint.TryParse(stringValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out var value) => value,
+            _ => 0,
+        };
 
         private void SetUInt32(string category, string key, uint value) => this.SetString(category, key, value == 0 ? null : value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }

@@ -28,10 +28,7 @@ namespace ITunes.Editor.Collections
         /// Initializes a new instance of the <see cref="ObservableCollectionObject"/> class.
         /// </summary>
         /// <param name="lockType">The lock type.</param>
-        protected ObservableCollectionObject(LockType lockType)
-        {
-            this.LockType = lockType;
-        }
+        protected ObservableCollectionObject(LockType lockType) => this.LockType = lockType;
 
         /// <inheritdoc/>
         public virtual event NotifyCollectionChangedEventHandler? CollectionChanged;
@@ -201,10 +198,7 @@ namespace ITunes.Editor.Collections
         /// <summary>
         /// Raises the <see cref="CollectionChanged"/> event.
         /// </summary>
-        protected virtual void RaiseNotifyCollectionChanged()
-        {
-            this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
+        protected virtual void RaiseNotifyCollectionChanged() => this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
         /// <summary>
         /// Raises the <see cref="CollectionChanged"/> event.

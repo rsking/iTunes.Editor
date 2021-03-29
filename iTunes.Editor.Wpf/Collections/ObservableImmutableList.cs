@@ -122,7 +122,7 @@ namespace ITunes.Editor.Collections
         /// <returns>The operation result.</returns>
         public bool DoAdd(Func<ImmutableList<T>, T> valueProvider) => this.DoOperation(currentItems =>
         {
-            T value = valueProvider(currentItems);
+            var value = valueProvider(currentItems);
             var newItems = this.items.Add(value);
             return new KeyValuePair<ImmutableList<T>, NotifyCollectionChangedEventArgs>(newItems, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value, currentItems.Count));
         });
@@ -188,7 +188,7 @@ namespace ITunes.Editor.Collections
         /// <returns>The operation result.</returns>
         public bool TryAdd(Func<ImmutableList<T>, T> valueProvider) => this.TryOperation(currentItems =>
         {
-            T value = valueProvider(currentItems);
+            var value = valueProvider(currentItems);
             var newItems = this.items.Add(value);
             return new KeyValuePair<ImmutableList<T>, NotifyCollectionChangedEventArgs>(newItems, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value, currentItems.Count));
         });
@@ -250,7 +250,7 @@ namespace ITunes.Editor.Collections
         /// <inheritdoc/>
         public int Add(object? value)
         {
-            T val = (T)value!;
+            var val = (T)value!;
             this.Add(val);
             return this.IndexOf(val);
         }

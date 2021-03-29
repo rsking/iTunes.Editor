@@ -28,7 +28,8 @@ namespace ITunes.Editor.PList
             { "testDouble", 1.34223 },
             { "testImage", ImageBytes },
             {
-                "testDictLarge", new Dictionary<string, object>(StringComparer.Ordinal)
+                "testDictLarge",
+                new Dictionary<string, object>(StringComparer.Ordinal)
                 {
                     { "15", 15 },
                     { "03", 3 },

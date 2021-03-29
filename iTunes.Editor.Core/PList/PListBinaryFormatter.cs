@@ -56,7 +56,7 @@ namespace ITunes.Editor.PList
 
             var offsetTable = new int[refCount];
             serializationStream.Seek(offsetTableOffset, SeekOrigin.Begin);
-            for (int i = 0; i < refCount; i++)
+            for (var i = 0; i < refCount; i++)
             {
                 var buffer = serializationStream.Read(offsetByteSize);
                 Array.Reverse(buffer);
@@ -93,7 +93,7 @@ namespace ITunes.Editor.PList
             var offsetTableOffset = serializationStream.Length;
             var offsetByteSize = RegulateNullBytes(BitConverter.GetBytes(offsetTable[offsetTable.Count - 1])).Length;
 
-            for (int i = 0; i < offsetTable.Count; i++)
+            for (var i = 0; i < offsetTable.Count; i++)
             {
                 serializationStream.Write(RegulateNullBytes(BitConverter.GetBytes(offsetTable[i]), offsetByteSize).Reverse());
             }
