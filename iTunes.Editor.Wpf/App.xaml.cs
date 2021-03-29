@@ -42,7 +42,7 @@ namespace ITunes.Editor
                     services.AddSingleton<Models.ISongs, ViewModels.SongsViewModel>();
 
                     // views
-                    services.AddSingleton<ShellView>();
+                    services.AddSingleton<Views.ShellView>();
                     services.AddTransient<Views.LoadView>();
                     services.AddTransient<Views.SongsView>();
                 })
@@ -107,7 +107,7 @@ namespace ITunes.Editor
         {
             await this.host.StartAsync().ConfigureAwait(true);
 
-            this.host.Services.GetRequiredService<ShellView>().Show();
+            this.host.Services.GetRequiredService<Views.ShellView>().Show();
 
             base.OnStartup(e);
         }

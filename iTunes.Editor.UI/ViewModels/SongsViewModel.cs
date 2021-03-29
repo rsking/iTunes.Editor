@@ -14,7 +14,7 @@ namespace ITunes.Editor.ViewModels
     /// <summary>
     /// The songs view model.
     /// </summary>
-    public class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISongs
+    public class SongsViewModel : ViewModelBase, Models.ISongs
     {
         private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
 

@@ -26,7 +26,7 @@ namespace ITunes.Editor
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            this.Dispose(disposing: true);
             System.GC.SuppressFinalize(this);
         }
 

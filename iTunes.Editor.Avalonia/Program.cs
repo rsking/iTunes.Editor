@@ -6,44 +6,41 @@
 
 namespace ITunes.Editor
 {
+    using System;
     using global::Avalonia;
+    using global::Avalonia.Controls.ApplicationLifetimes;
     using global::Avalonia.ReactiveUI;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
 
     /// <summary>
     /// The program entry.
     /// </summary>
-    internal static class Program
+    internal sealed class Program
     {
-        /// <summary>
-        /// Builds the Avalonia application.
-        /// </summary>
-        /// <returns>The application builder.</returns>
-        public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .UseHost(Host.CreateDefaultBuilder)
-                .UseReactiveUI();
+        private Program()
+        {
+        }
 
         /// <summary>
         /// The main entry point.
         /// </summary>
-        private static void Main(string[] args) => BuildAvaloniaApp()
+        /// <param name="args">The command line arguments.</param>
+        /// <remarks>
+        /// Don't use any Avalonia, third-party APIs or any SynchronizationContext-reliant code before AppMain is called:
+        /// things aren't initialized yet and stuff might break.
+        /// </remarks>
+        public static void Main(string[] args) => BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
 
-        private static TAppBuilder UseHost<TAppBuilder>(this TAppBuilder builder, System.Func<IHostBuilder> hostBuilderFactory, System.Action<IHostBuilder>? configure = default)
-            where TAppBuilder : global::Avalonia.Controls.AppBuilderBase<TAppBuilder>, new() =>
-            builder.AfterSetup(_ =>
-            {
-                var hostBuilder = hostBuilderFactory();
-
-                hostBuilder.UseDefaultITunes();
-
-                configure?.Invoke(hostBuilder);
-
-                hostBuilder.ConfigureServices(serviceCollection => serviceCollection.AddTransient<Models.IShell, ViewModels.ShellViewModel>());
-            });
+        /// <summary>
+        /// Builds the Avalonia application.
+        /// </summary>
+        /// <returns>The application builder.</returns>
+        /// <remarks>Avalonia configuration, don't remove; also used by visual designer.</remarks>
+        public static AppBuilder BuildAvaloniaApp()
+            => AppBuilder.Configure<App>()
+                .UsePlatformDetect()
+                .LogToTrace()
+                .UseHost(Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder)
+                .UseReactiveUI();
     }
 }

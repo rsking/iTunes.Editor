@@ -9,6 +9,7 @@ namespace ITunes.Editor
     using System;
     using global::Avalonia.Controls;
     using global::Avalonia.Controls.Templates;
+    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// The view locator.
@@ -16,15 +17,11 @@ namespace ITunes.Editor
     public class ViewLocator : IDataTemplate
     {
         /// <summary>
-        /// Gets a value indicating whether this instance supports recycling.
+        /// Gets a value indicating whether this instance support recycling.
         /// </summary>
         public bool SupportsRecycling => false;
 
-        /// <summary>
-        /// Builds the control.
-        /// </summary>
-        /// <param name="param">The data.</param>
-        /// <returns>The created control.</returns>
+        /// <inheritdoc/>
         public IControl Build(object param)
         {
             if (param is null)
@@ -34,43 +31,22 @@ namespace ITunes.Editor
 
             var name = param.GetType().FullName?
 #if NETCOREAPP
-                .Replace("ViewModel", "View", StringComparison.InvariantCulture);
+                .Replace("ViewModel", "View", StringComparison.Ordinal);
 #else
                 .Replace("ViewModel", "View");
 #endif
 
             if (name is not null
                 && Type.GetType(name) is Type type
-                && Activator.CreateInstance(type) is Control control)
+                && Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService(type) is Control control)
             {
-                global::Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(control);
                 return control;
             }
-            else
-            {
-                return new TextBlock { Text = $"Not Found: {name}" };
-            }
+
+            return new TextBlock { Text = $"Not Found: {name}" };
         }
 
-        /// <summary>
-        /// Mathes the instance.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>Whether the data is matched.</returns>
-        public bool Match(object data)
-        {
-            if (data is null)
-            {
-                return false;
-            }
-
-            var name = data.GetType().FullName?
-#if NETCOREAPP
-                .Replace("ViewModel", "View", StringComparison.InvariantCulture);
-#else
-                .Replace("ViewModel", "View");
-#endif
-            return name is not null && Type.GetType(name) is not null;
-        }
+        /// <inheritdoc/>
+        public bool Match(object data) => data is ViewModels.ViewModelBase;
     }
 }

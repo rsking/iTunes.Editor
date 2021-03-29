@@ -2,7 +2,7 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor
+namespace ITunes.Editor.Views
 {
     using System;
     using System.Collections.Generic;

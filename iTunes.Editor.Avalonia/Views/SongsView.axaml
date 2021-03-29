@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ITunes.Editor.Views.SongsView">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <TreeView Grid.RowSpan="2"
+              Grid.Column="0"
+              Items="{Binding Artists}">
+      <TreeView.Styles>
+        <Style Selector="TreeViewItem">
+          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+          <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+        <Style Selector="TreeViewItem[IsSelected=true]:pointerover">
+          <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+      </TreeView.Styles>
+      <TreeView.DataTemplates>
+        <TreeDataTemplate ItemsSource="{Binding Children}">
+          <TextBlock Text="{Binding Name}" />
+        </TreeDataTemplate>
+      </TreeView.DataTemplates>
+    </TreeView>
+    <StackPanel Grid.Column="1">
+      <Button Command="{Binding UpdateLyrics}" Content="Update Lyrics" />
+    </StackPanel>
+    <Grid Grid.Column="1" Grid.Row="1" DataContext="{Binding SelectedTag}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <TextBlock Text="Performers" />
+      <TextBox Grid.Column="1" Text="{Binding JoinedPerformers}" IsReadOnly="true" />
+      <TextBlock Grid.Row="1" Text="Title" />
+      <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Title}" IsReadOnly="true" />
+    </Grid>
+  </Grid>
+</UserControl>

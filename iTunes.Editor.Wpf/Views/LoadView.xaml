@@ -30,13 +30,6 @@
                             <Run Text="Load songs from " /><Run Text="{Binding Name, Mode=OneWay}" />
                         </TextBlock>
                     </Button.Content>
-                    <!--<i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="LoadAsync">
-                                <cal:Parameter Value="$dataContext" />
-                            </cal:ActionMessage>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>-->
                 </Button>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

@@ -30,7 +30,16 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public async override System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default) => (await this.GetFileNamesImpl(path, false).ConfigureAwait(false))?.FirstOrDefault();
+        public override async System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default)
+        {
+            var fileNames = await this.GetFileNamesImpl(path, multiselect: false).ConfigureAwait(false);
+            if (fileNames is null)
+            {
+                return default;
+            }
+
+            return fileNames.FirstOrDefault();
+        }
 
         /// <summary>
         /// Gets multiple file names.
@@ -42,7 +51,7 @@ namespace ITunes.Editor.Services
         /// Gets multiple file names asynchronously.
         /// </summary>
         /// <returns>The list of file names.</returns>
-        public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => this.GetFileNamesImpl(null, true);
+        public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => this.GetFileNamesImpl(path: null, multiselect: true);
 
         /// <summary>
         /// Internal implementation to get the filenames.

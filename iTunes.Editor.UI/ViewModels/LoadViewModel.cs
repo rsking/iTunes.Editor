@@ -12,7 +12,7 @@ namespace ITunes.Editor.ViewModels
     /// <summary>
     /// The load view model.
     /// </summary>
-    public class LoadViewModel : Models.ILoad
+    public class LoadViewModel : ViewModelBase, Models.ILoad
     {
         private readonly Services.Contracts.IOpenFile openFile;
 

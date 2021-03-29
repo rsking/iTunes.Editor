@@ -6,14 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Versions">
-    <AvaloniaVersion>0.10.*</AvaloniaVersion>
+    <AvaloniaVersion>0.10.0</AvaloniaVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="**\*.xaml" SubType="Designer" />
-    <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
-    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" CustomToolNamespace="$(RootNamespace).Avalonia.Properties" />
-    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
@@ -23,6 +20,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
   </ItemGroup>
 

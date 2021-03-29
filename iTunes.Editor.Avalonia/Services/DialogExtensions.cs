@@ -20,16 +20,39 @@ namespace ITunes.Editor.Services
         /// <returns>The active window.</returns>
         internal static global::Avalonia.Controls.Window? GetActiveWindow(this global::Avalonia.Application application)
         {
-            var windows = application.Windows;
-            var window = windows.SingleOrDefault(x => x.IsActive);
-
-            if (window == null)
+            return application.ApplicationLifetime switch
             {
-                return null;
+                global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop => GetWindowFromWindows(desktop.Windows),
+                global::Avalonia.Controls.ApplicationLifetimes.ISingleViewApplicationLifetime spa => GetWindowFromControl(spa.MainView),
+                _ => default,
+            };
+
+            static global::Avalonia.Controls.Window? GetWindowFromWindows(System.Collections.Generic.IEnumerable<global::Avalonia.Controls.Window> windows)
+            {
+                var window = windows.SingleOrDefault(x => x.IsActive);
+                if (window is null)
+                {
+                    return default;
+                }
+
+                // see if any of the other has this as a parent
+                return windows.FirstOrDefault(x => window.Equals(x.Parent)) ?? window;
             }
 
-            // see if any of the other has this as a parent
-            return windows.FirstOrDefault(x => window.Equals(x.Parent)) ?? window;
+            static global::Avalonia.Controls.Window? GetWindowFromControl(global::Avalonia.Controls.IControl control)
+            {
+                if (control is global::Avalonia.Controls.Window window)
+                {
+                    return window;
+                }
+
+                if (control.Parent is null)
+                {
+                    return default;
+                }
+
+                return GetWindowFromControl(control.Parent);
+            }
         }
 
         /// <summary>
