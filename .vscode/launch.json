@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch UI",
+            "name": "Launch Avalonia",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Build UI",
+            "preLaunchTask": "Build Avalonia",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceRoot}/iTunes.Editor.Avalonia/bin/Debug/netcoreapp3.1/iTunes.Editor.Avalonia.dll",
             "args": [],

@@ -17,7 +17,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build UI",
+            "label": "Build Avalonia",
             "command": "dotnet build \"${workspaceFolder}/iTunes.Editor.Avalonia/iTunes.Editor.Avalonia.csproj\"",
             "type": "shell",
             "group": "build",
