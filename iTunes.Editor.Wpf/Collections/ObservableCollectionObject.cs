@@ -31,7 +31,7 @@ namespace ITunes.Editor.Collections
         protected ObservableCollectionObject(LockType lockType) => this.LockType = lockType;
 
         /// <inheritdoc/>
-        public virtual event NotifyCollectionChangedEventHandler? CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
