@@ -17,7 +17,7 @@ namespace ITunes.Editor.Lyrics.Ovh
 
         private readonly ILogger logger;
 
-        private readonly IRestClient client = new RestClient(Uri)
+        private readonly IRestClient client = new RestClient(Uri) { Timeout = 3000, ReadWriteTimeout = 3000 }
             .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         /// <summary>
@@ -35,10 +35,9 @@ namespace ITunes.Editor.Lyrics.Ovh
             }
 
             this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
-            var request = new RestRequest("{artist}/{title}", Method.GET)
+            var request = new RestRequest("{artist}/{title}", Method.GET) { Timeout = 3000, ReadWriteTimeout = 3000 }
                 .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
                 .AddUrlSegment("title", tagInformation.Title);
-            request.ReadWriteTimeout = 3000;
             var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessful)
             {
