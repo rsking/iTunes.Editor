@@ -31,8 +31,8 @@ namespace Microsoft.Extensions.Hosting
                     .AddAZ()
                     .AddGenius()
                     .AddChartLyrics()
-                    .AddOvh()
                     .AddApiSeeds(hostingContext.Configuration)
+                    .AddOvh()
                     .AddPurgoMalum();
 
                 // Composers
