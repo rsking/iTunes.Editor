@@ -34,6 +34,7 @@
     </TreeView>
     <StackPanel Grid.Column="1">
       <Button Command="{Binding UpdateLyrics}" Content="Update Lyrics" />
+      <Button Command="{Binding UpdateComposers}" Content="Update Composers" />
     </StackPanel>
     <Grid Grid.Column="1" Grid.Row="1" DataContext="{Binding SelectedTag}">
       <Grid.ColumnDefinitions>

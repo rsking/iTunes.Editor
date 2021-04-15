@@ -17,6 +17,11 @@ namespace ITunes.Editor.Models
         System.Windows.Input.ICommand UpdateLyrics { get; }
 
         /// <summary>
+        /// Gets a command to update the composers.
+        /// </summary>
+        System.Windows.Input.ICommand UpdateComposers { get; }
+
+        /// <summary>
         /// Gets the songs.
         /// </summary>
         System.Collections.Generic.IEnumerable<SongInformation> Songs { get; }

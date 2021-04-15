@@ -30,17 +30,8 @@ namespace ITunes.Editor.ViewModels
         /// <param name="eventAggregator">The event aggregator.</param>
         public SongsViewModel(IEventAggregator eventAggregator)
         {
-            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(async () =>
-            {
-                var selectedSongs = this.GetSelectedSongs().ToArray();
-
-                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
-
-                foreach (var song in selectedSongs)
-                {
-                    await service.UpdateAsync(song).ConfigureAwait(false);
-                }
-            });
+            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() => UpdateSongsAsync(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>()));
+            this.UpdateComposers = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() => UpdateSongsAsync(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>()));
 
             eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
             {
@@ -78,6 +69,14 @@ namespace ITunes.Editor.ViewModels
                     }
                 }
             });
+
+            async Task UpdateSongsAsync(IUpdateService service)
+            {
+                foreach (var song in this.GetSelectedSongs().ToArray())
+                {
+                    await service.UpdateAsync(song).ConfigureAwait(false);
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -116,6 +115,9 @@ namespace ITunes.Editor.ViewModels
 
         /// <inheritdoc/>
         public System.Windows.Input.ICommand UpdateLyrics { get; }
+
+        /// <inheritdoc/>
+        public System.Windows.Input.ICommand UpdateComposers { get; }
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
