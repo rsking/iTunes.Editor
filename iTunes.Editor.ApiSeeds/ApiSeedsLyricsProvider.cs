@@ -75,15 +75,31 @@ namespace ITunes.Editor.ApiSeeds
                 }
 
                 if (result.Artist?.Name is not null
-                    && result.Artist.Name.Equals((string?)request.Parameters[0].Value, System.StringComparison.InvariantCultureIgnoreCase)
+                    && CheckName(result.Artist.Name, (string?)request.Parameters[0].Value)
                     && result.Track?.Name is not null
-                    && result.Track.Name.Equals((string?)request.Parameters[1].Value, System.StringComparison.InvariantCultureIgnoreCase))
+                    && CheckName(result.Track.Name, (string?)request.Parameters[1].Value))
                 {
                     return result.Track.Text;
                 }
 
                 logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{result.Artist?.Name}|{result.Track?.Name}");
                 return null;
+
+                static bool CheckName(string? first, string? second)
+                {
+                    return string.Equals(first, second, System.StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.InvariantCultureIgnoreCase);
+
+                    static string? Sanitise(string? input)
+                    {
+                        if (input is null)
+                        {
+                            return input;
+                        }
+
+                        return input.Replace('-', ' ');
+                    }
+                }
             }
         }
 
