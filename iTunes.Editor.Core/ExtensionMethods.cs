@@ -337,6 +337,61 @@ namespace ITunes.Editor
 
             return provider;
         }
+
+        /// <summary>
+        /// Produces the set difference of two sequences.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <typeparam name="TKey">The type of the elements of the test sequence.</typeparam>
+        /// <param name="first">An <see cref="IEnumerable{T}"/> whose elements that are not also in <paramref name="second"/> will be returned.</param>
+        /// <param name="second">An <see cref="IEnumerable{T}"/> whose elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
+        /// <param name="keySelector">The key selector.</param>
+        /// <returns>A sequence that contains the set difference of the elements of two sequences.</returns>
+        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector) => ExceptBy(first, second, keySelector, null);
+
+        /// <summary>
+        /// Produces the set difference of two sequences.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <typeparam name="TKey">The type of the elements of the test sequence.</typeparam>
+        /// <param name="first">An <see cref="IEnumerable{T}"/> whose elements that are not also in <paramref name="second"/> will be returned.</param>
+        /// <param name="second">An <see cref="IEnumerable{T}"/> whose elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
+        /// <param name="keySelector">The key selector.</param>
+        /// <param name="comparer">The equality comparer.</param>
+        /// <returns>A sequence that contains the set difference of the elements of two sequences.</returns>
+        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return ExceptByIterator(first, second, keySelector, comparer);
+        }
+
+        private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+        {
+            var set = new HashSet<TKey>(second, comparer);
+
+            foreach (TSource element in first)
+            {
+                if (set.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
+
         private static string? RemoveTagImpl(this string? tags, string tag)
         {
             if (tags?.Contains(tag) == true)

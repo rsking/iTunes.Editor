@@ -11,6 +11,7 @@ namespace ITunes.Editor
     using System.CommandLine.Builder;
     using System.CommandLine.Hosting;
     using System.CommandLine.Invocation;
+    using System.CommandLine.IO;
     using System.CommandLine.Parsing;
     using System.Linq;
     using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace ITunes.Editor
             const string listCommand = "list";
             const string allCommand = "all";
             const string composerCommand = "composer";
+            const string check = "check";
 
             var inputArgument = new Argument<System.IO.FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
             var typeOption = new Option(new[] { "-t", "--type" }, "The type of input") { Argument = new Argument<string>("TYPE") };
@@ -115,6 +117,11 @@ namespace ITunes.Editor
                 .AddCommand(updateFileCommandBuilder.Command)
                 .AddCommand(updateListCommandBuilder.Command);
 
+            var checkCommandBuilder = new CommandBuilder(new Command(check) { Handler = CommandHandler.Create<IHost, IConsole, System.IO.FileSystemInfo, string, System.IO.DirectoryInfo, System.Threading.CancellationToken>(Check) })
+                .AddArgument(inputArgument)
+                .AddOption(typeOption)
+                .AddOption(new Option<System.IO.DirectoryInfo>(new[] { "-f", "--folder" }, "The folder").ExistingOnly());
+
             var builder = new CommandLineBuilder()
                 .UseDefaults()
                 .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
@@ -124,7 +131,8 @@ namespace ITunes.Editor
                 .AddCommand(composerCommandBuilder.Command)
                 .AddCommand(lyricsCommandBuilder.Command)
                 .AddCommand(mediaInfoCommandBuilder.Command)
-                .AddCommand(updateCommandBuilder.Command);
+                .AddCommand(updateCommandBuilder.Command)
+                .AddCommand(checkCommandBuilder.Command);
 
             return builder.Build().InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
         }
@@ -250,6 +258,36 @@ namespace ITunes.Editor
                     await lyricsService.UpdateAsync(songInformation, force, token).ConfigureAwait(false);
                 },
                 cancellationToken);
+        }
+
+        private static async Task Check(IHost host, IConsole console, System.IO.FileSystemInfo input, string type, System.IO.DirectoryInfo folder, System.Threading.CancellationToken cancellationToken = default)
+        {
+            var songsProvider = host.Services
+                .GetRequiredService<ISongsProvider>(type)
+                .SetPath(input);
+
+            var songs = await songsProvider
+                .GetTagInformationAsync(cancellationToken)
+                .ToArrayAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            var options = new System.IO.EnumerationOptions { AttributesToSkip = System.IO.FileAttributes.Hidden, RecurseSubdirectories = true };
+            var files = folder
+                .EnumerateFiles("*", options)
+                .ToArray();
+
+            var onlyInInput = songs.ExceptBy(files.Select(file => file.FullName), song => song.Name);
+            var onlyInFolder = files.ExceptBy(songs.Select(song => song.Name), file => file.FullName);
+
+            foreach (var item in onlyInInput)
+            {
+                console.Out.WriteLine($"{type,12}: {item.Name}");
+            }
+
+            foreach (var item in onlyInFolder)
+            {
+                console.Out.WriteLine($"folder      : {item.FullName}");
+            }
         }
     }
 }
