@@ -38,16 +38,28 @@ namespace ITunes.Editor.Lyrics.Ovh
             var request = new RestRequest("{artist}/{title}", Method.GET) { Timeout = 3000, ReadWriteTimeout = 3000 }
                 .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
                 .AddUrlSegment("title", tagInformation.Title);
-            var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
+
+            var response = await this.client
+                .ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken)
+                .ConfigureAwait(false);
             if (!response.IsSuccessful)
             {
-                this.logger.LogError(response.ErrorMessage);
+                if (!string.IsNullOrEmpty(response.ErrorMessage))
+                {
+                    this.logger.LogError(response.ErrorMessage);
+                }
+
+                return default;
+            }
+
+            if (response.Data.Error is not null)
+            {
                 return default;
             }
 
             return response.Data.Lyrics;
         }
 
-        private record GetLyricsResponse(string? Lyrics);
+        private record GetLyricsResponse(string? Lyrics, string? Error);
     }
 }
