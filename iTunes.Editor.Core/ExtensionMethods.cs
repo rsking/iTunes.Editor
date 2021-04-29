@@ -316,6 +316,27 @@ namespace ITunes.Editor
         /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the returned string only if <paramref name="source"/> has more than one element.</param>
         /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
         public static string? Join<T>(this IEnumerable<T> source, string? separator) => source is null ? null : string.Join(separator, source);
+
+        /// <summary>
+        /// Sets the path for the <see cref="ISongsProvider"/>.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="path">The path.</param>
+        /// <returns>The songs provider.</returns>
+        public static ISongsProvider SetPath(this ISongsProvider provider, System.IO.FileSystemInfo path)
+        {
+            switch (provider)
+            {
+                case IFolderProvider folderProvider:
+                    folderProvider.Folder = path.FullName;
+                    break;
+                case IFileProvider fileProvider:
+                    fileProvider.File = path.FullName;
+                    break;
+            }
+
+            return provider;
+        }
         private static string? RemoveTagImpl(this string? tags, string tag)
         {
             if (tags?.Contains(tag) == true)

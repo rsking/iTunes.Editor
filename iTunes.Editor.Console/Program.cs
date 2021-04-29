@@ -134,17 +134,11 @@ namespace ITunes.Editor
             //// var options = new System.IO.EnumerationOptions { AttributesToSkip = System.IO.FileAttributes.Hidden, RecurseSubdirectories = true };
             //// await System.IO.File.WriteAllLinesAsync("C:\\Temp\\folder.txt", System.IO.Directory.EnumerateFiles("D:\\Users\\rskin\\OneDrive\\Music\\iTunes\\iTunes Media", "*", options).OrderBy(file => file), System.Text.Encoding.Default).ConfigureAwait(false);
 
-            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type).SetProperties(property);
+            var songsProvider = host.Services
+                .GetRequiredService<ISongsProvider>(type)
+                .SetProperties(property)
+                .SetPath(input);
             var logger = host.Services.GetRequiredService<ILogger<Program>>();
-            switch (songsProvider)
-            {
-                case IFolderProvider folderProvider:
-                    folderProvider.Folder = input.FullName;
-                    break;
-                case IFileProvider fileProvider:
-                    fileProvider.File = input.FullName;
-                    break;
-            }
 
             //// await System.IO.File.WriteAllLinesAsync("C:\\Temp\\itunes.txt", songsProvider.GetTagInformationAsync(cancellationToken).Where(song => song.Name?.Length > 0).OrderBy(song => song.Name).Select(song => song.Name).ToEnumerable()).ConfigureAwait(false);
             //// using var stream = new System.IO.StreamWriter("C:\\Temp\\itunes.txt");
@@ -210,16 +204,9 @@ namespace ITunes.Editor
 
         private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, System.Threading.CancellationToken, Task> updateFunction, System.Threading.CancellationToken cancellationToken)
         {
-            var songsProvider = host.Services.GetRequiredService<ISongsProvider>(type);
-            switch (songsProvider)
-            {
-                case IFolderProvider folderProvider:
-                    folderProvider.Folder = input.FullName;
-                    break;
-                case IFileProvider fileProvider:
-                    fileProvider.File = input.FullName;
-                    break;
-            }
+            var songsProvider = host.Services
+                .GetRequiredService<ISongsProvider>(type)
+                .SetPath(input);
 
             var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
