@@ -59,6 +59,21 @@ namespace Microsoft.Extensions.DependencyInjection
             .AddTransient<ILyricsProvider, ITunes.Editor.Lyrics.Ovh.OvhLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.Lyrics.Ovh)));
 
         /// <summary>
+        /// Adds happi.dev.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns>The return service collection.</returns>
+        public static IServiceCollection AddHappiDev(this IServiceCollection serviceCollection, Configuration.IConfiguration configuration)
+        {
+            serviceCollection
+                .AddHttpClient<ITunes.Editor.HappiDev.HappiDevLyricsProvider>();
+            return serviceCollection
+                .Configure<ITunes.Editor.HappiDev.HappiDevOptions>(configuration?.GetSection(nameof(ITunes.Editor.HappiDev)))
+                .AddTransient<ILyricsProvider, ITunes.Editor.HappiDev.HappiDevLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.HappiDev)));
+        }
+
+        /// <summary>
         /// Adds Purgo Malum.
         /// </summary>
         /// <param name="serviceCollection">The service collection.</param>

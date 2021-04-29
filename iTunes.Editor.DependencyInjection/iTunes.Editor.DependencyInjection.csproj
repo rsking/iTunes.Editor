@@ -5,9 +5,14 @@
     <RootNamespace>Microsoft.Extensions.DependencyInjection</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <MicrosoftExtensionsVersion>3.0.0</MicrosoftExtensionsVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftExtensionsVersion)" />
     <PackageReference Include="Neleus.DependencyInjection.Extensions" Version="1.0.4" />
   </ItemGroup>
 
@@ -15,6 +20,7 @@
     <ProjectReference Include="..\iTunes.Editor.ApiSeeds\iTunes.Editor.ApiSeeds.csproj" />
     <ProjectReference Include="..\iTunes.Editor.ChartLyrics\iTunes.Editor.ChartLyrics.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Composers.ApraAmcos\iTunes.Editor.Composers.ApraAmcos.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.HappiDev\iTunes.Editor.HappiDev.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iPod\iTunes.Editor.iPod.csproj" />
     <ProjectReference Include="..\iTunes.Editor.iTunesLib\iTunes.Editor.iTunesLib.csproj" />
     <ProjectReference Include="..\iTunes.Editor.Lyrics.AZLyrics\iTunes.Editor.Lyrics.AZLyrics.csproj" />

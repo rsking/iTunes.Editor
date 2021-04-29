@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.Hosting
                     .AddAZ()
                     .AddGenius()
                     .AddChartLyrics()
-                    .AddApiSeeds(hostingContext.Configuration)
+                    .AddHappiDev(hostingContext.Configuration)
                     .AddOvh()
                     .AddPurgoMalum();
 
