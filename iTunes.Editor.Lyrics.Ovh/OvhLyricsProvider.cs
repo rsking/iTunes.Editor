@@ -36,7 +36,7 @@ namespace ITunes.Editor.Lyrics.Ovh
 
             this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
             var request = new RestRequest("{artist}/{title}", Method.GET) { Timeout = 3000, ReadWriteTimeout = 3000 }
-                .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
+                .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
                 .AddUrlSegment("title", tagInformation.Title);
             var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessful)

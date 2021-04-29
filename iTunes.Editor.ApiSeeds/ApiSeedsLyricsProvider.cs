@@ -56,7 +56,7 @@ namespace ITunes.Editor.ApiSeeds
 
             this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
             var request = new RestRequest("{artist}/{track}", Method.GET)
-                .AddUrlSegment("artist", string.Join("; ", tagInformation.Performers))
+                .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
                 .AddUrlSegment("track", tagInformation.Title);
             var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessful)

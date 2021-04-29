@@ -276,6 +276,29 @@ namespace ITunes.Editor
         /// <returns>Returns <see langword="true"/> if the unrated flag is updated; otherwise <see langword="false"/>.</returns>
         public static bool SetUnrated(this TagLib.Mpeg4.AppleTag appleTag) => appleTag?.SetRating(UnratedRatingData) ?? false;
 
+        /// <summary>
+        /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
+        /// </summary>
+        /// <param name="source">A collection that contains the strings to concatenate.</param>
+        /// /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        public static string ToJoinedString(this IEnumerable<string> source) => source.Join("; ")!;
+
+        /// <summary>
+        /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
+        /// </summary>
+        /// <param name="source">A collection that contains the strings to concatenate.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the returned string only if <paramref name="source"/> has more than one element.</param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        public static string? Join(this IEnumerable<string?> source, string? separator) => source is null ? null : string.Join(separator, source);
+
+        /// <summary>
+        /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection, using the specified separator between each member.
+        /// </summary>
+        /// <typeparam name="T">The type of the members of values.</typeparam>
+        /// <param name="source">A collection that contains the objects to concatenate.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the returned string only if <paramref name="source"/> has more than one element.</param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        public static string? Join<T>(this IEnumerable<T> source, string? separator) => source is null ? null : string.Join(separator, source);
         private static string? RemoveTagImpl(this string? tags, string tag)
         {
             if (tags?.Contains(tag) == true)
@@ -299,7 +322,7 @@ namespace ITunes.Editor
                     groupingList.RemoveAt(index);
                     return groupingList.Count == 0
                         ? default
-                        : string.Join("; ", groupingList);
+                        : groupingList.ToJoinedString();
                 }
             }
 
@@ -340,7 +363,7 @@ namespace ITunes.Editor
             Array.Resize(ref grouping, grouping.Length + 1);
             grouping[grouping.Length - 1] = tag;
 
-            var update = string.Join("; ", grouping);
+            var update = grouping.ToJoinedString();
 
             if (!string.Equals(update, appleTag.Grouping, StringComparison.Ordinal))
             {
