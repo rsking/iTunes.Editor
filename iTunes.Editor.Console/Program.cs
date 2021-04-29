@@ -229,11 +229,10 @@ namespace ITunes.Editor
                 .ConfigureAwait(false))
             {
                 // check the location
-                var mediaType = song.GetMediaType();
+                var mediaType = song.GetMediaKind();
                 switch (mediaType)
                 {
-                    case "Music":
-                    case null:
+                    case MediaKind.Song:
                         logger.LogInformation(Console.Properties.Resources.Processing, song);
                         break;
                     default:

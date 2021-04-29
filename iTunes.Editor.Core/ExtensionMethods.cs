@@ -33,15 +33,24 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="songInformation">The song information.</param>
         /// <returns>The media type.</returns>
-        public static string? GetMediaType(this SongInformation songInformation)
+        public static MediaKind GetMediaKind(this SongInformation songInformation)
         {
             if (songInformation?.Name is null)
             {
-                return null;
+                return MediaKind.Unknown;
             }
 
-            var name = songInformation.Name;
-            var values = name.Split(System.IO.Path.DirectorySeparatorChar);
+            return songInformation.Name.GetMediaKind();
+        }
+
+        /// <summary>
+        /// Gets the media type.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>The media type.</returns>
+        public static MediaKind GetMediaKind(this string path)
+        {
+            var values = path.Split(System.IO.Path.DirectorySeparatorChar);
 
             for (var i = 0; i < values.Length; i++)
             {
@@ -49,14 +58,22 @@ namespace ITunes.Editor
                 {
                     if (i + 1 < values.Length)
                     {
-                        return values[i + 1];
+                        return values[i + 1] switch
+                        {
+                            "Audiobooks" => MediaKind.Audiobook,
+                            "Home Videos" => MediaKind.HomeVideo,
+                            "Movies" => MediaKind.Movie,
+                            "Music" => MediaKind.Song,
+                            "TV Shows" => MediaKind.TVShow,
+                            _ => MediaKind.Unknown,
+                        };
                     }
 
                     break;
                 }
             }
 
-            return null;
+            return MediaKind.Unknown;
         }
 
         /// <summary>

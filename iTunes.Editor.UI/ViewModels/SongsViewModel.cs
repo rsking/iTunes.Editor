@@ -40,7 +40,7 @@ namespace ITunes.Editor.ViewModels
                 this.songs.Clear();
                 await foreach (var song in evt.Information.ConfigureAwait(false))
                 {
-                    if (string.Equals(song.GetMediaType(), "Music", StringComparison.Ordinal))
+                    if (song.GetMediaKind() == MediaKind.Song)
                     {
                         this.songs.Add(song);
                     }
