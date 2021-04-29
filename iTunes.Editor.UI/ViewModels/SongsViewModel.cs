@@ -24,6 +24,8 @@ namespace ITunes.Editor.ViewModels
 
         private TagLib.File? selectedFile;
 
+        private string? progress;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
@@ -46,7 +48,8 @@ namespace ITunes.Editor.ViewModels
 
                 var query = this.songs
                     .SelectMany(SelectPerfomers)
-                    .GroupBy(p => p.Performer, StringComparer.Ordinal)
+                    .GroupBy(p => p.Performer, p => p.Song, StringComparer.Ordinal)
+                    .OrderBy(g => g.Key)
                     .Select(group => new ArtistViewModel(
                         this,
                         group.Key,
@@ -74,8 +77,12 @@ namespace ITunes.Editor.ViewModels
             {
                 foreach (var song in this.GetSelectedSongs().ToArray())
                 {
+                    // update the UI
+                    this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
                     await service.UpdateAsync(song).ConfigureAwait(false);
                 }
+
+                this.Progress = default;
             }
         }
 
@@ -119,19 +126,31 @@ namespace ITunes.Editor.ViewModels
         /// <inheritdoc/>
         public System.Windows.Input.ICommand UpdateComposers { get; }
 
+        /// <inheritdoc/>
+        public string? Progress
+        {
+            get => this.progress;
+            protected set => this.SetProperty(ref this.progress, value);
+        }
+
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
             return this.Artists
-                .Cast<SelectableViewModel>()
-                .SelectMany(selectable => Select(selectable));
+                .Cast<Models.ISelectable>()
+                .SelectMany(SelectBase);
 
-            static System.Collections.Generic.IEnumerable<SongInformation> Select(Models.ISelectable selectable, bool forceSelected = false)
+            static System.Collections.Generic.IEnumerable<SongInformation> SelectBase(Models.ISelectable selectable)
+            {
+                return SelectChildren(selectable, false);
+            }
+
+            static System.Collections.Generic.IEnumerable<SongInformation> SelectChildren(Models.ISelectable selectable, bool forceSelected)
             {
                 if (!selectable.IsSelected && !forceSelected)
                 {
                     foreach (var subSelectable in selectable.Children)
                     {
-                        foreach (var item in Select(subSelectable))
+                        foreach (var item in SelectChildren(subSelectable, false))
                         {
                             yield return item;
                         }
@@ -148,7 +167,7 @@ namespace ITunes.Editor.ViewModels
 
                 foreach (var subSelectable in selectable.Children)
                 {
-                    foreach (var item in Select(subSelectable, forceSelected: true))
+                    foreach (var item in SelectChildren(subSelectable, true))
                     {
                         yield return item;
                     }

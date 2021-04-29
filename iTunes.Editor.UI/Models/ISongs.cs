@@ -35,5 +35,10 @@ namespace ITunes.Editor.Models
         /// Gets the selected tag.
         /// </summary>
         TagLib.Tag? SelectedTag { get; }
+
+        /// <summary>
+        /// Gets the progress.
+        /// </summary>
+        string? Progress { get; }
     }
 }
