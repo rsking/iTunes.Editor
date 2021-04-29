@@ -28,7 +28,16 @@ namespace ITunes.Editor
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
-        public SongInformation(string title, string? performers, string? sortPerformers, string? albumPerformers, string? album, string? name, int? rating = null)
+        /// <param name="hasLyrics">Set to <see langword="true"/> if this instance has lyrics.</param>
+        public SongInformation(
+            string title,
+            string? performers,
+            string? sortPerformers,
+            string? albumPerformers,
+            string? album,
+            string? name,
+            int? rating = null,
+            bool hasLyrics = false)
             : this(
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
@@ -36,7 +45,8 @@ namespace ITunes.Editor
                 albumPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
                 album,
                 name,
-                rating)
+                rating,
+                hasLyrics)
         {
         }
 
@@ -50,6 +60,7 @@ namespace ITunes.Editor
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
+        /// <param name="hasLyrics">Set to <see langword="true"/> if this instance has lyrics.</param>
         public SongInformation(
             string title,
             System.Collections.Generic.IEnumerable<string> performers,
@@ -57,7 +68,8 @@ namespace ITunes.Editor
             System.Collections.Generic.IEnumerable<string> albumPerformers,
             string? album,
             string? name,
-            int? rating = null)
+            int? rating = null,
+            bool hasLyrics = false)
         {
             this.Title = title;
             this.Performers = performers ?? Enumerable.Empty<string>();
@@ -66,6 +78,7 @@ namespace ITunes.Editor
             this.Album = album;
             this.Name = name;
             this.Rating = rating;
+            this.HasLyrics = hasLyrics;
         }
 
         /// <summary>
@@ -104,18 +117,32 @@ namespace ITunes.Editor
         public int? Rating { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance has lyrics.
+        /// </summary>
+        public bool HasLyrics { get; }
+
+        /// <summary>
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
         /// </summary>
         /// <param name="file">The file to convert.</param>
-        public static explicit operator SongInformation(TagLib.File file) => file is null
-            ? throw new System.ArgumentNullException(nameof(file))
-            : new SongInformation(
-                file.Tag.Title,
-                file.Tag.Performers,
-                file.Tag.PerformersSort ?? file.Tag.Performers,
-                file.Tag.AlbumArtists,
-                file.Tag.Album,
-                file.Name);
+        public static explicit operator SongInformation(TagLib.File file)
+        {
+            return file is null
+                ? throw new System.ArgumentNullException(nameof(file))
+                : new SongInformation(
+                    file.Tag.Title,
+                    file.Tag.Performers,
+                    file.Tag.PerformersSort ?? file.Tag.Performers,
+                    file.Tag.AlbumArtists,
+                    file.Tag.Album,
+                    file.Name,
+                    hasLyrics: HasLyrics(file));
+
+            static bool HasLyrics(TagLib.File file)
+            {
+                return file.GetTag(TagLib.TagTypes.Apple) is TagLib.Mpeg4.AppleTag appleTag && !string.IsNullOrEmpty(appleTag.Lyrics);
+            }
+        }
 
         /// <summary>
         /// Creates a new <see cref="SongInformation" /> from a file.

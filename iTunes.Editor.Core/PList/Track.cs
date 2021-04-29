@@ -168,6 +168,11 @@ namespace ITunes.Editor.PList
         public string Genre => this.dict.GetString("Genre");
 
         /// <summary>
+        /// Gets the grouping.
+        /// </summary>
+        public string? Grouping => this.dict.GetNullableString("Grouping");
+
+        /// <summary>
         /// Gets the kind.
         /// </summary>
         public string Kind => this.dict.GetString("Kind");
@@ -205,7 +210,15 @@ namespace ITunes.Editor.PList
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 
-            return new SongInformation(track.Name, track.Artist, track.SortArtist ?? track.Artist, track.AlbumArtist, track.Album, path, track.Rating);
+            return new SongInformation(
+                track.Name,
+                track.Artist,
+                track.SortArtist ?? track.Artist,
+                track.AlbumArtist,
+                track.Album,
+                path,
+                track.Rating,
+                track.Grouping?.Contains("No Lyrics") ?? false);
         }
     }
 }

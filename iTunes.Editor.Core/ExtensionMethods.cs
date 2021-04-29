@@ -106,6 +106,13 @@ namespace ITunes.Editor
         }
 
         /// <summary>
+        /// Gets a value indicating whether the tags contain the "no lyrics" tag.
+        /// </summary>
+        /// <param name="tags">The tags.</param>
+        /// <returns><see langword="true"/> if the tags contain the "no lyrics" tag; otherwise, <see langword="false"/>.</returns>
+        public static bool HasNoLyrics(this string? tags) => tags?.Contains(NoLyrics) == true;
+
+        /// <summary>
         /// Cleans the lyrics.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
@@ -196,6 +203,13 @@ namespace ITunes.Editor
         public static bool AddNoLyrics(this TagLib.Tag appleTag) => appleTag.AddTag(NoLyrics);
 
         /// <summary>
+        /// Adds the "no lyrics" flag to the grouping.
+        /// </summary>
+        /// <param name="tags">The tags.</param>
+        /// <returns><paramref name="tags"/> with "no lyrics" added.</returns>
+        public static string AddNoLyrics(this string? tags) => tags.AddTagImpl(NoLyrics);
+
+        /// <summary>
         /// Removes the "no lyrics" flag from the grouping.
         /// </summary>
         /// <param name="appleTag">The apple tag.</param>
@@ -230,25 +244,26 @@ namespace ITunes.Editor
                 return false;
             }
 
-            var lyrics = tag.Lyrics;
-            if (string.IsNullOrEmpty(lyrics))
+            if (tag is TagLib.Mpeg4.AppleTag appleTag)
             {
-                if (tag is TagLib.Mpeg4.AppleTag appleTag)
+                var lyrics = tag.Lyrics;
+
+                if (string.IsNullOrEmpty(lyrics))
                 {
                     return appleTag.SetUnrated();
                 }
-            }
-            else if (tag is TagLib.Mpeg4.AppleTag appleTag && !appleTag.HasRating())
-            {
-                if (explicitLyricsProvider is null)
+                else if (appleTag.HasRating())
                 {
-                    return false;
-                }
+                    if (explicitLyricsProvider is null)
+                    {
+                        return false;
+                    }
 
-                var @explicit = await explicitLyricsProvider.IsExplicitAsync(lyrics, cancellationToken).ConfigureAwait(false);
-                if (@explicit.HasValue)
-                {
-                    return @explicit.Value ? appleTag.SetExplicit() : appleTag.SetClean();
+                    var @explicit = await explicitLyricsProvider.IsExplicitAsync(lyrics, cancellationToken).ConfigureAwait(false);
+                    if (@explicit.HasValue)
+                    {
+                        return @explicit.Value ? appleTag.SetExplicit() : appleTag.SetClean();
+                    }
                 }
             }
 
@@ -392,6 +407,30 @@ namespace ITunes.Editor
             }
         }
 
+        private static string AddTagImpl(this string? tags, string tag)
+        {
+            if (tags is null || string.IsNullOrEmpty(tags))
+            {
+                return tag;
+            }
+
+            if (tags.Contains(tag))
+            {
+                return tags;
+            }
+
+            var grouping = tags.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            if (grouping.Contains(tag, StringComparer.Ordinal))
+            {
+                return tags;
+            }
+
+            Array.Resize(ref grouping, grouping.Length + 1);
+            grouping[grouping.Length - 1] = tag;
+
+            return grouping.ToJoinedString();
+        }
+
         private static string? RemoveTagImpl(this string? tags, string tag)
         {
             if (tags?.Contains(tag) == true)
@@ -441,24 +480,9 @@ namespace ITunes.Editor
                 return false;
             }
 
-            if (string.IsNullOrEmpty(appleTag.Grouping))
-            {
-                appleTag.Grouping = tag;
-                return true;
-            }
-
-            var grouping = appleTag.Grouping.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
-            if (grouping.Contains(tag, StringComparer.Ordinal))
-            {
-                return false;
-            }
-
-            Array.Resize(ref grouping, grouping.Length + 1);
-            grouping[grouping.Length - 1] = tag;
-
-            var update = grouping.ToJoinedString();
-
-            if (!string.Equals(update, appleTag.Grouping, StringComparison.Ordinal))
+            var original = appleTag.Grouping;
+            var update = original.AddTagImpl(tag);
+            if (!string.Equals(update, original, StringComparison.Ordinal))
             {
                 appleTag.Grouping = update;
                 return true;

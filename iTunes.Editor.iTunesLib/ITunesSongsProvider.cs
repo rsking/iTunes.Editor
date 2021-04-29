@@ -74,12 +74,17 @@ namespace ITunes.Editor.ITunesLib
                         }
                     }
 
-                    if (this.UpdateGrouping
-                        && track.Grouping is not null)
+                    var hasLyrics = !string.IsNullOrEmpty(track.Lyrics);
+                    if (this.UpdateGrouping)
                     {
-                        var grouping = track.Grouping.RemoveHasLyrics();
+                        var original = track.Grouping;
+                        var grouping = original.RemoveHasLyrics();
+                        if (!hasLyrics && track.Location.GetMediaKind() == MediaKind.Song)
+                        {
+                            grouping = grouping.AddNoLyrics();
+                        }
 
-                        if (!string.Equals(grouping, track.Grouping, System.StringComparison.Ordinal))
+                        if (!string.Equals(grouping, original, System.StringComparison.Ordinal))
                         {
                             track.Grouping = grouping ?? string.Empty;
                         }
@@ -92,7 +97,8 @@ namespace ITunes.Editor.ITunesLib
                         track.AlbumArtist,
                         track.Album,
                         track.Location,
-                        track.Rating);
+                        track.Rating,
+                        hasLyrics);
                 }
             }
         }
