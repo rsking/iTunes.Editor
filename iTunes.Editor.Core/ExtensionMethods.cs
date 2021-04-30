@@ -252,7 +252,8 @@ namespace ITunes.Editor
                 {
                     return appleTag.SetUnrated();
                 }
-                else if (appleTag.HasRating())
+
+                if (!appleTag.HasRating())
                 {
                     if (explicitLyricsProvider is null)
                     {
