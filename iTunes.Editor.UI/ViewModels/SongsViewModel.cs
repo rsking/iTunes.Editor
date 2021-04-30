@@ -26,6 +26,8 @@ namespace ITunes.Editor.ViewModels
 
         private string? progress;
 
+        private int percentage;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
@@ -83,13 +85,25 @@ namespace ITunes.Editor.ViewModels
 
             async Task UpdateSongsAsync(Func<SongInformation, Task<SongInformation>> processor)
             {
-                foreach (var song in this.GetSelectedSongs().ToArray())
+                var selectedSongs = this.GetSelectedSongs().ToArray();
+                var count = selectedSongs.Length;
+                var current = 0;
+                foreach (var song in selectedSongs)
                 {
                     // update the UI
                     this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
+                    var currentPercentage = 100 * current / count;
+                    if (this.percentage != currentPercentage)
+                    {
+                        this.Percentage = currentPercentage;
+                    }
+
                     await processor(song).ConfigureAwait(false);
+
+                    current++;
                 }
 
+                this.Percentage = 0;
                 this.Progress = default;
             }
         }
@@ -139,6 +153,13 @@ namespace ITunes.Editor.ViewModels
         {
             get => this.progress;
             protected set => this.SetProperty(ref this.progress, value);
+        }
+
+        /// <inheritdoc/>
+        public int Percentage
+        {
+            get => this.percentage;
+            protected set => this.SetProperty(ref this.percentage, value);
         }
 
         public bool ForceLyricsSearch { get; set; } = false;

@@ -40,5 +40,10 @@ namespace ITunes.Editor.Models
         /// Gets the progress.
         /// </summary>
         string? Progress { get; }
+
+        /// <summary>
+        /// Gets the percentage.
+        /// </summary>
+        int Percentage { get; }
     }
 }
