@@ -35,7 +35,10 @@
     </TreeView>
     <StackPanel Grid.Column="1">
       <Button Command="{Binding UpdateLyrics}" Content="Update Lyrics" />
+      <CheckBox IsChecked="{Binding ForceLyricsSearch}" Content="Force Lyrics Search" />
+      <CheckBox IsChecked="{Binding ForceLyricsUpdate}" Content="Force Lyrics Update" />
       <Button Command="{Binding UpdateComposers}" Content="Update Composers" />
+      <CheckBox IsChecked="{Binding ForceComposersSearch}" Content="Force Composers Search" />
     </StackPanel>
     <Grid Grid.Column="1" Grid.Row="1" DataContext="{Binding SelectedTag}">
       <Grid.ColumnDefinitions>

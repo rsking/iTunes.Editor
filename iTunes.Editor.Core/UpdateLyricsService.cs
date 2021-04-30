@@ -36,7 +36,18 @@ namespace ITunes.Editor
             IEnumerable<ILyricsProvider> providers) => (this.logger, this.explicitLyrics, this.providers) = (logger, explicitLyricsProvider, providers.ToArray());
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default)
+        public System.Threading.Tasks.Task<SongInformation> UpdateAsync(
+            SongInformation songInformation,
+            bool force = false,
+            System.Threading.CancellationToken cancellationToken = default)
+            => this.UpdateAsync(songInformation, force, force, cancellationToken);
+
+        /// <inheritdoc />
+        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(
+            SongInformation songInformation,
+            bool forceSearch = false,
+            bool forceExplicit = false,
+            System.Threading.CancellationToken cancellationToken = default)
         {
             if (songInformation is null)
             {
@@ -44,7 +55,7 @@ namespace ITunes.Editor
             }
 
             using var updater = new Updater(this.logger, songInformation);
-            if (updater.ShouldUpdate(force))
+            if (updater.ShouldUpdateLyrics(forceSearch))
             {
                 foreach (var provider in this.providers)
                 {
@@ -56,7 +67,12 @@ namespace ITunes.Editor
                 }
             }
 
-            return await updater.UpdateAsync(this.explicitLyrics, cancellationToken: cancellationToken).ConfigureAwait(false);
+            if (forceExplicit && updater.CanUpdateExplicit())
+            {
+                return await updater.UpdateAsync(this.explicitLyrics, cancellationToken: cancellationToken).ConfigureAwait(false);
+            }
+
+            return songInformation;
         }
 
         private sealed class Updater : IDisposable
@@ -87,7 +103,9 @@ namespace ITunes.Editor
                 }
             }
 
-            public bool ShouldUpdate(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
+            public bool ShouldUpdateLyrics(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.Lyrics) || this.appleTag.Lyrics.Trim().Length == 0 || force);
+
+            public bool CanUpdateExplicit() => this.appleTag is not null && !string.IsNullOrEmpty(this.appleTag.Lyrics) && this.appleTag.Lyrics.Trim().Length > 0;
 
             public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, System.Threading.CancellationToken cancellationToken = default)
             {

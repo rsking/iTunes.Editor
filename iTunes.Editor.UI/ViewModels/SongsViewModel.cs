@@ -32,8 +32,16 @@ namespace ITunes.Editor.ViewModels
         /// <param name="eventAggregator">The event aggregator.</param>
         public SongsViewModel(IEventAggregator eventAggregator)
         {
-            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() => UpdateSongsAsync(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>()));
-            this.UpdateComposers = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() => UpdateSongsAsync(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>()));
+            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() =>
+            {
+                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
+                return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceLyricsSearch, this.ForceLyricsUpdate));
+            });
+            this.UpdateComposers = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() =>
+            {
+                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
+                return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
+            });
 
             eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
             {
@@ -73,13 +81,13 @@ namespace ITunes.Editor.ViewModels
                 }
             });
 
-            async Task UpdateSongsAsync(IUpdateService service)
+            async Task UpdateSongsAsync(Func<SongInformation, Task<SongInformation>> processor)
             {
                 foreach (var song in this.GetSelectedSongs().ToArray())
                 {
                     // update the UI
                     this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
-                    await service.UpdateAsync(song).ConfigureAwait(false);
+                    await processor(song).ConfigureAwait(false);
                 }
 
                 this.Progress = default;
@@ -132,6 +140,12 @@ namespace ITunes.Editor.ViewModels
             get => this.progress;
             protected set => this.SetProperty(ref this.progress, value);
         }
+
+        public bool ForceLyricsSearch { get; set; } = false;
+
+        public bool ForceLyricsUpdate { get; set; } = true;
+
+        public bool ForceComposersSearch { get; set; } = false;
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
