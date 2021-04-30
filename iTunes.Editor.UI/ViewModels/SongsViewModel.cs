@@ -170,13 +170,22 @@ namespace ITunes.Editor.ViewModels
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
-            return this.Artists
+            var selected = this.Artists
                 .Cast<Models.ISelectable>()
                 .SelectMany(SelectBase);
 
+            if (selected.Any())
+            {
+                return selected;
+            }
+
+            return this.artists
+                .Cast<Models.ISelectable>()
+                .SelectMany(selectable => SelectChildren(selectable, forceSelected: true));
+
             static System.Collections.Generic.IEnumerable<SongInformation> SelectBase(Models.ISelectable selectable)
             {
-                return SelectChildren(selectable, false);
+                return SelectChildren(selectable, forceSelected: false);
             }
 
             static System.Collections.Generic.IEnumerable<SongInformation> SelectChildren(Models.ISelectable selectable, bool forceSelected)
@@ -185,7 +194,7 @@ namespace ITunes.Editor.ViewModels
                 {
                     foreach (var subSelectable in selectable.Children)
                     {
-                        foreach (var item in SelectChildren(subSelectable, false))
+                        foreach (var item in SelectChildren(subSelectable, forceSelected: false))
                         {
                             yield return item;
                         }
@@ -202,7 +211,7 @@ namespace ITunes.Editor.ViewModels
 
                 foreach (var subSelectable in selectable.Children)
                 {
-                    foreach (var item in SelectChildren(subSelectable, true))
+                    foreach (var item in SelectChildren(subSelectable, forceSelected: true))
                     {
                         yield return item;
                     }
