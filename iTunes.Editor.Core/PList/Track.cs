@@ -193,6 +193,11 @@ namespace ITunes.Editor.PList
         public string? SortArtist => this.dict.GetNullableString("Sort Artist");
 
         /// <summary>
+        /// Gets the sort album artist.
+        /// </summary>
+        public string? SortAlbumArtist => this.dict.GetNullableString("Sort Album Artist");
+
+        /// <summary>
         /// Gets the location.
         /// </summary>
         public string? Location => this.dict.GetNullableString("Location");
@@ -215,6 +220,7 @@ namespace ITunes.Editor.PList
                 track.Artist,
                 track.SortArtist ?? track.Artist,
                 track.AlbumArtist,
+                track.SortAlbum,
                 track.Album,
                 path,
                 track.Rating,

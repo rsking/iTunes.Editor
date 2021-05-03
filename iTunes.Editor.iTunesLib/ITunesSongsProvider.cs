@@ -93,6 +93,7 @@ namespace ITunes.Editor.ITunesLib
                         track.Artist,
                         track.SortArtist ?? track.Artist,
                         track.AlbumArtist,
+                        track.SortAlbumArtist,
                         track.Album,
                         track.Location,
                         track.Rating,

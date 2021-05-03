@@ -63,7 +63,7 @@ namespace ITunes.Editor.ViewModels
                     .Select(group => new ArtistViewModel(
                         this,
                         group.Key,
-                        this.songs.Where(song => song.AlbumPerformers.Contains(group.Key, StringComparer.Ordinal) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+                        this.songs.Where(song => song.AlbumPerformer?.Contains(group.Key) == true || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
 
                 foreach (var artist in query)
                 {
@@ -72,13 +72,18 @@ namespace ITunes.Editor.ViewModels
 
                 static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
                 {
-                    return song.AlbumPerformers.Any()
-                        ? SelectPerfomersImpl(song.AlbumPerformers, song)
+                    return song.AlbumPerformer is not null
+                        ? SelectPerfomerImpl(song.AlbumPerformer, song)
                         : SelectPerfomersImpl(song.Performers, song);
 
                     static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
                     {
                         return performers.Select(performer => (performer, song));
+                    }
+
+                    static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomerImpl(string performer, SongInformation song)
+                    {
+                        yield return (performer, song);
                     }
                 }
             });
@@ -173,7 +178,7 @@ namespace ITunes.Editor.ViewModels
         public bool ForceLyricsUpdate { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to force the composer search.
+        /// Gets or sets a value indicating whether to force the composers search.
         /// </summary>
         public bool ForceComposersSearch { get; set; } = false;
 

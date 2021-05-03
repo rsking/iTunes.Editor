@@ -46,7 +46,7 @@ namespace ITunes.Editor.IPod
             {
                 var track = trackDatabase.Tracks[i];
 
-                yield return new SongInformation(track.Title, track.Artist, track.SortArtist, track.AlbumArtist, track.Album, track.FileName, (int)track.Rating, track.Grouping.HasNoLyrics());
+                yield return new SongInformation(track.Title, track.Artist, track.SortArtist, track.AlbumArtist, track.AlbumArtist, track.Album, track.FileName, (int)track.Rating, track.Grouping.HasNoLyrics());
             }
         }
     }

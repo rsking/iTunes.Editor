@@ -16,7 +16,7 @@ namespace ITunes.Editor
         /// <summary>
         /// An empty song information.
         /// </summary>
-        public static readonly SongInformation Empty = new(string.Empty, default(string), default, default, default, default);
+        public static readonly SongInformation Empty = new(string.Empty, default(string), default, default, default, default, default);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongInformation"/> class.
@@ -24,7 +24,8 @@ namespace ITunes.Editor
         /// <param name="title">The title.</param>
         /// <param name="performers">The performers.</param>
         /// <param name="sortPerformers">The sort performers.</param>
-        /// <param name="albumPerformers">The album performers.</param>
+        /// <param name="albumPerformer">The album performer.</param>
+        /// <param name="sortAlbumPerformer">The sort album performer.</param>
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
@@ -33,7 +34,8 @@ namespace ITunes.Editor
             string title,
             string? performers,
             string? sortPerformers,
-            string? albumPerformers,
+            string? albumPerformer,
+            string? sortAlbumPerformer,
             string? album,
             string? name,
             int? rating = null,
@@ -42,7 +44,8 @@ namespace ITunes.Editor
                 title,
                 performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
                 sortPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
-                albumPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
+                albumPerformer,
+                sortAlbumPerformer,
                 album,
                 name,
                 rating,
@@ -56,7 +59,8 @@ namespace ITunes.Editor
         /// <param name="title">The title.</param>
         /// <param name="performers">The performers.</param>
         /// <param name="sortPerformers">The sort performers.</param>
-        /// <param name="albumPerformers">The album performers.</param>
+        /// <param name="albumPerformer">The album performers.</param>
+        /// <param name="sortAlbumPerformer">The sort album performer.</param>
         /// <param name="album">The album.</param>
         /// <param name="name">The file name.</param>
         /// <param name="rating">The rating.</param>
@@ -65,7 +69,8 @@ namespace ITunes.Editor
             string title,
             System.Collections.Generic.IEnumerable<string> performers,
             System.Collections.Generic.IEnumerable<string> sortPerformers,
-            System.Collections.Generic.IEnumerable<string> albumPerformers,
+            string? albumPerformer,
+            string? sortAlbumPerformer,
             string? album,
             string? name,
             int? rating = null,
@@ -74,7 +79,8 @@ namespace ITunes.Editor
             this.Title = title;
             this.Performers = performers ?? Enumerable.Empty<string>();
             this.SortPerformers = sortPerformers ?? Enumerable.Empty<string>();
-            this.AlbumPerformers = albumPerformers ?? Enumerable.Empty<string>();
+            this.AlbumPerformer = albumPerformer;
+            this.SortAlbumPerformer = sortAlbumPerformer;
             this.Album = album;
             this.Name = name;
             this.Rating = rating;
@@ -99,7 +105,12 @@ namespace ITunes.Editor
         /// <summary>
         /// Gets the album performers.
         /// </summary>
-        public System.Collections.Generic.IEnumerable<string> AlbumPerformers { get; }
+        public string? AlbumPerformer { get; }
+
+        /// <summary>
+        /// Gets the sort album performers.
+        /// </summary>
+        public string? SortAlbumPerformer { get; }
 
         /// <summary>
         /// Gets the album.
@@ -133,7 +144,8 @@ namespace ITunes.Editor
                     file.Tag.Title,
                     file.Tag.Performers,
                     file.Tag.PerformersSort ?? file.Tag.Performers,
-                    file.Tag.AlbumArtists,
+                    file.Tag.AlbumArtists.ToJoinedString(),
+                    file.Tag.AlbumArtistsSort.ToJoinedString(),
                     file.Tag.Album,
                     file.Name,
                     hasLyrics: HasLyrics(file));
