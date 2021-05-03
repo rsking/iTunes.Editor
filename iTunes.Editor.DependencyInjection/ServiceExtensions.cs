@@ -121,6 +121,21 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
+        /// Adds the shell provider.
+        /// </summary>
+        /// <param name="serviceDescriptors">The service descriptors.</param>
+        /// <returns>The return service descriptors.</returns>
+        public static IServiceCollection AddShell(this IServiceCollection serviceDescriptors)
+        {
+            if (MS.WindowsAPICodePack.Internal.CoreHelpers.RunningOnVista)
+            {
+                serviceDescriptors.AddTransient<ISongsProvider, ITunes.Editor.Windows.ShellSongsProvider>("shell");
+            }
+
+            return serviceDescriptors;
+        }
+
+        /// <summary>
         /// Adds the PList provider.
         /// </summary>
         /// <param name="serviceCollection">The service collection.</param>
@@ -178,10 +193,23 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceType">The service type.</param>
         /// <param name="key">The key.</param>
         /// <returns>A service object of type <paramref name="serviceType"/> --or-- <see langword="null"/> if there is no service object of type <paramref name="serviceType"/>.</returns>
-        public static object GetRequiredService(this System.IServiceProvider provider, System.Type serviceType, string key) => typeof(ServiceExtensions)
-            .GetMethod(nameof(GetRequiredService), new[] { typeof(System.IServiceProvider), typeof(string) })
-            .MakeGenericMethod(serviceType)
-            .Invoke(null, new object[] { provider, key });
+        public static object GetRequiredService(this System.IServiceProvider provider, System.Type serviceType, string key)
+        {
+            var type = typeof(ServiceExtensions);
+            var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(System.IServiceProvider), typeof(string) });
+            if (method is null)
+            {
+                throw new System.ArgumentException("Could not get method", nameof(provider));
+            }
+
+            var genericMethod = method.MakeGenericMethod(serviceType);
+            if (genericMethod.Invoke(null, new object[] { provider, key }) is object obj)
+            {
+                return obj;
+            }
+
+            throw new System.Collections.Generic.KeyNotFoundException();
+        }
 
         private static string GetLyricsProviderName(string name) => GetProviderName(name, nameof(ITunes.Editor.Lyrics));
 
@@ -190,7 +218,12 @@ namespace Microsoft.Extensions.DependencyInjection
             var providerName = name;
             if (!string.IsNullOrEmpty(suffix))
             {
-                providerName = providerName.Replace(suffix, string.Empty);
+                providerName = providerName
+#if NETSTANDARD2_0
+                    .Replace(suffix, string.Empty);
+#else
+                    .Replace(suffix, string.Empty, System.StringComparison.OrdinalIgnoreCase);
+#endif
             }
 
             return providerName.ToLower(System.Globalization.CultureInfo.CurrentCulture);

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>$(RootNamespace).Windows</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iTunes.Editor.Core\iTunes.Editor.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="WindowsAPICodePack\**\Resources\LocalizedMessages.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="LocalizedMessages.resx" />
+    <EmbeddedResource Update="WindowsAPICodePack\**\Resources\LocalizedMessages.resx" Generator="ResXFileCodeGenerator" LastGenOutput="LocalizedMessages.Designer.cs" />
+    <EmbeddedResource Update="WindowsAPICodePack\Core\Resources\LocalizedMessages.resx" CustomToolNamespace="Microsoft.WindowsAPICodePack.Resources" />
+    <EmbeddedResource Update="WindowsAPICodePack\Shell\Resources\LocalizedMessages.resx" CustomToolNamespace="Microsoft.WindowsAPICodePack.Shell.Resources" />
+  </ItemGroup>
+
+</Project>

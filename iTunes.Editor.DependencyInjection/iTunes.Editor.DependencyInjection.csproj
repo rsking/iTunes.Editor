@@ -28,6 +28,7 @@
     <ProjectReference Include="..\iTunes.Editor.Lyrics.Ovh\iTunes.Editor.Lyrics.Ovh.csproj" />
     <ProjectReference Include="..\iTunes.Editor.MediaInfo\iTunes.Editor.MediaInfo.csproj" />
     <ProjectReference Include="..\iTunes.Editor.PurgoMalum\iTunes.Editor.PurgoMalum.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.Windows\iTunes.Editor.Windows.csproj" />
   </ItemGroup>
 
 </Project>

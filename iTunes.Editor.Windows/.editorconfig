@@ -1,0 +1,12 @@
+[*]
+end_of_line = crlf
+
+[*.xml]
+indent_style = space
+
+[WindowsAPICodePack/**.cs]
+dotnet_diagnostic.SA1636.severity = none
+dotnet_diagnostic.SA1641.severity = none
+dotnet_diagnostic.SA1642.severity = none
+dotnet_diagnostic.SA1643.severity = none
+dotnet_diagnostic.SA1649.severity = none

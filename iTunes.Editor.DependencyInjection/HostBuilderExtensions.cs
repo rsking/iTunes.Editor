@@ -44,7 +44,8 @@ namespace Microsoft.Extensions.Hosting
                     .AddFolder()
                     .AddIPod()
                     .AddPList()
-                    .AddITunes();
+                    .AddITunes()
+                    .AddShell();
 
                 // tag provider
                 serviceCollection
