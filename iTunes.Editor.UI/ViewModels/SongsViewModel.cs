@@ -162,10 +162,19 @@ namespace ITunes.Editor.ViewModels
             protected set => this.SetProperty(ref this.percentage, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to force the lyrics search.
+        /// </summary>
         public bool ForceLyricsSearch { get; set; } = false;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to force the lyrics update.
+        /// </summary>
         public bool ForceLyricsUpdate { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to force the composer search.
+        /// </summary>
         public bool ForceComposersSearch { get; set; } = false;
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
