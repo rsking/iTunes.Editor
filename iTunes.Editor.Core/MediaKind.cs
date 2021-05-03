@@ -82,6 +82,7 @@ namespace ITunes.Editor
         /// <summary>
         /// The media item is an iTunes U audio or video file.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "This is the correct casing")]
         iTunesU,
 
         /// <summary>
