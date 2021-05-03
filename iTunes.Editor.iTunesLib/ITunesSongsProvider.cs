@@ -34,7 +34,7 @@ namespace ITunes.Editor.ITunesLib
 
         /// <inheritdoc />
 #if NO_ITUNES
-        public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotImplementedException("Compiled without iTunes support");
+        public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotSupportedException("Compiled without iTunes support");
 #else
         public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
