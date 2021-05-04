@@ -3,10 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>$(RootNamespace).ITunesLib</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(MSBuildRuntimeType)' == 'Core' ">
-    <DefineConstants>$(DefineConstants);NO_ITUNES</DefineConstants>
+    <ComAvailable>True</ComAvailable>
+    <ComAvailable Condition=" '$(MSBuildRuntimeType)' == 'Core' ">False</ComAvailable>
+    <DefineConstants Condition="$(ComAvailable)">$(DefineConstants);COM_AVAILABLE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="iTunesLib.dll" Condition=" '$(MSBuildRuntimeType)' != 'Core' ">
+    <COMReference Include="iTunesLib.dll" Condition="$(ComAvailable)">
       <Guid>9e93c96f-cf0d-43f6-8ba8-b807a3370712</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>13</VersionMinor>
@@ -32,12 +31,6 @@
 
   <ItemGroup>
     <EmbeddedResource Update="**\*.resx" Generator="ResXFileCodeGenerator" LastGenOutput="%(Filename).Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-    </Compile>
   </ItemGroup>
 
 </Project>

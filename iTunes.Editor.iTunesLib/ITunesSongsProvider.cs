@@ -33,9 +33,7 @@ namespace ITunes.Editor.ITunesLib
         public bool UpdateGrouping { get; set; }
 
         /// <inheritdoc />
-#if NO_ITUNES
-        public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotSupportedException("Compiled without iTunes support");
-#else
+#if COM_AVAILABLE
         public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             var library = await System.Threading.Tasks.Task.Run(() =>
@@ -102,6 +100,8 @@ namespace ITunes.Editor.ITunesLib
                 }
             }
         }
+#else
+        public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotSupportedException("Compiled without iTunes support");
 #endif
     }
 }
