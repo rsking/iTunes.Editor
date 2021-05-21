@@ -69,10 +69,14 @@ namespace ITunes.Editor
 
             if (forceExplicit && updater.CanUpdateExplicit())
             {
-                return await updater.UpdateAsync(this.explicitLyrics, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return await updater
+                    .UpdateAsync(this.explicitLyrics, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
             }
 
-            return songInformation;
+            return await updater
+                .UpdateAsync(NullExplicitLyricsProvider.Instance, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private sealed class Updater : IDisposable
@@ -107,7 +111,7 @@ namespace ITunes.Editor
 
             public bool CanUpdateExplicit() => this.appleTag is not null && !string.IsNullOrEmpty(this.appleTag.Lyrics) && this.appleTag.Lyrics.Trim().Length > 0;
 
-            public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, System.Threading.CancellationToken cancellationToken = default)
+            public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, System.Threading.CancellationToken cancellationToken = default)
             {
                 if (this.file is null || this.appleTag is null)
                 {
@@ -115,7 +119,8 @@ namespace ITunes.Editor
                 }
 
                 var updated = false;
-                lyrics = (lyrics ?? this.appleTag.Lyrics)?.Replace("\r\n", NewLine);
+                lyrics ??= this.appleTag.Lyrics;
+                lyrics = lyrics?.Replace("\r\n", NewLine);
 
                 if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
                 {
@@ -186,6 +191,17 @@ namespace ITunes.Editor
                 this.file?.Dispose();
                 this.file = null;
             }
+        }
+
+        private sealed class NullExplicitLyricsProvider : IExplicitLyricsProvider
+        {
+            public static readonly IExplicitLyricsProvider Instance = new NullExplicitLyricsProvider();
+
+            private NullExplicitLyricsProvider()
+            {
+            }
+
+            public System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => new(result: false);
         }
     }
 }
