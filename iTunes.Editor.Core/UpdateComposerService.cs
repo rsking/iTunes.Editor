@@ -24,7 +24,7 @@ namespace ITunes.Editor
         public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers.ToArray();
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default)
         {
             if (songInformation is null)
             {

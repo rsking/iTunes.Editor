@@ -48,6 +48,6 @@ namespace ITunes.Editor.Services.Contracts
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default);
+        System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default);
     }
 }

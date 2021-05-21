@@ -76,7 +76,7 @@ namespace ITunes.Editor.HappiDev
         }
 
         /// <inheritdoc/>
-        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
         {
             var lyricsAddress = await GetLyricsAddressAsync(tagInformation, cancellationToken)
                 .ConfigureAwait(false);

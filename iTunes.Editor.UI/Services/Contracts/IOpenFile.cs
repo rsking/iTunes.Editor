@@ -21,6 +21,6 @@ namespace ITunes.Editor.Services.Contracts
         /// Gets multiple file names asynchronously.
         /// </summary>
         /// <returns>The list of file names.</returns>
-        System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync();
+        System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync();
     }
 }

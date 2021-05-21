@@ -210,7 +210,7 @@ namespace ITunes.Editor
             await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
         }
 
-        private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, System.Threading.CancellationToken, Task> updateFunction, System.Threading.CancellationToken cancellationToken)
+        private static async Task UpdateList(IHost host, System.IO.FileSystemInfo input, string type, bool force, Func<SongInformation, bool, System.Threading.CancellationToken, ValueTask<SongInformation>> updateFunction, System.Threading.CancellationToken cancellationToken)
         {
             var songsProvider = host.Services
                 .GetRequiredService<ISongsProvider>(type)
@@ -245,19 +245,24 @@ namespace ITunes.Editor
 
         private static Task UpdateAllList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, System.Threading.CancellationToken cancellationToken = default)
         {
-            var composerService = host.Services.GetRequiredService<IUpdateComposerService>();
-            var lyricsService = host.Services.GetRequiredService<IUpdateLyricsService>();
+            var composerService = default(IUpdateComposerService);
+            var lyricsService = default(IUpdateLyricsService);
             return UpdateList(
                 host,
                 input,
                 type,
                 force,
-                async (songInformation, force, token) =>
-                {
-                    await composerService.UpdateAsync(songInformation, force, token).ConfigureAwait(false);
-                    await lyricsService.UpdateAsync(songInformation, force, token).ConfigureAwait(false);
-                },
+                Update,
                 cancellationToken);
+
+            async ValueTask<SongInformation> Update(SongInformation songInformation, bool force, System.Threading.CancellationToken cancellationToken)
+            {
+                composerService ??= host.Services.GetRequiredService<IUpdateComposerService>();
+                lyricsService ??= host.Services.GetRequiredService<IUpdateLyricsService>();
+
+                songInformation = await composerService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+                return await lyricsService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+            }
         }
 
         private static async Task Check(IHost host, IConsole console, System.IO.FileSystemInfo input, string type, System.IO.DirectoryInfo folder, System.Threading.CancellationToken cancellationToken = default)

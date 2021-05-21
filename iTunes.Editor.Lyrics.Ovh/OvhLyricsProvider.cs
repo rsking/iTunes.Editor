@@ -27,7 +27,7 @@ namespace ITunes.Editor.Lyrics.Ovh
         public OvhLyricsProvider(ILogger<OvhLyricsProvider> logger) => this.logger = logger;
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {

@@ -15,20 +15,20 @@ namespace ITunes.Editor
         public string? File { get; set; }
 
         /// <inheritdoc/>
-        public System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken)
+        public System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken)
         {
             if (this.File is null)
             {
-                return System.Threading.Tasks.Task.FromResult<TagLib.Tag?>(null);
+                return new(default(TagLib.Tag));
             }
 
-            return System.Threading.Tasks.Task.Run(
+            return new(System.Threading.Tasks.Task.Run(
                 () =>
                 {
                     using var file = GetFile(this.File);
                     return file?.Tag;
                 },
-                cancellationToken);
+                cancellationToken));
         }
 
         private static TagLib.File? GetFile(string path)

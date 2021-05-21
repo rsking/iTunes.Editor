@@ -30,7 +30,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 if (this.canonicalName is null)
                 {
-                    PropertySystemNativeMethods.PSGetNameFromPropertyKey(ref this.propertyKey, out this.canonicalName);
+                    _ = PropertySystemNativeMethods.PSGetNameFromPropertyKey(ref this.propertyKey, out this.canonicalName);
                 }
 
                 return this.canonicalName;

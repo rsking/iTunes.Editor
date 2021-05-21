@@ -17,6 +17,6 @@ namespace ITunes.Editor
         /// <param name="tagInformation">The tag information.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The lyrics.</returns>
-        System.Threading.Tasks.Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default);
     }
 }

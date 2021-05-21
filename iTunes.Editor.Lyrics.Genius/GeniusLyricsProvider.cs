@@ -20,7 +20,7 @@ namespace ITunes.Editor.Lyrics.Genius
         public void Dispose() => this.client.Dispose();
 
         /// <inheritdoc/>
-        public async Task<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+        public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {

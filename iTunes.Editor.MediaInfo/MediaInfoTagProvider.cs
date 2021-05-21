@@ -15,7 +15,7 @@ namespace ITunes.Editor.MediaInfo
         public string? File { get; set; }
 
         /// <inheritdoc/>
-        public System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken) => System.Threading.Tasks.Task.Run(
+        public System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken) => new(System.Threading.Tasks.Task.Run(
             () =>
             {
                 var handle = NativeMethods.MediaInfo_New();
@@ -37,6 +37,6 @@ namespace ITunes.Editor.MediaInfo
 
                 return mediaTag as TagLib.Tag;
             },
-            cancellationToken);
+            cancellationToken));
     }
 }

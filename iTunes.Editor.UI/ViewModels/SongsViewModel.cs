@@ -88,7 +88,7 @@ namespace ITunes.Editor.ViewModels
                 }
             });
 
-            async Task UpdateSongsAsync(Func<SongInformation, Task<SongInformation>> processor)
+            async Task UpdateSongsAsync(Func<SongInformation, ValueTask<SongInformation>> processor)
             {
                 var selectedSongs = this.GetSelectedSongs().ToArray();
                 var count = selectedSongs.Length;

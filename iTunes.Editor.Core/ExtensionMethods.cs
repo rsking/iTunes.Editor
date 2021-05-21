@@ -363,7 +363,7 @@ namespace ITunes.Editor
         /// <param name="second">An <see cref="IEnumerable{T}"/> whose elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
         /// <param name="keySelector">The key selector.</param>
         /// <returns>A sequence that contains the set difference of the elements of two sequences.</returns>
-        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector) => ExceptBy(first, second, keySelector, null);
+        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector) => ExceptBy(first, second, keySelector, comparer: null);
 
         /// <summary>
         /// Produces the set difference of two sequences.

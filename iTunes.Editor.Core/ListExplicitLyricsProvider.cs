@@ -9,7 +9,6 @@ namespace ITunes.Editor
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// An <see cref="IExplicitLyricsProvider"/> based all a list.
@@ -33,6 +32,6 @@ namespace ITunes.Editor
         };
 
         /// <inheritdoc/>
-        public Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => Task.Run<bool?>(() => ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0), cancellationToken);
+        public System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => new(ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0));
     }
 }

@@ -23,6 +23,6 @@ namespace ITunes.Editor.Services.Contracts
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-        System.Threading.Tasks.Task<string?> GetSelectedPathAsync(string? path = default);
+        System.Threading.Tasks.ValueTask<string?> GetSelectedPathAsync(string? path = default);
     }
 }

@@ -17,6 +17,6 @@ namespace ITunes.Editor
         /// <param name="lyrics">The lyrics.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Returns <see langword="true"/> if <paramref name="lyrics"/> are explicit; otherwise <see langword="false"/>.</returns>
-        System.Threading.Tasks.Task<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken);
     }
 }

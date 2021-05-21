@@ -36,14 +36,14 @@ namespace ITunes.Editor
             IEnumerable<ILyricsProvider> providers) => (this.logger, this.explicitLyrics, this.providers) = (logger, explicitLyricsProvider, providers.ToArray());
 
         /// <inheritdoc />
-        public System.Threading.Tasks.Task<SongInformation> UpdateAsync(
+        public System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(
             SongInformation songInformation,
             bool force = false,
             System.Threading.CancellationToken cancellationToken = default)
             => this.UpdateAsync(songInformation, force, force, cancellationToken);
 
         /// <inheritdoc />
-        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(
+        public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(
             SongInformation songInformation,
             bool forceSearch = false,
             bool forceExplicit = false,

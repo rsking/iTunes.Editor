@@ -16,6 +16,6 @@ namespace ITunes.Editor
         /// </summary>
         /// <returns>The tag.</returns>
         /// <param name="cancellationToken">The cancellation token.</param>
-        System.Threading.Tasks.Task<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
     }
 }
