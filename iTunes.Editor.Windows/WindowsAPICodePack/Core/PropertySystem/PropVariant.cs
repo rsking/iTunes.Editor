@@ -780,6 +780,7 @@ namespace MS.WindowsAPICodePack.Internal
         [StructLayout(LayoutKind.Sequential)]
         private struct Blob
         {
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "This is required for padding")]
             public int Number;
             public IntPtr Pointer;
         }
