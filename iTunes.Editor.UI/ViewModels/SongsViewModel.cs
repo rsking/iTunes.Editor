@@ -28,6 +28,8 @@ namespace ITunes.Editor.ViewModels
 
         private int percentage;
 
+        private bool isLoading;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
@@ -50,6 +52,7 @@ namespace ITunes.Editor.ViewModels
                 this.songs.Clear();
                 await foreach (var song in evt.Information.ConfigureAwait(false))
                 {
+                    this.IsLoading = true;
                     if (song.GetMediaKind() == MediaKind.Song)
                     {
                         this.songs.Add(song);
@@ -64,6 +67,8 @@ namespace ITunes.Editor.ViewModels
                         this,
                         group.Key,
                         this.songs.Where(song => song.AlbumPerformer?.Contains(group.Key) == true || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+
+                this.IsLoading = false;
 
                 foreach (var artist in query)
                 {
@@ -115,6 +120,15 @@ namespace ITunes.Editor.ViewModels
 
         /// <inheritdoc/>
         public System.Collections.Generic.IEnumerable<SongInformation> Songs => this.songs;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is loading.
+        /// </summary>
+        public bool IsLoading
+        {
+            get => this.isLoading;
+            set => this.SetProperty(ref this.isLoading, value);
+        }
 
         /// <inheritdoc/>
         public SongInformation? SelectedSong
