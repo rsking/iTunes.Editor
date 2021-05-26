@@ -30,13 +30,13 @@ namespace ITunes.Editor.HappiDev
         /// <summary>
         /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
         /// <param name="httpClientFactory">The HTTP client factory.</param>
         /// <param name="options">The options.</param>
+        /// <param name="logger">The logger.</param>
         public HappiDevLyricsProvider(
-            ILogger<HappiDevLyricsProvider> logger,
             System.Net.Http.IHttpClientFactory httpClientFactory,
-            Microsoft.Extensions.Options.IOptions<HappiDevOptions> options)
+            Microsoft.Extensions.Options.IOptions<HappiDevOptions> options,
+            ILogger<HappiDevLyricsProvider> logger)
             : this(logger, httpClientFactory.CreateClient(nameof(HappiDevLyricsProvider)), options)
         {
         }
@@ -44,13 +44,13 @@ namespace ITunes.Editor.HappiDev
         /// <summary>
         /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
         /// <param name="httpClient">The HTTP client.</param>
         /// <param name="apiKey">The API key.</param>
+        /// <param name="logger">The logger.</param>
         public HappiDevLyricsProvider(
-            ILogger<HappiDevLyricsProvider> logger,
             System.Net.Http.HttpClient httpClient,
-            string? apiKey)
+            string? apiKey,
+            ILogger<HappiDevLyricsProvider> logger)
         {
             this.logger = logger;
             this.httpClient = httpClient;
@@ -71,7 +71,7 @@ namespace ITunes.Editor.HappiDev
             ILogger<HappiDevLyricsProvider> logger,
             System.Net.Http.HttpClient httpClient,
             Microsoft.Extensions.Options.IOptions<HappiDevOptions> options)
-            : this(logger, httpClient, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
+            : this(httpClient, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey, logger)
         {
         }
 
