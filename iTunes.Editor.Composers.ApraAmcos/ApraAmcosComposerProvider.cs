@@ -49,9 +49,21 @@ namespace ITunes.Editor.Composers.ApraAmcos
                 {
                     var work = response.Data.Result.First();
 
-                    foreach (var workWriter in work.WorkWriters)
+                    if (work.WorkWriters is not null)
                     {
-                        yield return Name.FromInversedName(workWriter.WriterName);
+                        foreach (var workWriter in work.WorkWriters)
+                        {
+                            yield return Name.FromInversedName(workWriter.WriterName);
+                        }
+                    }
+                    else if (work.Writers is not null)
+                    {
+                        var writers = work.Writers.Split('/');
+
+                        foreach (var name in writers)
+                        {
+                            yield return Name.FromInversedName(name);
+                        }
                     }
                 }
             }
@@ -59,7 +71,7 @@ namespace ITunes.Editor.Composers.ApraAmcos
 
         private record SearchResult(bool Success, System.Collections.Generic.IReadOnlyCollection<Work> Result);
 
-        private record Work(string Title, System.Collections.Generic.IReadOnlyCollection<Writer> WorkWriters);
+        private record Work(string Title, string? Writers, System.Collections.Generic.IReadOnlyCollection<Writer>? WorkWriters);
 
         private record Writer(string Contract, string WriterName);
     }
