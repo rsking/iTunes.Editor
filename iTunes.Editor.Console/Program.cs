@@ -13,6 +13,7 @@ namespace ITunes.Editor
     using System.CommandLine.Invocation;
     using System.CommandLine.IO;
     using System.CommandLine.Parsing;
+    using System.CommandLine.Rendering;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -45,14 +46,15 @@ namespace ITunes.Editor
             const string check = "check";
 
             var inputArgument = new Argument<System.IO.FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
-            var typeOption = new Option(new[] { "-t", "--type" }, "The type of input") { Argument = new Argument<string>("TYPE") };
-            var propertiesOptions = new Option(new[] { "-p", "--property" }, "A property to set on the input provider") { Argument = new Argument<string>("PROPERTY") { Arity = ArgumentArity.ZeroOrMore } };
+            var typeOption = new Option<string>(new[] { "-t", "--type" }, "The type of input");
+            var propertiesOptions = new Option<string>("--property", "A property to set on the input provider", ArgumentArity.ZeroOrMore);
+            propertiesOptions.AddAlias("-");
             var artistArgument = new Argument<string>("artist") { Description = "The artist" };
             var songArgument = new Argument<string>("song") { Description = "The song" };
 
             static Option CreateProviderOption(string defaultValue)
             {
-                return new Option(new[] { "-p", "--provider" }, "The type of provider") { Argument = new Argument<string>("PROVIDER", () => defaultValue) };
+                return new Option<string>(new[] { "-p", "--provider" }, () => defaultValue, "The type of provider");
             }
 
             var listCommandBuilder = new CommandBuilder(new Command(listCommand, "Lists the files from the specified input") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, System.Threading.CancellationToken, string[]>(List) })
@@ -73,7 +75,7 @@ namespace ITunes.Editor
             var mediaInfoCommandBuilder = new CommandBuilder(new Command(nameof(Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture), "Gets the media info for a specific file") { Handler = CommandHandler.Create<IHost, string, System.Threading.CancellationToken>(MediaInfo) })
                 .AddArgument(new Argument<string>("file") { Description = "The file to get information for" });
 
-            var forceOption = new Option(new[] { "-f", "--force" }, "Whether to force the update") { Argument = new Argument<bool>() };
+            var forceOption = new Option<bool>(new[] { "-f", "--force" }, "Whether to force the update");
             var fileArgument = new Argument<System.IO.FileInfo>("file") { Description = "The file" };
 
             var updateComposerFileCommandBuilder = new CommandBuilder(new Command(composerCommand, "Updates the composer in the specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, bool, System.Threading.CancellationToken>(UpdateComposerFile) })
@@ -124,9 +126,14 @@ namespace ITunes.Editor
 
             var builder = new CommandLineBuilder()
                 .UseDefaults()
+                .UseAnsiTerminalWhenAvailable()
                 .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
                     .UseDefaultITunes()
-                    .ConfigureServices(services => services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true)))
+                    .ConfigureServices(services =>
+                    {
+                        services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
+                        services.AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, NullConfigurator<ITunesLib.ITunesSongsProvider>>();
+                    }))
                 .AddCommand(listCommandBuilder.Command)
                 .AddCommand(composerCommandBuilder.Command)
                 .AddCommand(lyricsCommandBuilder.Command)
@@ -134,7 +141,9 @@ namespace ITunes.Editor
                 .AddCommand(updateCommandBuilder.Command)
                 .AddCommand(checkCommandBuilder.Command);
 
-            return builder.Build().InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
+            return builder
+                .Build()
+                .InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
         }
 
         private static async Task List(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default, params string[] property)

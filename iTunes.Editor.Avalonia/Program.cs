@@ -9,6 +9,7 @@ namespace ITunes.Editor
     using global::Avalonia;
     using global::Avalonia.ReactiveUI;
     using Microsoft.Extensions.DependencyInjection;
+    using Movere;
 
     /// <summary>
     /// The program entry.
@@ -27,6 +28,7 @@ namespace ITunes.Editor
         /// Don't use any Avalonia, third-party APIs or any SynchronizationContext-reliant code before AppMain is called:
         /// things aren't initialized yet and stuff might break.
         /// </remarks>
+        [System.STAThread]
         public static void Main(string[] args) => BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
 
@@ -35,11 +37,10 @@ namespace ITunes.Editor
         /// </summary>
         /// <returns>The application builder.</returns>
         /// <remarks>Avalonia configuration, don't remove; also used by visual designer.</remarks>
-        public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .UseHost(Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder, builder => builder.ConfigureServices((_, services) => services.Configure<Microsoft.Extensions.Hosting.ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true)))
-                .UseReactiveUI();
+        public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace()
+            .UseMovere()
+            .UseReactiveUI();
     }
 }

@@ -29,6 +29,10 @@ namespace ITunes.Editor
                     services.AddSingleton<IEventAggregator, EventAggregator>();
                     services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                     services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
+                    services
+                        .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
+                        .AddSingleton<System.Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model))
+                        .AddTransient(Create<ViewModels.ITunesConfigureViewModel>);
 
                     // view models
                     services.AddSingleton<ReactiveUI.IScreen, ViewModels.ShellViewModel>();
@@ -39,6 +43,16 @@ namespace ITunes.Editor
                     services.AddSingleton<Views.ShellView>();
                     services.AddTransient<Views.LoadView>();
                     services.AddTransient<Views.SongsView>();
+
+                    Movere.Services.IContentDialogService<T> Create<T>(System.IServiceProvider services)
+                        where T : Models.IConfigure
+                    {
+                        global::Avalonia.Controls.Window owner = this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                            ? desktop.MainWindow
+                            : Ioc.Default.GetRequiredService<Views.ShellView>();
+
+                        return new Movere.Services.ContentDialogService<T>(owner, new Services.CustomContentViewResolver());
+                    }
                 })
                 .Build();
 

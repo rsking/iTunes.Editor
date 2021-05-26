@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ITunes.Editor.ViewModels"
+             x:Class="ITunes.Editor.Views.ITunesConfigureView"
+             x:DataType="vm:ITunesConfigureViewModel"
+             x:CompileBindings="True"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450">
+
+  <StackPanel>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+        <TextBlock Text="Select Playlist" />
+        <ComboBox Grid.Column="1"
+                  Items="{Binding Playlists}"
+                  SelectedItem="{Binding SelectedPlaylist}" />
+    </Grid>
+    <CheckBox IsChecked="{Binding UpdateMetadata}">Update Metadata</CheckBox>
+    <CheckBox IsChecked="{Binding SetAlbumArtist}">Set Album Artist</CheckBox>
+    <CheckBox IsChecked="{Binding UpdateGrouping}">Update Grouping</CheckBox>
+    <CheckBox IsChecked="{Binding UpdateComments}">Update Comments</CheckBox>
+  </StackPanel>
+
+</UserControl>
