@@ -79,6 +79,36 @@ namespace ITunes.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Music
+        ///Music|African
+        ///Music|African|African Dancehall
+        ///Music|African|African Reggae
+        ///Music|African|Afrikaans
+        ///Music|African|Afro House
+        ///Music|African|Afro Soul
+        ///Music|African|Afro-Beat
+        ///Music|African|Afro-folk
+        ///Music|African|Afro-fusion
+        ///Music|African|Afro-Pop
+        ///Music|African|Afrobeats
+        ///Music|African|Alte
+        ///Music|African|Amapiano
+        ///Music|African|Benga
+        ///Music|African|Bongo-Flava
+        ///Music|African|Coupé-Décalé
+        ///Music|African|Gqom
+        ///Music|African|Highlife
+        ///Music|African|Kizomba
+        ///Music|African|Kuduro
+        ///Music|African|Kw [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Genres {
+            get {
+                return ResourceManager.GetString("Genres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Getting lyics for {Song}.
         /// </summary>
         public static string GettingLyrics {
