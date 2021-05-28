@@ -7,6 +7,7 @@
 namespace ITunes.Editor.IPod
 {
     using System.Collections.Generic;
+    using System.Linq;
     using global::IPod;
 
     /// <summary>
@@ -46,7 +47,17 @@ namespace ITunes.Editor.IPod
             {
                 var track = trackDatabase.Tracks[i];
 
-                yield return new SongInformation(track.Title, track.Artist, track.SortArtist, track.AlbumArtist, track.AlbumArtist, track.Album, track.FileName, (int)track.Rating, track.Grouping.HasNoLyrics());
+                yield return new SongInformation(track.Title)
+                {
+                    Performers = track.Artist.FromJoinedString().ToArray(),
+                    SortPerformers = track.SortArtist.FromJoinedString().ToArray(),
+                    AlbumPerformer = track.AlbumArtist,
+                    SortAlbumPerformer = track.AlbumArtist,
+                    Album = track.Album,
+                    Name = track.FileName,
+                    Rating = (int)track.Rating,
+                    HasLyrics = !track.Grouping.HasNoLyrics(),
+                };
             }
         }
     }

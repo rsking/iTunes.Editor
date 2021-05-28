@@ -313,8 +313,15 @@ namespace ITunes.Editor
         /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
         /// </summary>
         /// <param name="source">A collection that contains the strings to concatenate.</param>
-        /// /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the separator string. -or- <see cref="string.Empty"/> if values has zero elements or all the elements of values are null. -or- <see langword="null" /> if <paramref name="source"/> is <see langword="null"/>.</returns>
         public static string ToJoinedString(this IEnumerable<string> source) => source.Join("; ")!;
+
+        /// <summary>
+        /// Splits a string into substrings.
+        /// </summary>
+        /// <param name="source">The string to split.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> collection of type <see cref="string"/> whose elements contain the substrings from this instance.</returns>
+        public static IEnumerable<string> FromJoinedString(this string? source) => source?.Split(';').Select(_ => _.Trim()) ?? Enumerable.Empty<string>();
 
         /// <summary>
         /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
@@ -420,14 +427,13 @@ namespace ITunes.Editor
                 return tags;
             }
 
-            var grouping = tags.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            var grouping = tags.FromJoinedString().ToList();
             if (grouping.Contains(tag, StringComparer.Ordinal))
             {
                 return tags;
             }
 
-            Array.Resize(ref grouping, grouping.Length + 1);
-            grouping[grouping.Length - 1] = tag;
+            grouping.Add(tag);
 
             return grouping.ToJoinedString();
         }

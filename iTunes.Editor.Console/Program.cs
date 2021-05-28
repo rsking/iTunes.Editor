@@ -170,8 +170,15 @@ namespace ITunes.Editor
         {
             var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
             var logger = host.Services.GetRequiredService<ILogger<Program>>();
+            var performers = artist.FromJoinedString().ToArray();
+            var songInformation = new SongInformation(song)
+            {
+                Performers = performers,
+                SortPerformers = performers,
+            };
+
             await foreach (var composer in composerProvider
-                .GetComposersAsync(new SongInformation(song, artist, artist, albumPerformer: null, sortAlbumPerformer: null, album: null, name: null), cancellationToken)
+                .GetComposersAsync(songInformation, cancellationToken)
                 .ConfigureAwait(false))
             {
                 logger.LogInformation(Console.Properties.Resources.ComposerLog, composer);
@@ -180,8 +187,15 @@ namespace ITunes.Editor
 
         private static async Task Lyrics(IHost host, string artist, string song, string provider = DefaultLyricProvider, System.Threading.CancellationToken cancellationToken = default)
         {
+            var performers = artist.FromJoinedString().ToArray();
+            var songInformation = new SongInformation(song)
+            {
+                Performers = performers,
+                SortPerformers = performers,
+            };
+
             var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
-               .GetLyricsAsync(new SongInformation(song, artist, artist, albumPerformer: null, sortAlbumPerformer: null, album: null, name: null), cancellationToken)
+               .GetLyricsAsync(songInformation, cancellationToken)
                .ConfigureAwait(false);
             host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.LyricsLog, lyrics);
         }

@@ -57,14 +57,18 @@ namespace ITunes.Editor.Windows
                     var performersValue = performers.Value ?? Enumerable.Empty<string>();
                     var albumPerformersValue = albumPerformers.Value ?? default;
 
-                    yield return new SongInformation(
-                        title.Value!,
-                        performersValue,
-                        sortPerformers.Value ?? performersValue,
-                        albumPerformersValue,
-                        sortAlbumPerformers.Value ?? albumPerformersValue,
-                        album.Value,
-                        fileInfo.FullName);
+                    if (title.Value is not null)
+                    {
+                        yield return new SongInformation(title.Value)
+                        {
+                            Performers = performersValue,
+                            SortPerformers = sortPerformers.Value ?? performersValue,
+                            AlbumPerformer = albumPerformersValue,
+                            SortAlbumPerformer = sortAlbumPerformers.Value ?? albumPerformersValue,
+                            Album = album.Value,
+                            Name = fileInfo.FullName,
+                        };
+                    }
                 }
             }
         }

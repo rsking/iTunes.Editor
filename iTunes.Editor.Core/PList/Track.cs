@@ -8,6 +8,7 @@ namespace ITunes.Editor.PList
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// The track.
@@ -215,16 +216,18 @@ namespace ITunes.Editor.PList
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 
-            return new SongInformation(
-                track.Name,
-                track.Artist,
-                track.SortArtist ?? track.Artist,
-                track.AlbumArtist,
-                track.SortAlbum,
-                track.Album,
-                path,
-                track.Rating,
-                track.Grouping?.Contains("No Lyrics") ?? false);
+            var artist = track.Artist.FromJoinedString().ToArray();
+            return new SongInformation(track.Name)
+            {
+                Performers = artist,
+                SortPerformers = track.SortArtist?.FromJoinedString().ToArray() ?? artist,
+                AlbumPerformer = track.AlbumArtist,
+                SortAlbumPerformer = track.SortAlbum,
+                Album = track.Album,
+                Name = path,
+                Rating = track.Rating,
+                HasLyrics = !track.Album.HasNoLyrics(),
+            };
         }
     }
 }

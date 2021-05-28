@@ -11,126 +11,63 @@ namespace ITunes.Editor
     /// <summary>
     /// The song information.
     /// </summary>
-    public class SongInformation
+    public record SongInformation
     {
         /// <summary>
         /// An empty song information.
         /// </summary>
-        public static readonly SongInformation Empty = new(string.Empty, default(string), default, default, default, default, default);
+        public static readonly SongInformation Empty = new(string.Empty);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongInformation"/> class.
         /// </summary>
         /// <param name="title">The title.</param>
-        /// <param name="performers">The performers.</param>
-        /// <param name="sortPerformers">The sort performers.</param>
-        /// <param name="albumPerformer">The album performer.</param>
-        /// <param name="sortAlbumPerformer">The sort album performer.</param>
-        /// <param name="album">The album.</param>
-        /// <param name="name">The file name.</param>
-        /// <param name="rating">The rating.</param>
-        /// <param name="hasLyrics">Set to <see langword="true"/> if this instance has lyrics.</param>
-        public SongInformation(
-            string title,
-            string? performers,
-            string? sortPerformers,
-            string? albumPerformer,
-            string? sortAlbumPerformer,
-            string? album,
-            string? name,
-            int? rating = null,
-            bool hasLyrics = false)
-            : this(
-                title,
-                performers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
-                sortPerformers?.Split(';').Select(_ => _.Trim()).ToArray() ?? Enumerable.Empty<string>(),
-                albumPerformer,
-                sortAlbumPerformer,
-                album,
-                name,
-                rating,
-                hasLyrics)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SongInformation"/> class.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <param name="performers">The performers.</param>
-        /// <param name="sortPerformers">The sort performers.</param>
-        /// <param name="albumPerformer">The album performers.</param>
-        /// <param name="sortAlbumPerformer">The sort album performer.</param>
-        /// <param name="album">The album.</param>
-        /// <param name="name">The file name.</param>
-        /// <param name="rating">The rating.</param>
-        /// <param name="hasLyrics">Set to <see langword="true"/> if this instance has lyrics.</param>
-        public SongInformation(
-            string title,
-            System.Collections.Generic.IEnumerable<string> performers,
-            System.Collections.Generic.IEnumerable<string> sortPerformers,
-            string? albumPerformer,
-            string? sortAlbumPerformer,
-            string? album,
-            string? name,
-            int? rating = null,
-            bool hasLyrics = false)
-        {
-            this.Title = title;
-            this.Performers = performers ?? Enumerable.Empty<string>();
-            this.SortPerformers = sortPerformers ?? Enumerable.Empty<string>();
-            this.AlbumPerformer = albumPerformer;
-            this.SortAlbumPerformer = sortAlbumPerformer;
-            this.Album = album;
-            this.Name = name;
-            this.Rating = rating;
-            this.HasLyrics = hasLyrics;
-        }
+        public SongInformation(string title) => this.Title = title;
 
         /// <summary>
         /// Gets the title.
         /// </summary>
-        public string Title { get; }
+        public string Title { get; init; }
 
         /// <summary>
         /// Gets the performers.
         /// </summary>
-        public System.Collections.Generic.IEnumerable<string> Performers { get; }
+        public System.Collections.Generic.IEnumerable<string> Performers { get; init; } = Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets the sort performers.
         /// </summary>
-        public System.Collections.Generic.IEnumerable<string> SortPerformers { get; }
+        public System.Collections.Generic.IEnumerable<string> SortPerformers { get; init; } = Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets the album performers.
         /// </summary>
-        public string? AlbumPerformer { get; }
+        public string? AlbumPerformer { get; init; }
 
         /// <summary>
         /// Gets the sort album performers.
         /// </summary>
-        public string? SortAlbumPerformer { get; }
+        public string? SortAlbumPerformer { get; init; }
 
         /// <summary>
         /// Gets the album.
         /// </summary>
-        public string? Album { get; }
+        public string? Album { get; init; }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string? Name { get; }
+        public string? Name { get; init; }
 
         /// <summary>
         /// Gets the rating.
         /// </summary>
-        public int? Rating { get; }
+        public int? Rating { get; init; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has lyrics.
         /// </summary>
-        public bool HasLyrics { get; }
+        public bool? HasLyrics { get; init; }
 
         /// <summary>
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
@@ -140,20 +77,16 @@ namespace ITunes.Editor
         {
             return file is null
                 ? throw new System.ArgumentNullException(nameof(file))
-                : new SongInformation(
-                    file.Tag.Title,
-                    file.Tag.Performers,
-                    file.Tag.PerformersSort ?? file.Tag.Performers,
-                    file.Tag.AlbumArtists.ToJoinedString(),
-                    file.Tag.AlbumArtistsSort.ToJoinedString(),
-                    file.Tag.Album,
-                    file.Name,
-                    hasLyrics: HasLyrics(file));
-
-            static bool HasLyrics(TagLib.File file)
-            {
-                return file.GetTag(TagLib.TagTypes.Apple) is TagLib.Mpeg4.AppleTag appleTag && !string.IsNullOrEmpty(appleTag.Lyrics);
-            }
+                : new SongInformation(file.Tag.Title)
+                {
+                    Performers = file.Tag.Performers,
+                    SortPerformers = file.Tag.PerformersSort ?? file.Tag.Performers,
+                    AlbumPerformer = file.Tag.AlbumArtists.ToJoinedString(),
+                    SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
+                    Album = file.Tag.Album,
+                    Name = file.Name,
+                    HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
+                };
         }
 
         /// <summary>
@@ -182,7 +115,7 @@ namespace ITunes.Editor
         /// <inheritdoc/>
         public override string ToString()
         {
-            var performers = this.Performers is null ? null : string.Join("; ", this.Performers);
+            var performers = this.Performers?.ToJoinedString();
             return $"{performers}|{this.Album}|{this.Title}";
         }
     }

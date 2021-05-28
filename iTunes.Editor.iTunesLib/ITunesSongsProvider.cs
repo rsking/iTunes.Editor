@@ -157,16 +157,18 @@ namespace ITunes.Editor.ITunesLib
                             }
                         }
 
-                        songInformation = new SongInformation(
-                            track.Name,
-                            track.Artist,
-                            track.SortArtist ?? track.Artist,
-                            track.AlbumArtist,
-                            track.SortAlbumArtist,
-                            track.Album,
-                            track.Location,
-                            track.Rating,
-                            hasLyrics);
+                        var artist = track.Artist.FromJoinedString().ToArray();
+                        songInformation = new SongInformation(track.Name)
+                        {
+                            Performers = artist,
+                            SortPerformers = track.SortArtist?.FromJoinedString().ToArray() ?? artist,
+                            AlbumPerformer = track.AlbumArtist,
+                            SortAlbumPerformer = track.SortAlbumArtist,
+                            Album = track.Album,
+                            Name = track.Location,
+                            Rating = track.Rating,
+                            HasLyrics = hasLyrics,
+                        };
                     }
                     catch (System.Runtime.InteropServices.COMException exception) when (exception.Message.Contains("deleted"))
                     {
