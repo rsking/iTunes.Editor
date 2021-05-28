@@ -5,7 +5,7 @@
 namespace ITunes.Editor.Models
 {
     /// <summary>
-    /// The models for selecting.
+    /// The models for configuring.
     /// </summary>
     public interface IConfigure
     {

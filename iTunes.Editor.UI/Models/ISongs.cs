@@ -37,6 +37,11 @@ namespace ITunes.Editor.Models
         TagLib.Tag? SelectedTag { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is loading.
+        /// </summary>
+        public bool IsLoading { get; }
+
+        /// <summary>
         /// Gets the progress.
         /// </summary>
         string? Progress { get; }

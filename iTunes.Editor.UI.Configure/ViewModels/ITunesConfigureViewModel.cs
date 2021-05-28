@@ -4,8 +4,6 @@
 
 namespace ITunes.Editor.ViewModels
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// The configure view model for <see cref="ITunesLib.ITunesSongsProvider"/>.
     /// </summary>
@@ -21,7 +19,7 @@ namespace ITunes.Editor.ViewModels
         public ITunesConfigureViewModel(ITunesLib.ITunesSongsProvider provider) => this.provider = provider;
 
         /// <inheritdoc cref="ITunesLib.ITunesSongsProvider.Playlists" />
-        public IEnumerable<string> Playlists => this.provider.Playlists;
+        public System.Collections.Generic.IEnumerable<string> Playlists => this.provider.Playlists;
 
         /// <inheritdoc cref="ITunesLib.ITunesSongsProvider.SelectedPlaylist" />
         public string? SelectedPlaylist

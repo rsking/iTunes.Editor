@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iTunes.Editor.DependencyInjection\iTunes.Editor.DependencyInjection.csproj" />
-    <ProjectReference Include="..\iTunes.Editor.UI\iTunes.Editor.UI.csproj" />
+    <ProjectReference Include="..\iTunes.Editor.UI.Configure\iTunes.Editor.UI.Configure.csproj" />
   </ItemGroup>
 
   <!--

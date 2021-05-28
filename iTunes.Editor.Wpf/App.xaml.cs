@@ -31,6 +31,10 @@ namespace ITunes.Editor
                     services.AddSingleton<IEventAggregator, EventAggregator>();
                     services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                     services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
+                    services
+                        .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
+                        .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model));
+                    services.AddSingleton<MahApps.Metro.Controls.Dialogs.IDialogCoordinator>(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
 
                     // view models
                     services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();

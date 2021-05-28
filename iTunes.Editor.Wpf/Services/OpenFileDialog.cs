@@ -30,7 +30,7 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The starting path.</param>
         /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override System.Threading.Tasks.Task<string?> GetFileNameAsync(string? path = default) => System.Threading.Tasks.Task.FromResult(this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault());
+        public override System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default) => new(this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault());
 
         /// <summary>
         /// Gets multiple file names.
@@ -42,7 +42,7 @@ namespace ITunes.Editor.Services
         /// Gets multiple file names asynchronously.
         /// </summary>
         /// <returns>The list of file names.</returns>
-        public System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => System.Threading.Tasks.Task.FromResult(this.GetFileNamesImpl(path: null, multiselect: true));
+        public System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => new(this.GetFileNamesImpl(path: null, multiselect: true));
 
         private System.Collections.Generic.IEnumerable<string> GetFileNamesImpl(string? path, bool multiselect)
         {

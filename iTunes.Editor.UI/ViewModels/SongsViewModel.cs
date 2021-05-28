@@ -47,7 +47,7 @@ namespace ITunes.Editor.ViewModels
                 return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
             });
 
-            eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
+            _ = eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
             {
                 this.songs.Clear();
                 await foreach (var song in evt.Information.ConfigureAwait(false))
@@ -108,7 +108,7 @@ namespace ITunes.Editor.ViewModels
                         this.Percentage = currentPercentage;
                     }
 
-                    await processor(song).ConfigureAwait(false);
+                    _ = await processor(song).ConfigureAwait(false);
 
                     current++;
                 }
@@ -121,35 +121,27 @@ namespace ITunes.Editor.ViewModels
         /// <inheritdoc/>
         public System.Collections.Generic.IEnumerable<SongInformation> Songs => this.songs;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is loading.
-        /// </summary>
-        public bool IsLoading
-        {
-            get => this.isLoading;
-            set => this.SetProperty(ref this.isLoading, value);
-        }
-
         /// <inheritdoc/>
         public SongInformation? SelectedSong
         {
             get => this.selectedSong;
             set
             {
-                this.SetProperty(ref this.selectedSong, value);
-
-                if (this.selectedFile is not null)
+                if (this.SetProperty(ref this.selectedSong, value))
                 {
-                    this.selectedFile.Dispose();
-                    this.selectedFile = default;
-                }
+                    if (this.selectedFile is not null)
+                    {
+                        this.selectedFile.Dispose();
+                        this.selectedFile = default;
+                    }
 
-                if (this.selectedSong is not null)
-                {
-                    this.selectedFile = TagLib.File.Create(this.selectedSong.Name);
-                }
+                    if (this.selectedSong is not null)
+                    {
+                        this.selectedFile = TagLib.File.Create(this.selectedSong.Name);
+                    }
 
-                this.OnPropertyChanged(nameof(this.SelectedTag));
+                    this.OnPropertyChanged(nameof(this.SelectedTag));
+                }
             }
         }
 
@@ -168,6 +160,13 @@ namespace ITunes.Editor.ViewModels
         public System.Windows.Input.ICommand UpdateComposers { get; }
 
         /// <inheritdoc/>
+        public bool IsLoading
+        {
+            get => this.isLoading;
+            protected set => this.SetProperty(ref this.isLoading, value);
+        }
+
+        /// <inheritdoc/>
         public string? Progress
         {
             get => this.progress;
@@ -184,7 +183,7 @@ namespace ITunes.Editor.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether to force the lyrics search.
         /// </summary>
-        public bool ForceLyricsSearch { get; set; } = false;
+        public bool ForceLyricsSearch { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to force the lyrics update.
@@ -194,7 +193,7 @@ namespace ITunes.Editor.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether to force the composers search.
         /// </summary>
-        public bool ForceComposersSearch { get; set; } = false;
+        public bool ForceComposersSearch { get; set; }
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
@@ -202,14 +201,16 @@ namespace ITunes.Editor.ViewModels
                 .Cast<Models.ISelectable>()
                 .SelectMany(SelectBase);
 
-            if (selected.Any())
-            {
-                return selected;
-            }
+            return selected.Any()
+                ? selected
+                : All();
 
-            return this.artists
-                .Cast<Models.ISelectable>()
-                .SelectMany(selectable => SelectChildren(selectable, forceSelected: true));
+            System.Collections.Generic.IEnumerable<SongInformation> All()
+            {
+                return this.artists
+                    .Cast<Models.ISelectable>()
+                    .SelectMany(selectable => SelectChildren(selectable, forceSelected: true));
+            }
 
             static System.Collections.Generic.IEnumerable<SongInformation> SelectBase(Models.ISelectable selectable)
             {

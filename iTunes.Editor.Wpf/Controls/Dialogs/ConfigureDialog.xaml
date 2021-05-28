@@ -1,0 +1,58 @@
+﻿<dialogs:BaseMetroDialog x:Class="ITunes.Editor.Controls.Dialogs.ConfigureDialog"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                         xmlns:vm="clr-namespace:ITunes.Editor.ViewModels;assembly=iTunes.Editor.UI.Configure"
+                         dialogs:DialogParticipation.Register="{Binding}">
+    <Grid Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentControl x:Name="PART_Content"
+                        Grid.Row="0"
+                        Margin="0,5,0,0"
+                        Content="{Binding}"
+                        FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type vm:ITunesConfigureViewModel}">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Select Playlist" />
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding Playlists, Mode=OneWay}"
+                                      SelectedItem="{Binding SelectedPlaylist}" />
+                        </Grid>
+                        <CheckBox IsChecked="{Binding UpdateMetadata}">Update Metadata</CheckBox>
+                        <CheckBox IsChecked="{Binding SetAlbumArtist}">Set Album Artist</CheckBox>
+                        <CheckBox IsChecked="{Binding UpdateGrouping}">Update Grouping</CheckBox>
+                        <CheckBox IsChecked="{Binding UpdateComments}">Update Comments</CheckBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+
+        <StackPanel Grid.Row="1"
+                    MinHeight="85"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button x:Name="PART_AffirmativeButton"
+                    Margin="0,0,5,0"
+                    Content="{Binding AffirmativeButtonText, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
+            <Button x:Name="PART_NegativeButton"
+                    Margin="5,0,5,0"
+                    Content="{Binding NegativeButtonText, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType=dialogs:InputDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{DynamicResource MahApps.Styles.Button.Dialogs}" />
+        </StackPanel>
+    </Grid>
+</dialogs:BaseMetroDialog>
