@@ -8,5 +8,6 @@
 
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="avares://iTunes.Editor.Avalonia/Styles/ProgressRing.axaml"/>
     </Application.Styles>
 </Application>
