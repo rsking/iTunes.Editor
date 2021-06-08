@@ -40,10 +40,12 @@ namespace ITunes.Editor
         private static Task<int> Main(string[] args)
         {
             const string lyricsCommand = "lyrics";
+            const string updateCommand = "update";
             const string listCommand = "list";
+            const string fileCommand = "file";
             const string allCommand = "all";
             const string composerCommand = "composer";
-            const string check = "check";
+            const string checkCommand = "check";
 
             var inputArgument = new Argument<System.IO.FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
             var typeOption = new Option<string>(new[] { "-t", "--type" }, "The type of input");
@@ -90,7 +92,7 @@ namespace ITunes.Editor
                 .AddArgument(fileArgument)
                 .AddOption(forceOption);
 
-            var updateFileCommandBuilder = new CommandBuilder(new Command("file", "Updates a specific file"))
+            var updateFileCommandBuilder = new CommandBuilder(new Command(fileCommand, "Updates a specific file"))
                 .AddCommand(updateComposerFileCommandBuilder.Command)
                 .AddCommand(updateLyricsFileCommandBuilder.Command)
                 .AddCommand(updateAllFileCommandBuilder.Command);
@@ -115,14 +117,20 @@ namespace ITunes.Editor
                 .AddCommand(updateLyricsListCommandBuilder.Command)
                 .AddCommand(updateAllListCommandBuilder.Command);
 
-            var updateCommandBuilder = new CommandBuilder(new Command("update", "Updates a specific file or list"))
+            var updateCommandBuilder = new CommandBuilder(new Command(updateCommand, "Updates a specific file or list"))
                 .AddCommand(updateFileCommandBuilder.Command)
                 .AddCommand(updateListCommandBuilder.Command);
 
-            var checkCommandBuilder = new CommandBuilder(new Command(check) { Handler = CommandHandler.Create<IHost, IConsole, System.IO.FileSystemInfo, string, System.IO.DirectoryInfo, System.Threading.CancellationToken>(Check) })
+            var checkListCommandBuilder = new CommandBuilder(new Command(listCommand, "Checks a specific list") { Handler = CommandHandler.Create<IHost, System.IO.FileSystemInfo, string, System.Threading.CancellationToken>(CheckList) })
                 .AddArgument(inputArgument)
-                .AddOption(typeOption)
-                .AddOption(new Option<System.IO.DirectoryInfo>(new[] { "-f", "--folder" }, "The folder").ExistingOnly());
+                .AddOption(typeOption);
+
+            var checkFileCommandBuilder = new CommandBuilder(new Command(fileCommand, "Checks a specific file") { Handler = CommandHandler.Create<IHost, System.IO.FileInfo, System.Threading.CancellationToken>(CheckFile) })
+                .AddArgument(inputArgument);
+
+            var checkCommandBuilder = new CommandBuilder(new Command(checkCommand, "Checks a specific file or list"))
+                .AddCommand(checkFileCommandBuilder.Command)
+                .AddCommand(checkListCommandBuilder.Command);
 
             var builder = new CommandLineBuilder()
                 .UseDefaults()
@@ -285,6 +293,76 @@ namespace ITunes.Editor
 
                 songInformation = await composerService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
                 return await lyricsService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        private static async Task CheckList(IHost host, System.IO.FileSystemInfo input, string type = DefaultType, System.Threading.CancellationToken cancellationToken = default)
+        {
+            var songsProvider = host.Services
+                .GetRequiredService<ISongsProvider>(type)
+                .SetPath(input);
+
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
+            await foreach (var song in songsProvider
+                .GetTagInformationAsync(cancellationToken)
+                .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name))
+                .ConfigureAwait(false))
+            {
+                CheckFileImpl(logger, song);
+            }
+        }
+
+        private static async Task CheckFile(IHost host, System.IO.FileInfo file, System.Threading.CancellationToken cancellationToken = default)
+        {
+            var songInformation = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
+            CheckFileImpl(host.Services.GetRequiredService<ILogger<Program>>(), songInformation);
+        }
+
+        private static void CheckFileImpl(ILogger logger, SongInformation song)
+        {
+            // check the location
+            var mediaType = song.GetMediaKind();
+            switch (mediaType)
+            {
+                case MediaKind.Song:
+                    logger.LogInformation(Console.Properties.Resources.Processing, song);
+                    break;
+                default:
+                    logger.LogInformation(Console.Properties.Resources.Skipping, song, mediaType);
+                    return;
+            }
+
+            (var genre, var level) = GetGenre(song.Genre);
+            if (genre is null)
+            {
+                logger.LogWarning("Failed to match {genre} to an approvied genre", song.Genre);
+            }
+
+            static (Genre? Genre, int Level) GetGenre(string? genre)
+            {
+                return genre is null
+                    ? default
+                    : GetGenre(Genres.Music.SubGenres, genre, 1);
+
+                static (Genre? Genre, int Level) GetGenre(System.Collections.Generic.IReadOnlyCollection<Genre> genres, string name, int level)
+                {
+                    foreach (var genre in genres)
+                    {
+                        if (string.Equals(genre.Name, name, StringComparison.Ordinal))
+                        {
+                            return (genre, level);
+                        }
+
+                        var subGenre = GetGenre(genre.SubGenres, name, level + 1);
+                        if (subGenre.Genre is not null)
+                        {
+                            return subGenre;
+                        }
+                    }
+
+                    return default;
+                }
             }
         }
 
