@@ -62,7 +62,7 @@ namespace ITunes.Editor.Controls.Dialogs
         /// Initializes a new instance of the <see cref="ConfigureDialog"/> class.
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
-        /// <param name="settings">The settings,</param>
+        /// <param name="settings">The settings.</param>
         internal ConfigureDialog(MetroWindow? parentWindow, MetroDialogSettings? settings)
             : base(parentWindow, settings) => this.InitializeComponent();
 

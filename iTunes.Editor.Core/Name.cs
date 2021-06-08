@@ -110,8 +110,8 @@ namespace ITunes.Editor
         }
 
         /// <inheritdoc/>
-        public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.InvariantCulture)
-            && string.Equals(this.Last, other.Last, System.StringComparison.InvariantCulture);
+        public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.Ordinal)
+            && string.Equals(this.Last, other.Last, System.StringComparison.Ordinal);
 
         /// <inheritdoc/>
         public override bool Equals(object obj) => obj is Name name ? this.Equals(name) : base.Equals(obj);

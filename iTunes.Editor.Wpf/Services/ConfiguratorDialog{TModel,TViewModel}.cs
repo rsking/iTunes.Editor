@@ -1,24 +1,31 @@
-﻿namespace ITunes.Editor.Services
+﻿// <copyright file="ConfiguratorDialog{TModel,TViewModel}.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+
+namespace ITunes.Editor.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using ITunes.Editor.Controls.Dialogs;
 
+    /// <summary>
+    /// The configurator dialog.
+    /// </summary>
+    /// <typeparam name="TModel">The model.</typeparam>
+    /// <typeparam name="TViewModel">The view model.</typeparam>
     public class ConfiguratorDialog<TModel, TViewModel> : Configurator<TModel, TViewModel>
         where TViewModel : Models.IConfigure
     {
-        MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator;
+        private readonly MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfiguratorDialog{TModel, TViewModel}"/> class.
+        /// </summary>
+        /// <param name="dialogCoordinator">The dialog coordinator.</param>
+        /// <param name="viewModelCreator">The view model creator.</param>
         public ConfiguratorDialog(
             MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator,
             System.Func<TModel, TViewModel> viewModelCreator)
-            : base(viewModelCreator)
-        {
-            this.dialogCoordinator = dialogCoordinator;
-        }
+            : base(viewModelCreator) => this.dialogCoordinator = dialogCoordinator;
 
         /// <inheritdoc/>
         protected override ValueTask<bool> ConfigureViewModelAsync(TViewModel source) =>

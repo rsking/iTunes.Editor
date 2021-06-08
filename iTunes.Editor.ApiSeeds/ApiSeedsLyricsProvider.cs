@@ -87,17 +87,16 @@ namespace ITunes.Editor.ApiSeeds
 
                 static bool CheckName(string? first, string? second)
                 {
-                    return string.Equals(first, second, System.StringComparison.InvariantCultureIgnoreCase)
-                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.InvariantCultureIgnoreCase);
+                    return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
 
                     static string? Sanitise(string? input)
                     {
-                        if (input is null)
+                        return input switch
                         {
-                            return input;
-                        }
-
-                        return input.Replace('-', ' ');
+                            null => input,
+                            _ => input.Replace('-', ' '),
+                        };
                     }
                 }
             }

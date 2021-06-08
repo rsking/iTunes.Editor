@@ -1,15 +1,25 @@
-﻿namespace ITunes.Editor.Controls.Dialogs
+﻿// <copyright file="DialogExtensions.cs" company="RossKing">
+// Copyright (c) RossKing. All rights reserved.
+// </copyright>
+
+namespace ITunes.Editor.Controls.Dialogs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using MahApps.Metro.Controls;
     using MahApps.Metro.Controls.Dialogs;
 
+    /// <summary>
+    /// The dialog extensions.
+    /// </summary>
     public static class DialogExtensions
     {
+        /// <summary>
+        /// Show the configure dialog asynchronously.
+        /// </summary>
+        /// <param name="dialogCoordinator">The dialog coordinator.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns>The result of the dialog.</returns>
         public static async Task<bool> ShowConfigureAsync(this IDialogCoordinator dialogCoordinator, object context, MetroDialogSettings? settings = null)
         {
             var metroWindow = System.Windows.Application.Current.MainWindow as MetroWindow;

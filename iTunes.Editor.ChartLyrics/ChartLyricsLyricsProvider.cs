@@ -80,8 +80,8 @@ namespace ITunes.Editor.ChartLyrics
                 return null;
             }
 
-            if (getLyricResult.LyricArtist.Equals(artist, System.StringComparison.InvariantCultureIgnoreCase)
-                && getLyricResult.LyricSong.Equals(song, System.StringComparison.InvariantCultureIgnoreCase))
+            if (getLyricResult.LyricArtist.Equals(artist, System.StringComparison.OrdinalIgnoreCase)
+                && getLyricResult.LyricSong.Equals(song, System.StringComparison.OrdinalIgnoreCase))
             {
                 return getLyricResult.Lyric;
             }
