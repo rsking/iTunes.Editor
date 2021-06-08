@@ -406,7 +406,7 @@ namespace ITunes.Editor
         {
             var set = new HashSet<TKey>(second, comparer);
 
-            foreach (TSource element in first)
+            foreach (var element in first)
             {
                 if (set.Add(keySelector(element)))
                 {

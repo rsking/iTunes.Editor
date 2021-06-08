@@ -28,6 +28,7 @@ namespace ITunes.Editor.Services
         /// </summary>
         /// <param name="path">The initial path.</param>
         /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "This would cause it to call itself")]
         public System.Threading.Tasks.ValueTask<string?> GetSelectedPathAsync(string? path = default) => new(this.GetSelectedPath(path));
     }
 }

@@ -44,10 +44,11 @@ namespace ITunes.Editor
                     services.AddTransient<Views.LoadView>();
                     services.AddTransient<Views.SongsView>();
 
+                    [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is required for the signature")]
                     Movere.Services.IContentDialogService<T> Create<T>(System.IServiceProvider services)
                         where T : Models.IConfigure
                     {
-                        global::Avalonia.Controls.Window owner = this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                        var owner = this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
                             ? desktop.MainWindow
                             : Ioc.Default.GetRequiredService<Views.ShellView>();
 

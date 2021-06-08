@@ -45,7 +45,7 @@ namespace ITunes.Editor.Controls.Dialogs
         /// Initializes a new instance of the <see cref="ConfigureDialog"/> class.
         /// </summary>
         internal ConfigureDialog()
-            : this(null)
+            : this(parentWindow: null)
         {
         }
 
@@ -54,7 +54,7 @@ namespace ITunes.Editor.Controls.Dialogs
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
         internal ConfigureDialog(MetroWindow? parentWindow)
-            : this(parentWindow, null)
+            : this(parentWindow, settings: null)
         {
         }
 
@@ -90,10 +90,7 @@ namespace ITunes.Editor.Controls.Dialogs
         /// <returns>The result.</returns>
         internal Task<bool> WaitForButtonPressAsync()
         {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                this.Focus();
-            }));
+            this.Dispatcher.BeginInvoke(new Action(() => this.Focus()));
 
             var tcs = new TaskCompletionSource<bool>();
 

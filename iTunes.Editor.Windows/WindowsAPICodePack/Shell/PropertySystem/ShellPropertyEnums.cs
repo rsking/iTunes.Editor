@@ -129,52 +129,52 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     public enum PropertyConditionOperation
     {
         /// <summary>The implicit comparison between the value of the property and the value of the constant.</summary>
-        Implicit,
+        Implicit = 0,
 
         /// <summary>The value of the property and the value of the constant must be equal.</summary>
-        Equal,
+        Equal = 1,
 
         /// <summary>The value of the property and the value of the constant must not be equal.</summary>
-        NotEqual,
+        NotEqual = 2,
 
         /// <summary>The value of the property must be less than the value of the constant.</summary>
-        LessThan,
+        LessThan = 3,
 
         /// <summary>The value of the property must be greater than the value of the constant.</summary>
-        GreaterThan,
+        GreaterThan = 4,
 
         /// <summary>The value of the property must be less than or equal to the value of the constant.</summary>
-        LessThanOrEqual,
+        LessThanOrEqual = 5,
 
         /// <summary>The value of the property must be greater than or equal to the value of the constant.</summary>
-        GreaterThanOrEqual,
+        GreaterThanOrEqual = 6,
 
         /// <summary>The value of the property must begin with the value of the constant.</summary>
-        ValueStartsWith,
+        ValueStartsWith = 7,
 
         /// <summary>The value of the property must end with the value of the constant.</summary>
-        ValueEndsWith,
+        ValueEndsWith = 8,
 
         /// <summary>The value of the property must contain the value of the constant.</summary>
-        ValueContains,
+        ValueContains = 9,
 
         /// <summary>The value of the property must not contain the value of the constant.</summary>
-        ValueNotContains,
+        ValueNotContains = 10,
 
         /// <summary>
         /// The value of the property must match the value of the constant, where '?' matches any single character and '*' matches any
         /// sequence of characters.
         /// </summary>
-        DOSWildCards,
+        DOSWildCards = 11,
 
         /// <summary>The value of the property must contain a word that is the value of the constant.</summary>
-        WordEqual,
+        WordEqual = 12,
 
         /// <summary>The value of the property must contain a word that begins with the value of the constant.</summary>
-        WordStartsWith,
+        WordStartsWith = 13,
 
         /// <summary>The application is free to interpret this in any suitable way.</summary>
-        ApplicationSpecific,
+        ApplicationSpecific = 14,
     }
 
     /// <summary>Specifies the condition type to use when displaying the property in the query builder user interface (UI).</summary>
@@ -184,6 +184,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         None = 0,
 
         /// <summary>The string type.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720", Justification = "This is correct")]
         String = 1,
 
         /// <summary>The size type.</summary>
@@ -218,35 +219,35 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         PrefixName = 0x1,
 
         /// <summary>The string treated as a file name.</summary>
-        FileName = 0x2,
+        FileName = 1 << 1,
 
         /// <summary>The sizes displayed in kilobytes (KB), regardless of size.</summary>
         /// <remarks>This flag applies to properties of <c>Integer</c> types and aligns the values in the column.</remarks>
-        AlwaysKB = 0x4,
+        AlwaysKB = 1 << 2,
 
         /// <summary>Reserved.</summary>
-        RightToLeft = 0x8,
+        RightToLeft = 1 << 3,
 
         /// <summary>The time displayed as 'hh:mm am/pm'.</summary>
-        ShortTime = 0x10,
+        ShortTime = 1 << 4,
 
         /// <summary>The time displayed as 'hh:mm:ss am/pm'.</summary>
-        LongTime = 0x20,
+        LongTime = 1 << 5,
 
         /// <summary>The time portion of date/time hidden.</summary>
-        HideTime = 64,
+        HideTime = 1 << 6,
 
         /// <summary>The date displayed as 'MM/DD/YY'. For example, '3/21/04'.</summary>
-        ShortDate = 0x80,
+        ShortDate = 1 << 7,
 
         /// <summary>The date displayed as 'DayOfWeek Month day, year'. For example, 'Monday, March 21, 2004'.</summary>
-        LongDate = 0x100,
+        LongDate = 1 << 8,
 
         /// <summary>The date portion of date/time hidden.</summary>
-        HideDate = 0x200,
+        HideDate = 1 << 9,
 
         /// <summary>The friendly date descriptions, such as "Yesterday".</summary>
-        RelativeDate = 0x400,
+        RelativeDate = 1 << 10,
 
         /// <summary>The text displayed in a text box as a cue for the user, such as 'Enter your name'.</summary>
         /// <remarks>
@@ -254,27 +255,28 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// cue for the user, Formatting can fail if the data entered is not of an expected type, such as putting alpha characters in a phone
         /// number field.
         /// </remarks>
-        UseEditInvitation = 0x800,
+        UseEditInvitation = 1 << 11,
 
         /// <summary>
         /// This flag requires UseEditInvitation to also be specified. When the formatting flags are ReadOnly | UseEditInvitation and the
         /// algorithm would have shown invitation text, a string is returned that indicates the value is "Unknown" instead of the invitation text.
         /// </summary>
-        ReadOnly = 0x1000,
+        ReadOnly = 1 << 12,
 
         /// <summary>
         /// The detection of the reading order is not automatic. Useful when converting to ANSI to omit the Unicode reading order characters.
         /// </summary>
-        NoAutoReadingOrder = 0x2000,
+        NoAutoReadingOrder = 1 << 13,
 
         /// <summary>Smart display of DateTime values.</summary>
-        SmartDateTime = 0x4000,
+        SmartDateTime = 1 << 14,
     }
 
     /// <summary>Specifies the display types for a property.</summary>
     public enum PropertyDisplayType
     {
         /// <summary>The String Display. This is the default if the property doesn't specify a display type.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720", Justification = "This is correct")]
         String = 0,
 
         /// <summary>The Number Display.</summary>
@@ -320,19 +322,19 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     public enum PropertySortDescription
     {
         /// <summary>The default ascending or descending property sort, "Sort going up", "Sort going down".</summary>
-        General,
+        General = 0,
 
         /// <summary>The alphabetical sort, "A on top", "Z on top".</summary>
-        AToZ,
+        AToZ = 1,
 
         /// <summary>The numerical sort, "Lowest on top", "Highest on top".</summary>
-        LowestToHighest,
+        LowestToHighest = 2,
 
         /// <summary>The size sort, "Smallest on top", "Largest on top".</summary>
-        SmallestToBiggest,
+        SmallestToBiggest = 3,
 
         /// <summary>The chronological sort, "Oldest on top", "Newest on top".</summary>
-        OldestToNewest,
+        OldestToNewest = 4,
     }
 
     /// <summary>Describes the attributes of the <c>typeInfo</c> element in the property's <c>.propdesc</c> file.</summary>
@@ -415,37 +417,37 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         CenterAlign = 0x00000001,
 
         /// <summary>The property is right aligned.</summary>
-        RightAlign = 0x00000002,
+        RightAlign = 1 << 1,
 
         /// <summary>The property is shown as the beginning of the next collection of properties in the view.</summary>
-        BeginNewGroup = 0x00000004,
+        BeginNewGroup = 1 << 2,
 
         /// <summary>The remainder of the view area is filled with the content of this property.</summary>
-        FillArea = 0x00000008,
+        FillArea = 1 << 3,
 
         /// <summary>The property is reverse sorted if it is a property in a list of sorted properties.</summary>
-        SortDescending = 0x00000010,
+        SortDescending = 1 << 4,
 
         /// <summary>The property is only shown if it is present.</summary>
-        ShowOnlyIfPresent = 0x00000020,
+        ShowOnlyIfPresent = 1 << 5,
 
         /// <summary>The property is shown by default in a view (where applicable).</summary>
-        ShowByDefault = 0x00000040,
+        ShowByDefault = 1 << 6,
 
         /// <summary>The property is shown by default in primary column selection user interface (UI).</summary>
-        ShowInPrimaryList = 0x00000080,
+        ShowInPrimaryList = 1 << 7,
 
         /// <summary>The property is shown by default in secondary column selection UI.</summary>
-        ShowInSecondaryList = 0x00000100,
+        ShowInSecondaryList = 1 << 8,
 
         /// <summary>The label is hidden if the view is normally inclined to show the label.</summary>
-        HideLabel = 0x00000200,
+        HideLabel = 1 << 9,
 
         /// <summary>The property is not displayed as a column in the UI.</summary>
-        Hidden = 0x00000800,
+        Hidden = 1 << 11,
 
         /// <summary>The property is wrapped to the next row.</summary>
-        CanWrap = 0x00001000,
+        CanWrap = 1 << 12,
 
         /// <summary>A mask used to retrieve all flags.</summary>
         MaskAll = CenterAlign | RightAlign | BeginNewGroup | FillArea | SortDescending | ShowOnlyIfPresent | ShowByDefault | ShowInPrimaryList | ShowInSecondaryList | HideLabel,

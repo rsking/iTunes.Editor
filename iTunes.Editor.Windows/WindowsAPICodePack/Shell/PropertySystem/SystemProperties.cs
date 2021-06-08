@@ -24,15 +24,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)  Legacy code may treat this as VT_LPSTR.</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 2 (PIDSI_TITLE).</para>
             /// </summary>
-            public static PropertyKey Title
-            {
-                get
-                {
-                    var key = new PropertyKey(new Guid("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}"), 2);
-
-                    return key;
-                }
-            }
+            public static PropertyKey Title => new(new Guid("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}"), 2);
 
             /// <summary>
             /// Music Properties.
@@ -47,15 +39,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 11 (PIDSI_MUSIC_GENRE).</para>
                 /// </summary>
-                public static PropertyKey Genre
-                {
-                    get
-                    {
-                        PropertyKey key = new PropertyKey(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 11);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey Genre => new(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 11);
 
                 /// <summary>
                 /// Gets the album artist property key.
@@ -65,15 +49,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 13 (PIDSI_MUSIC_ALBUM_ARTIST).</para>
                 /// </summary>
-                public static PropertyKey AlbumArtist
-                {
-                    get
-                    {
-                        var key = new PropertyKey(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 13);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey AlbumArtist => new(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 13);
 
                 /// <summary>
                 /// Gets the album artist property key.
@@ -83,15 +59,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {F1FDB4AF-F78C-466C-BB05-56E92DB0B8EC}, 103 (PIDSI_MUSIC_ALBUM_ARTIST_SORT_OVERRIDE).</para>
                 /// </summary>
-                public static PropertyKey AlbumArtistSortOverride
-                {
-                    get
-                    {
-                        var key = new PropertyKey(new Guid("{F1FDB4AF-F78C-466C-BB05-56E92DB0B8EC}"), 103);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey AlbumArtistSortOverride => new(new Guid("{F1FDB4AF-F78C-466C-BB05-56E92DB0B8EC}"), 103);
 
                 /// <summary>
                 /// Gets the album title property key.
@@ -101,15 +69,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 4 (PIDSI_MUSIC_ALBUM).</para>
                 /// </summary>
-                public static PropertyKey AlbumTitle
-                {
-                    get
-                    {
-                        var key = new PropertyKey(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 4);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey AlbumTitle => new(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 4);
 
                 /// <summary>
                 /// Gets the artist property key.
@@ -119,15 +79,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 2 (PIDSI_MUSIC_ARTIST).</para>
                 /// </summary>
-                public static PropertyKey Artist
-                {
-                    get
-                    {
-                        var key = new PropertyKey(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 2);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey Artist => new(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 2);
 
                 /// <summary>
                 /// Gets the artist sort overrride property key.
@@ -137,15 +89,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR).</para>
                 /// <para>FormatID: (FMTID_MUSIC) {DEEB2DB5-0696-4CE0-94FE-A01F77A45FB5}, 102 (PIDSI_MUSIC_ARTIST).</para>
                 /// </summary>
-                public static PropertyKey ArtistSortOverride
-                {
-                    get
-                    {
-                        var key = new PropertyKey(new Guid("{DEEB2DB5-0696-4CE0-94FE-A01F77A45FB5}"), 102);
-
-                        return key;
-                    }
-                }
+                public static PropertyKey ArtistSortOverride => new(new Guid("{DEEB2DB5-0696-4CE0-94FE-A01F77A45FB5}"), 102);
             }
         }
     }

@@ -26,7 +26,7 @@ namespace MS.WindowsAPICodePack.Internal
         private static readonly object Padlock = new();
 
         // A static dictionary of delegates to get data from array's contained within PropVariants
-        private static Dictionary<Type, Action<PropVariant, Array, uint>>? vectorActions = null;
+        private static Dictionary<Type, Action<PropVariant, Array, uint>>? vectorActions;
 
         [FieldOffset(8)]
         private readonly Blob blob;
@@ -780,7 +780,8 @@ namespace MS.WindowsAPICodePack.Internal
         [StructLayout(LayoutKind.Sequential)]
         private struct Blob
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "This is required for padding")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "This is a false positive")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144", Justification = "This is required for padding")]
             public int Number;
             public IntPtr Pointer;
         }

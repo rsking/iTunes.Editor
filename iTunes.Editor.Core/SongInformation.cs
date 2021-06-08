@@ -78,22 +78,19 @@ namespace ITunes.Editor
         /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
         /// </summary>
         /// <param name="file">The file to convert.</param>
-        public static explicit operator SongInformation(TagLib.File file)
-        {
-            return file is null
-                ? throw new System.ArgumentNullException(nameof(file))
-                : new SongInformation(file.Tag.Title)
-                {
-                    Performers = file.Tag.Performers,
-                    SortPerformers = file.Tag.PerformersSort ?? file.Tag.Performers,
-                    AlbumPerformer = file.Tag.AlbumArtists.ToJoinedString(),
-                    SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
-                    Album = file.Tag.Album,
-                    Name = file.Name,
-                    Genre = file.Tag.Genres.ToJoinedString(),
-                    HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
-                };
-        }
+        public static explicit operator SongInformation(TagLib.File file) => file is null
+            ? throw new System.ArgumentNullException(nameof(file))
+            : new SongInformation(file.Tag.Title)
+            {
+                Performers = file.Tag.Performers,
+                SortPerformers = file.Tag.PerformersSort ?? file.Tag.Performers,
+                AlbumPerformer = file.Tag.AlbumArtists.ToJoinedString(),
+                SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
+                Album = file.Tag.Album,
+                Name = file.Name,
+                Genre = file.Tag.Genres.ToJoinedString(),
+                HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
+            };
 
         /// <summary>
         /// Creates a new <see cref="SongInformation" /> from a file.
