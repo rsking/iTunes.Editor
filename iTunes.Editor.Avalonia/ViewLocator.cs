@@ -36,17 +36,14 @@ namespace ITunes.Editor
                 .Replace("ViewModel", "View");
 #endif
 
-            if (name is not null
-                && Type.GetType(name) is Type type
-                && Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService(type) is Control control)
+            return name switch
             {
-                return control;
-            }
-
-            return new TextBlock { Text = $"Not Found: {name}" };
+                not null when Type.GetType(name) is Type type && Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService(type) is Control control => control,
+                _ => new TextBlock { Text = $"Not Found: {name}" },
+            };
         }
 
         /// <inheritdoc/>
-        public bool Match(object data) => data is ViewModels.ViewModelBase;
+        public bool Match(object data) => data is Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
     }
 }

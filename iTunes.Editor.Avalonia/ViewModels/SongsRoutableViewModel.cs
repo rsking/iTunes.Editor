@@ -12,8 +12,8 @@ namespace ITunes.Editor.ViewModels
     public class SongsRoutableViewModel : SongsViewModel, ReactiveUI.IRoutableViewModel
     {
         /// <inheritdoc cref="SongsViewModel"/>
-        public SongsRoutableViewModel(ReactiveUI.IScreen screen, IEventAggregator eventAggregator)
-            : base(eventAggregator) => this.HostScreen = screen;
+        public SongsRoutableViewModel(ReactiveUI.IScreen screen, Microsoft.Toolkit.Mvvm.Messaging.IMessenger messenger)
+            : base(messenger) => this.HostScreen = screen;
 
         /// <inheritdoc/>
         public string? UrlPathSegment { get; }

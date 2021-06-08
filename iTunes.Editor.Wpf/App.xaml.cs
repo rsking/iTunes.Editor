@@ -28,13 +28,13 @@ namespace ITunes.Editor
                 .ConfigureServices((_, services) =>
                 {
                     // services
-                    services.AddSingleton<IEventAggregator, EventAggregator>();
+                    services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
                     services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                     services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                     services
                         .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
                         .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model));
-                    services.AddSingleton<MahApps.Metro.Controls.Dialogs.IDialogCoordinator>(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
+                    services.AddSingleton(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
 
                     // view models
                     services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();

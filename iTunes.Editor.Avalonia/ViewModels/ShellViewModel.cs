@@ -7,7 +7,7 @@ namespace ITunes.Editor.ViewModels
     /// <summary>
     /// The shell view model.
     /// </summary>
-    public class ShellViewModel : ViewModelBase, ReactiveUI.IScreen
+    public class ShellViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, ReactiveUI.IScreen
     {
         /// <inheritdoc/>
         /// <remarks>Required by the <see cref="ReactiveUI.IScreen"/> interface.</remarks>

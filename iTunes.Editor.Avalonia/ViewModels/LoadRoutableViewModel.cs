@@ -18,8 +18,8 @@ namespace ITunes.Editor.ViewModels
             IEnumerable<ISongsProvider> loaders,
             Services.Contracts.IOpenFile openFile,
             Services.Contracts.ISelectFolder selectFolder,
-            IEventAggregator eventAggregator)
-            : base(loaders, openFile, selectFolder, eventAggregator) => this.HostScreen = screen;
+            Microsoft.Toolkit.Mvvm.Messaging.IMessenger messenger)
+            : base(loaders, openFile, selectFolder, messenger) => this.HostScreen = screen;
 
         /// <inheritdoc/>
         public string? UrlPathSegment { get; }

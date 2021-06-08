@@ -8,7 +8,7 @@ namespace ITunes.Editor.ViewModels
     /// The configure view model for <see cref="ITunesLib.ITunesSongsProvider"/>.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "This is for iTunes")]
-    public class ITunesConfigureViewModel : ViewModelBase, Models.IConfigure
+    public class ITunesConfigureViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.IConfigure
     {
         private readonly ITunesLib.ITunesSongsProvider provider;
 
@@ -28,8 +28,10 @@ namespace ITunes.Editor.ViewModels
             set
             {
                 var selectedPlaylist = this.provider.SelectedPlaylist;
-                this.SetProperty(ref selectedPlaylist, value);
-                this.provider.SelectedPlaylist = selectedPlaylist;
+                if (this.SetProperty(ref selectedPlaylist, value))
+                {
+                    this.provider.SelectedPlaylist = selectedPlaylist;
+                }
             }
         }
 
@@ -40,8 +42,10 @@ namespace ITunes.Editor.ViewModels
             set
             {
                 var updateMetadata = this.provider.UpdateMetadata;
-                this.SetProperty(ref updateMetadata, value);
-                this.provider.UpdateMetadata = updateMetadata;
+                if (this.SetProperty(ref updateMetadata, value))
+                {
+                    this.provider.UpdateMetadata = updateMetadata;
+                }
             }
         }
 
@@ -52,8 +56,10 @@ namespace ITunes.Editor.ViewModels
             set
             {
                 var setAlbumArtist = this.provider.SetAlbumArtist;
-                this.SetProperty(ref setAlbumArtist, value);
-                this.provider.SetAlbumArtist = setAlbumArtist;
+                if (this.SetProperty(ref setAlbumArtist, value))
+                {
+                    this.provider.SetAlbumArtist = setAlbumArtist;
+                }
             }
         }
 
@@ -64,8 +70,10 @@ namespace ITunes.Editor.ViewModels
             set
             {
                 var updateGrouping = this.provider.UpdateGrouping;
-                this.SetProperty(ref updateGrouping, value);
-                this.provider.UpdateGrouping = updateGrouping;
+                if (this.SetProperty(ref updateGrouping, value))
+                {
+                    this.provider.UpdateGrouping = updateGrouping;
+                }
             }
         }
 
@@ -76,8 +84,10 @@ namespace ITunes.Editor.ViewModels
             set
             {
                 var updateComments = this.provider.UpdateComments;
-                this.SetProperty(ref updateComments, value);
-                this.provider.UpdateComments = updateComments;
+                if (this.SetProperty(ref updateComments, value))
+                {
+                    this.provider.UpdateComments = updateComments;
+                }
             }
         }
     }

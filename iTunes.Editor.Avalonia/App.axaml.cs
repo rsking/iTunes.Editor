@@ -26,7 +26,7 @@ namespace ITunes.Editor
                 .ConfigureServices((_, services) =>
                 {
                     // services
-                    services.AddSingleton<IEventAggregator, EventAggregator>();
+                    services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
                     services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                     services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                     services

@@ -8,17 +8,16 @@ namespace ITunes.Editor.ViewModels
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.Toolkit.Mvvm.Messaging;
 
     /// <summary>
     /// The load view model.
     /// </summary>
-    public class LoadViewModel : ViewModelBase, Models.ILoad
+    public class LoadViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ILoad
     {
         private readonly Services.Contracts.IOpenFile openFile;
 
         private readonly Services.Contracts.ISelectFolder selectFolder;
-
-        private readonly IEventAggregator eventAggregator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadViewModel"/> class.
@@ -26,17 +25,17 @@ namespace ITunes.Editor.ViewModels
         /// <param name="loaders">The loaders.</param>
         /// <param name="openFile">The open file dialog.</param>
         /// <param name="selectFolder">The select folder dialog.</param>
-        /// <param name="eventAggregator">The event aggregator.</param>
+        /// <param name="messenger">The messenger.</param>
         public LoadViewModel(
             IEnumerable<ISongsProvider> loaders,
             Services.Contracts.IOpenFile openFile,
             Services.Contracts.ISelectFolder selectFolder,
-            IEventAggregator eventAggregator)
+            IMessenger messenger)
+            : base(messenger)
         {
             this.Providers = loaders.ToArray();
             this.openFile = openFile;
             this.selectFolder = selectFolder;
-            this.eventAggregator = eventAggregator;
         }
 
         /// <inheritdoc />
@@ -60,7 +59,7 @@ namespace ITunes.Editor.ViewModels
                     break;
             }
 
-            this.eventAggregator.Publish(new Models.SongsLoadedEvent(provider.GetTagInformationAsync()));
+            _ = this.Messenger.Send(new Models.SongsLoadedEvent(provider.GetTagInformationAsync()));
         }
     }
 }

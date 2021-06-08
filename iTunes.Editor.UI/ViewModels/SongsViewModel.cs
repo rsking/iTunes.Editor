@@ -10,11 +10,14 @@ namespace ITunes.Editor.ViewModels
     using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Toolkit.Mvvm.Messaging;
 
     /// <summary>
     /// The songs view model.
     /// </summary>
-    public class SongsViewModel : ViewModelBase, Models.ISongs
+    public class SongsViewModel :
+        Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient,
+        Models.ISongs
     {
         private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
 
@@ -33,8 +36,9 @@ namespace ITunes.Editor.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="SongsViewModel"/> class.
         /// </summary>
-        /// <param name="eventAggregator">The event aggregator.</param>
-        public SongsViewModel(IEventAggregator eventAggregator)
+        /// <param name="messenger">The messenger.</param>
+        public SongsViewModel(IMessenger messenger)
+            : base(messenger)
         {
             this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() =>
             {
@@ -47,32 +51,32 @@ namespace ITunes.Editor.ViewModels
                 return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
             });
 
-            _ = eventAggregator?.GetEvent<Models.SongsLoadedEvent>().Subscribe(async evt =>
+            this.Messenger.Register<SongsViewModel, Models.SongsLoadedEvent>(this, async (recipient, message) =>
             {
-                this.songs.Clear();
-                await foreach (var song in evt.Information.ConfigureAwait(false))
+                recipient.songs.Clear();
+                await foreach (var song in message.Information.ConfigureAwait(false))
                 {
-                    this.IsLoading = true;
+                    recipient.IsLoading = true;
                     if (song.GetMediaKind() == MediaKind.Song)
                     {
-                        this.songs.Add(song);
+                        recipient.songs.Add(song);
                     }
                 }
 
-                var query = this.songs
+                var query = recipient.songs
                     .SelectMany(SelectPerfomers)
                     .GroupBy(p => p.Performer, p => p.Song, StringComparer.Ordinal)
                     .OrderBy(g => g.Key)
                     .Select(group => new ArtistViewModel(
-                        this,
+                        recipient,
                         group.Key,
-                        this.songs.Where(song => song.AlbumPerformer?.Contains(group.Key) == true || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+                        recipient.songs.Where(song => song.AlbumPerformer?.Contains(group.Key) == true || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
 
-                this.IsLoading = false;
+                recipient.IsLoading = false;
 
                 foreach (var artist in query)
                 {
-                    this.artists.Add(artist);
+                    recipient.artists.Add(artist);
                 }
 
                 static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
