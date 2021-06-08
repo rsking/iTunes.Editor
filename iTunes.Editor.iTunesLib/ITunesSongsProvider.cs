@@ -166,6 +166,7 @@ namespace ITunes.Editor.ITunesLib
                             SortAlbumPerformer = track.SortAlbumArtist,
                             Album = track.Album,
                             Name = track.Location,
+                            Genre = track.Genre,
                             Rating = track.Rating,
                             HasLyrics = hasLyrics,
                         };

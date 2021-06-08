@@ -40,6 +40,24 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             public static class Music
             {
                 /// <summary>
+                /// Gets the genre property key.
+                /// <para>Name:     System.Music.Genre -- PKEY_Music_Genre.</para>
+                /// <para>Description:
+                /// </para>
+                /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR).</para>
+                /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 11 (PIDSI_MUSIC_GENRE).</para>
+                /// </summary>
+                public static PropertyKey Genre
+                {
+                    get
+                    {
+                        PropertyKey key = new PropertyKey(new Guid("{56A3372E-CE9C-11D2-9F0E-006097C686F6}"), 11);
+
+                        return key;
+                    }
+                }
+
+                /// <summary>
                 /// Gets the album artist property key.
                 /// <para>Name:     System.Music.AlbumArtist -- PKEY_Music_AlbumArtist.</para>
                 /// <para>Description:

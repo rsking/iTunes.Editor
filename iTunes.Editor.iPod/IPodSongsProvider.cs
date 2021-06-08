@@ -55,6 +55,7 @@ namespace ITunes.Editor.IPod
                     SortAlbumPerformer = track.AlbumArtist,
                     Album = track.Album,
                     Name = track.FileName,
+                    Genre = track.Genre,
                     Rating = (int)track.Rating,
                     HasLyrics = !track.Grouping.HasNoLyrics(),
                 };

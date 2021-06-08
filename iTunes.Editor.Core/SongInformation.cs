@@ -65,6 +65,11 @@ namespace ITunes.Editor
         public int? Rating { get; init; }
 
         /// <summary>
+        /// Gets the genre.
+        /// </summary>
+        public string? Genre { get; init; }
+
+        /// <summary>
         /// Gets a value indicating whether this instance has lyrics.
         /// </summary>
         public bool? HasLyrics { get; init; }
@@ -85,6 +90,7 @@ namespace ITunes.Editor
                     SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
                     Album = file.Tag.Album,
                     Name = file.Name,
+                    Genre = file.Tag.Genres.ToJoinedString(),
                     HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
                 };
         }

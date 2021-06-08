@@ -166,7 +166,7 @@ namespace ITunes.Editor.PList
         /// <summary>
         /// Gets the genre.
         /// </summary>
-        public string Genre => this.dict.GetString("Genre");
+        public string? Genre => this.dict.GetNullableString("Genre");
 
         /// <summary>
         /// Gets the grouping.
@@ -225,6 +225,7 @@ namespace ITunes.Editor.PList
                 SortAlbumPerformer = track.SortAlbum,
                 Album = track.Album,
                 Name = path,
+                Genre = track.Genre,
                 Rating = track.Rating,
                 HasLyrics = !track.Album.HasNoLyrics(),
             };

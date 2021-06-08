@@ -53,6 +53,7 @@ namespace ITunes.Editor.Windows
                     var albumPerformers = shellObject.Properties.GetProperty<string>(SystemProperties.System.Music.AlbumArtist);
                     var sortAlbumPerformers = shellObject.Properties.GetProperty<string>(SystemProperties.System.Music.AlbumArtistSortOverride);
                     var album = shellObject.Properties.GetProperty<string>(SystemProperties.System.Music.AlbumTitle);
+                    var genres = shellObject.Properties.GetProperty<string[]>(SystemProperties.System.Music.Genre);
 
                     var performersValue = performers.Value ?? Enumerable.Empty<string>();
                     var albumPerformersValue = albumPerformers.Value ?? default;
@@ -67,6 +68,7 @@ namespace ITunes.Editor.Windows
                             SortAlbumPerformer = sortAlbumPerformers.Value ?? albumPerformersValue,
                             Album = album.Value,
                             Name = fileInfo.FullName,
+                            Genre = genres.Value?.ToJoinedString(),
                         };
                     }
                 }
