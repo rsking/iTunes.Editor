@@ -171,8 +171,14 @@ namespace ITunes.Editor.ITunesLib
                             HasLyrics = hasLyrics,
                         };
                     }
-                    catch (System.Runtime.InteropServices.COMException exception) when (exception.Message.Contains("deleted"))
+                    catch (System.Runtime.InteropServices.COMException exception) when (exception.Message
+#if NETSTANDARD2_1_OR_GREATER
+                        .Contains("deleted", System.StringComparison.Ordinal))
+#else
+                        .Contains("deleted"))
+#endif
                     {
+                        // this has been removed from the playlist, so ignore it.
                         continue;
                     }
 
@@ -190,7 +196,7 @@ namespace ITunes.Editor.ITunesLib
             }
         }
 #else
-        public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotSupportedException("Compiled without iTunes support");
+        public System.Collections.Generic.IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default) => throw new System.NotSupportedException("Compiled without iTunes support");
 #endif
     }
 }

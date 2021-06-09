@@ -120,7 +120,7 @@ namespace ITunes.Editor
 
                 var updated = false;
                 lyrics ??= this.appleTag.Lyrics;
-                lyrics = lyrics?.Replace("\r\n", NewLine);
+                lyrics = lyrics.SafeReplace("\r\n", NewLine);
 
                 if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
                 {

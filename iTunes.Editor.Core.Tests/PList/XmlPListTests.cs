@@ -22,9 +22,13 @@ namespace ITunes.Editor.PList
         /// </summary>
         public XmlPListTests()
         {
-            using var stream = Resources.TestXml;
+            using var reader = System.Xml.XmlReader.Create(Resources.TestXml, new System.Xml.XmlReaderSettings
+            {
+                XmlResolver = default,
+                DtdProcessing = System.Xml.DtdProcessing.Ignore,
+            });
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-            var deserialized = serializer.Deserialize(stream);
+            var deserialized = serializer.Deserialize(reader);
             this.plist = (PList)deserialized!;
         }
 

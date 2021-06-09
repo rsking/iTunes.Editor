@@ -116,7 +116,7 @@ namespace ITunes.Editor.MediaInfo
         public override string? Grouping { get => this.GetString(GeneralCategory, "Grouping"); set => this.SetString(GeneralCategory, "Grouping", value); }
 
         /// <inheritdoc/>
-        public override string? Lyrics { get => this.GetString(GeneralCategory, "Lyrics")?.Replace(" / ", Environment.NewLine); set => this.SetString(GeneralCategory, "Lyrics", value?.Replace(Environment.NewLine, " / ")); }
+        public override string? Lyrics { get => this.GetString(GeneralCategory, "Lyrics").SafeReplace(" / ", Environment.NewLine); set => this.SetString(GeneralCategory, "Lyrics", value.SafeReplace(Environment.NewLine, " / ")); }
 
         /// <inheritdoc/>
         public override string[] Performers { get => this.GetStringArray(GeneralCategory, PerformerKey); set => this.SetStringArray(GeneralCategory, PerformerKey, value); }

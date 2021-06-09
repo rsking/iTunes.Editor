@@ -212,7 +212,13 @@ namespace ITunes.Editor.PList
             var path = track.Location;
             if (path is not null)
             {
-                var uri = new Uri(path.Replace(LocalHostString, string.Empty));
+                path =
+#if NETSTANDARD2_1_OR_GREATER
+                    path.Replace(LocalHostString, string.Empty, StringComparison.Ordinal);
+#else
+                    path.Replace(LocalHostString, string.Empty);
+#endif
+                var uri = new Uri(path);
                 path = System.IO.Path.GetFullPath(uri.LocalPath);
             }
 

@@ -74,7 +74,7 @@ namespace ITunes.Editor.Collections
         /// </summary>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="condition">The condition.</param>
-        protected static void PumpWait_PumpUntil(Dispatcher dispatcher, Func<bool> condition)
+        protected static void PumpWaitAndPumpUntil(Dispatcher dispatcher, Func<bool> condition)
         {
             var frame = new DispatcherFrame();
             BeginInvokePump(dispatcher, frame, condition);
@@ -97,7 +97,7 @@ namespace ITunes.Editor.Collections
             if (GetDispatcher() is Dispatcher dispatcher)
             {
                 this.lockObjWasTaken = true;
-                PumpWait_PumpUntil(dispatcher, condition);
+                PumpWaitAndPumpUntil(dispatcher, condition);
                 return;
             }
 

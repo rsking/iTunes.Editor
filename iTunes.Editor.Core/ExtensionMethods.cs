@@ -110,7 +110,13 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="tags">The tags.</param>
         /// <returns><see langword="true"/> if the tags contain the "no lyrics" tag; otherwise, <see langword="false"/>.</returns>
-        public static bool HasNoLyrics(this string? tags) => tags?.Contains(NoLyrics) == true;
+        public static bool HasNoLyrics(this string? tags) => tags
+#if NETSTANDARD2_1_OR_GREATER
+            ?.Contains(NoLyrics, StringComparison.Ordinal)
+#else
+            ?.Contains(NoLyrics)
+#endif
+            == true;
 
         /// <summary>
         /// Cleans the lyrics.
@@ -402,6 +408,49 @@ namespace ITunes.Editor
             return ExceptByIterator(first, second, keySelector, comparer);
         }
 
+        /// <summary>
+        /// Returns a value indicating whether a specified substring occurs within this string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="value">The string to seek.</param>
+        /// <returns><see langword="true"/> if <paramref name="input"/> is not <see langword="null"/> and the value parameter occurs within this string, or if value is the empty string (""); otherwise, <see langword="false"/>.</returns>
+        public static bool IsNotNullAndContains([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] this string? input, string value)
+        {
+            if (input is null)
+            {
+                return false;
+            }
+
+            return
+#if NETSTANDARD2_1_OR_GREATER
+                    input.Contains(value, StringComparison.Ordinal);
+#else
+                    input.Contains(value);
+#endif
+        }
+
+        /// <summary>
+        /// Returns a new string in which all occurrences of a specified string in the input are replaced with another specified string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="oldValue">The string to be replaced.</param>
+        /// <param name="newValue">The string to replace all occurrences of <paramref name="oldValue"/>.</param>
+        /// <returns>A string that is equivalent to <paramref name="input"/> except that all instances of <paramref name="oldValue"/> are replaced with <paramref name="newValue"/>. If oldValue is not found in the current instance, the method returns the current instance unchanged.</returns>
+        public static string? SafeReplace(this string? input, string oldValue, string? newValue)
+        {
+            if (input is null)
+            {
+                return default;
+            }
+
+            return input
+#if NETSTANDARD2_1_OR_GREATER
+                .Replace(oldValue, newValue, StringComparison.Ordinal);
+#else
+                .Replace(oldValue, newValue);
+#endif
+        }
+
         private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             var set = new HashSet<TKey>(second, comparer);
@@ -422,7 +471,12 @@ namespace ITunes.Editor
                 return tag;
             }
 
-            if (tags.Contains(tag))
+            if (tags
+#if NETSTANDARD2_1_OR_GREATER
+                .Contains(tag, StringComparison.Ordinal))
+#else
+                .Contains(tag))
+#endif
             {
                 return tags;
             }
@@ -440,7 +494,7 @@ namespace ITunes.Editor
 
         private static string? RemoveTagImpl(this string? tags, string tag)
         {
-            if (tags?.Contains(tag) == true)
+            if (tags.IsNotNullAndContains(tag))
             {
                 var grouping = tags.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
                 var index = -1;

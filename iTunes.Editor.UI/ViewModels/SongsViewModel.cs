@@ -70,7 +70,7 @@ namespace ITunes.Editor.ViewModels
                     .Select(group => new ArtistViewModel(
                         recipient,
                         group.Key,
-                        recipient.songs.Where(song => song.AlbumPerformer?.Contains(group.Key) == true || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+                        recipient.songs.Where(song => song.AlbumPerformer.IsNotNullAndContains(group.Key) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
 
                 recipient.IsLoading = false;
 

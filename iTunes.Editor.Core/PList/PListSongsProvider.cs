@@ -24,7 +24,11 @@ namespace ITunes.Editor.PList
         public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
         {
             PList plist;
-            using (var stream = System.IO.File.OpenRead(this.File))
+            var stream = System.IO.File.OpenRead(this.File);
+#if NETSTANDARD2_1_OR_GREATER
+            await
+#endif
+            using (stream)
             {
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
                 using var reader = System.Xml.XmlReader.Create(stream, new System.Xml.XmlReaderSettings

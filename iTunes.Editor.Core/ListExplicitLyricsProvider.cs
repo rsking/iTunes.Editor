@@ -32,6 +32,11 @@ namespace ITunes.Editor
         };
 
         /// <inheritdoc/>
-        public System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => new(ExplicitWords.Any(explicitWord => lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0));
+        public System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => new(ExplicitWords.Any(explicitWord =>
+#if NETSTANDARD2_1_OR_GREATER
+            lyrics.Contains(explicitWord, StringComparison.OrdinalIgnoreCase)));
+#else
+            lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0));
+#endif
     }
 }
