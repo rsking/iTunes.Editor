@@ -9,8 +9,8 @@
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       d:DataContext="{d:DesignInstance Type={x:Type vm:SongsViewModel},
                                        IsDesignTimeCreatable=False}"
-      d:DesignHeight="300"
-      d:DesignWidth="300"
+      d:DesignHeight="480"
+      d:DesignWidth="640"
       ShowsNavigationUI="False"
       mc:Ignorable="d">
     <Grid>
@@ -18,12 +18,13 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MaxWidth="200" />
         </Grid.ColumnDefinitions>
         <TreeView Grid.RowSpan="2"
                   Grid.Column="0"
@@ -57,6 +58,11 @@
                            Grid.Column="1"
                            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                            SelectedObject="{Binding SelectedTag}" />
+        <TextBlock Grid.Row="2"
+               Text="{Binding Progress, Mode=OneWay}" />
+        <ProgressBar Grid.Row="2"
+                 Grid.Column="1"
+                 Value="{Binding Percentage, Mode=OneWay}" />
         <Grid Grid.RowSpan="3"
               Grid.ColumnSpan="2"
               Background="#44CCCCCC"
