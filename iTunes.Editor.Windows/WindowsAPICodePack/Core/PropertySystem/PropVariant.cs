@@ -11,7 +11,7 @@ namespace MS.WindowsAPICodePack.Internal
     using Microsoft.WindowsAPICodePack.Resources;
     using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-#pragma warning disable RCS1130, S3265
+#pragma warning disable CS0618, RCS1130, S3265
     /// <summary>Represents the OLE struct PROPVARIANT. This class is intended for internal use only.</summary>
     /// <remarks>
     /// Originally sourced from http://blogs.msdn.com/adamroot/pages/interop-with-propvariants-in-net.aspx and modified to support additional
@@ -785,6 +785,6 @@ namespace MS.WindowsAPICodePack.Internal
             public int Number;
             public IntPtr Pointer;
         }
-#pragma warning restore RCS1130, S3265
+#pragma warning restore CS0618, RCS1130, S3265
     }
 }

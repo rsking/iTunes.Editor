@@ -8,6 +8,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     using System.Runtime.InteropServices;
     using MS.WindowsAPICodePack.Internal;
 
+#pragma warning disable RCS1222
+#pragma warning disable IDE0079
+#pragma warning disable CS0618
     /// <summary>Defines the shell property description information for a property.</summary>
     public class ShellPropertyDescription : IDisposable
     {
@@ -68,7 +71,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 if (this.nativePropertyDescription is null)
                 {
                     var guid = new Guid(ShellIIDGuid.IPropertyDescription);
-                    PropertySystemNativeMethods.PSGetPropertyDescription(ref this.propertyKey, ref guid, out this.nativePropertyDescription);
+                    _ = PropertySystemNativeMethods.PSGetPropertyDescription(ref this.propertyKey, ref guid, out this.nativePropertyDescription);
                 }
 
                 return this.nativePropertyDescription;
@@ -99,4 +102,5 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
         }
     }
+#pragma warning restore CS0618, IDE0079, RCS1222
 }

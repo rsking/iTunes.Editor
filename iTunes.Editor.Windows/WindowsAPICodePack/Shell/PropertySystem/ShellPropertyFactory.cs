@@ -35,6 +35,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <summary>Converts VarEnum to its associated .net Type.</summary>
         /// <param name="varEnumType">VarEnum value.</param>
         /// <returns>Associated .net equivelent.</returns>
+#pragma warning disable RCS1222
+#pragma warning disable IDE0079
+#pragma warning disable CS0618
         public static Type VarEnumToSystemType(VarEnum varEnumType) => varEnumType switch
         {
             VarEnum.VT_EMPTY or VarEnum.VT_NULL => typeof(object),
@@ -69,6 +72,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR => typeof(string[]),
             _ => typeof(object),
         };
+#pragma warning restore CS0618, IDE0079, RCS1222
 
         // Creates an expression for the specific constructor of the given type.
         private static Func<PropertyKey, ShellPropertyDescription, object, IShellProperty> ExpressConstructor(Type type, Type[] argTypes)

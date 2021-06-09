@@ -9,7 +9,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     using System.Runtime.InteropServices;
     using MS.WindowsAPICodePack.Internal;
 
-#pragma warning disable MA0048, SA1600, SA1649
+#pragma warning disable CS0618, MA0048, SA1600, SA1649
     [ComImport]
     [Guid(ShellIIDGuid.IPropertyDescription)]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -181,5 +181,5 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Commit();
     }
-#pragma warning restore MA0048, SA1600, SA1649
+#pragma warning restore CS0618, MA0048, SA1600, SA1649
 }

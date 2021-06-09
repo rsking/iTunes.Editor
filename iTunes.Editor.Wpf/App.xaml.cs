@@ -65,7 +65,7 @@ namespace ITunes.Editor
                 if (navigationWindow.Content is null)
                 {
                     navigationWindow.NavigationFailed += this.OnNavigationFailed;
-                    navigationWindow.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
+                    _ = navigationWindow.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
                 }
 
                 this.MainWindow.Activate();
@@ -96,7 +96,7 @@ namespace ITunes.Editor
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
+                _ = rootFrame.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
             }
 
             // Ensure the current window is active

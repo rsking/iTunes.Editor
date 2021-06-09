@@ -145,15 +145,26 @@ namespace ITunes.Editor.ITunesLib
                             var original = track.Comment;
                             var comment = original switch
                             {
-                                _ when original.StartsWith(By, System.StringComparison.Ordinal) => string.Concat(By.ToLowerInvariant(), original.Substring(By.Length)),
-                                _ when original.StartsWith(From, System.StringComparison.Ordinal) => string.Concat(From.ToLowerInvariant(), original.Substring(From.Length)),
-                                _ when original.StartsWith(Produced, System.StringComparison.Ordinal) => string.Concat(Produced.ToLowerInvariant(), original.Substring(Produced.Length)),
+                                _ when original.StartsWith(By, System.StringComparison.Ordinal) => LowerPrefix(original, By),
+                                _ when original.StartsWith(From, System.StringComparison.Ordinal) => LowerPrefix(original, From),
+                                _ when original.StartsWith(Produced, System.StringComparison.Ordinal) => LowerPrefix(original, Produced),
                                 _ => original,
                             };
 
                             if (!string.Equals(comment, original, System.StringComparison.Ordinal))
                             {
                                 track.Comment = comment ?? string.Empty;
+                            }
+
+                            static string LowerPrefix(string original, string prefix)
+                            {
+                                return string.Concat(
+                                    prefix.ToLowerInvariant(),
+#if NETSTANDARD2_1_OR_GREATER
+                                    original[prefix.Length..]);
+#else
+                                    original.Substring(prefix.Length));
+#endif
                             }
                         }
 

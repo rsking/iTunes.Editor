@@ -65,7 +65,13 @@ namespace ITunes.Editor.MediaInfo
                 }
 
                 var key = line.Substring(0, index).Trim();
-                var value = line.Substring(index + 1).Trim();
+                var value =
+#if NETSTANDARD2_1_OR_GREATER
+                    line[(index + 1)..]
+#else
+                    line.Substring(index + 1)
+#endif
+                    .Trim();
 
                 if (currentMainValue is null)
                 {

@@ -16,11 +16,6 @@ namespace ITunes.Editor
     /// </summary>
     public class ViewLocator : IDataTemplate
     {
-        /// <summary>
-        /// Gets a value indicating whether this instance support recycling.
-        /// </summary>
-        public bool SupportsRecycling => false;
-
         /// <inheritdoc/>
         public IControl Build(object param)
         {

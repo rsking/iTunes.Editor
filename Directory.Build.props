@@ -18,9 +18,9 @@
   <PropertyGroup Label="Versions">
     <DotnetCoreVersion>5.0.0</DotnetCoreVersion>
     <RestSharpVersion>106.11</RestSharpVersion>
-    <PropertyChangedVersion>3.3.*</PropertyChangedVersion>
+    <PropertyChangedVersion>3.4.*</PropertyChangedVersion>
     <HtmlAgilityPackBaseVersion>1.11.0</HtmlAgilityPackBaseVersion>
-    <HtmlAgilityPackVersion>1.11.32</HtmlAgilityPackVersion>
+    <HtmlAgilityPackVersion>1.11.34</HtmlAgilityPackVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -36,7 +36,7 @@ namespace ITunes.Editor.Services
                 }
 
                 // see if any of the other has this as a parent
-                return windows.FirstOrDefault(x => window.Equals(x.Parent)) ?? window;
+                return windows.FirstOrDefault(x => x.Parent is not null && window.Equals(x.Parent)) ?? window;
             }
 
             static global::Avalonia.Controls.Window? GetWindowFromControl(global::Avalonia.Controls.IControl control)

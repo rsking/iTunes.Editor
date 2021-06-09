@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Versions">
-    <AvaloniaVersion>0.10.0</AvaloniaVersion>
+    <AvaloniaVersion>0.10.6</AvaloniaVersion>
   </PropertyGroup>
 
   <ItemGroup>
