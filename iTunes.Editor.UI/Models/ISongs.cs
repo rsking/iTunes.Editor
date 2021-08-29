@@ -14,12 +14,12 @@ namespace ITunes.Editor.Models
         /// <summary>
         /// Gets a command to update the lyrics.
         /// </summary>
-        System.Windows.Input.ICommand UpdateLyrics { get; }
+        Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand UpdateLyricsCommand { get; }
 
         /// <summary>
         /// Gets a command to update the composers.
         /// </summary>
-        System.Windows.Input.ICommand UpdateComposers { get; }
+        Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand UpdateComposersCommand { get; }
 
         /// <summary>
         /// Gets the songs.

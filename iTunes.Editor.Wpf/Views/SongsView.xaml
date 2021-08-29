@@ -48,21 +48,20 @@
             </TreeView.ItemTemplate>
         </TreeView>
         <StackPanel Grid.Column="1">
-            <Button Command="{Binding UpdateLyrics}" Content="Update Lyrics" />
+            <Button Command="{Binding UpdateLyricsCommand}" Content="Update Lyrics" />
             <CheckBox Content="Force Lyrics Search" IsChecked="{Binding ForceLyricsSearch}" />
             <CheckBox Content="Force Lyrics Update" IsChecked="{Binding ForceLyricsUpdate}" />
-            <Button Command="{Binding UpdateComposers}" Content="Update Composers" />
+            <Button Command="{Binding UpdateComposersCommand}" Content="Update Composers" />
             <CheckBox Content="Force Composers Search" IsChecked="{Binding ForceComposersSearch}" />
         </StackPanel>
         <xctk:PropertyGrid Grid.Row="1"
                            Grid.Column="1"
                            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                            SelectedObject="{Binding SelectedTag}" />
-        <TextBlock Grid.Row="2"
-               Text="{Binding Progress, Mode=OneWay}" />
+        <TextBlock Grid.Row="2" Text="{Binding Progress, Mode=OneWay}" />
         <ProgressBar Grid.Row="2"
-                 Grid.Column="1"
-                 Value="{Binding Percentage, Mode=OneWay}" />
+                     Grid.Column="1"
+                     Value="{Binding Percentage, Mode=OneWay}" />
         <Grid Grid.RowSpan="3"
               Grid.ColumnSpan="2"
               Background="#44CCCCCC"

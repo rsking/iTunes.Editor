@@ -28,7 +28,7 @@ namespace ITunes.Editor.Views
 
             if (this.DataContext is Models.ILoad load)
             {
-                this.NavigationService.Navigate(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<SongsView>());
+                _ = this.NavigationService.Navigate(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<SongsView>());
                 await load.LoadAsync(provider).ConfigureAwait(true);
             }
         }

@@ -10,14 +10,13 @@ namespace ITunes.Editor.ViewModels
     using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Toolkit.Mvvm.Input;
     using Microsoft.Toolkit.Mvvm.Messaging;
 
     /// <summary>
     /// The songs view model.
     /// </summary>
-    public class SongsViewModel :
-        Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient,
-        Models.ISongs
+    public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ISongs, IRecipient<Models.SongsLoadedEvent>
     {
         private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
 
@@ -27,10 +26,13 @@ namespace ITunes.Editor.ViewModels
 
         private TagLib.File? selectedFile;
 
+        [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
         private string? progress;
 
+        [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
         private int percentage;
 
+        [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
         private bool isLoading;
 
         /// <summary>
@@ -38,89 +40,7 @@ namespace ITunes.Editor.ViewModels
         /// </summary>
         /// <param name="messenger">The messenger.</param>
         public SongsViewModel(IMessenger messenger)
-            : base(messenger)
-        {
-            this.UpdateLyrics = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() =>
-            {
-                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
-                return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceLyricsSearch, this.ForceLyricsUpdate));
-            });
-            this.UpdateComposers = new Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand(() =>
-            {
-                var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
-                return UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
-            });
-
-            this.Messenger.Register<SongsViewModel, Models.SongsLoadedEvent>(this, async (recipient, message) =>
-            {
-                recipient.songs.Clear();
-                await foreach (var song in message.Information.ConfigureAwait(false))
-                {
-                    recipient.IsLoading = true;
-                    if (song.GetMediaKind() == MediaKind.Song)
-                    {
-                        recipient.songs.Add(song);
-                    }
-                }
-
-                var query = recipient.songs
-                    .SelectMany(SelectPerfomers)
-                    .GroupBy(p => p.Performer, p => p.Song, StringComparer.Ordinal)
-                    .OrderBy(g => g.Key)
-                    .Select(group => new ArtistViewModel(
-                        recipient,
-                        group.Key,
-                        recipient.songs.Where(song => song.AlbumPerformer.IsNotNullAndContains(group.Key) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
-
-                recipient.IsLoading = false;
-
-                foreach (var artist in query)
-                {
-                    recipient.artists.Add(artist);
-                }
-
-                static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
-                {
-                    return song.AlbumPerformer is not null
-                        ? SelectPerfomerImpl(song.AlbumPerformer, song)
-                        : SelectPerfomersImpl(song.Performers, song);
-
-                    static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
-                    {
-                        return performers.Select(performer => (performer, song));
-                    }
-
-                    static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomerImpl(string performer, SongInformation song)
-                    {
-                        yield return (performer, song);
-                    }
-                }
-            });
-
-            async Task UpdateSongsAsync(Func<SongInformation, ValueTask<SongInformation>> processor)
-            {
-                var selectedSongs = this.GetSelectedSongs().ToArray();
-                var count = selectedSongs.Length;
-                var current = 0;
-                foreach (var song in selectedSongs)
-                {
-                    // update the UI
-                    this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
-                    var currentPercentage = 100 * current / count;
-                    if (this.percentage != currentPercentage)
-                    {
-                        this.Percentage = currentPercentage;
-                    }
-
-                    _ = await processor(song).ConfigureAwait(false);
-
-                    current++;
-                }
-
-                this.Percentage = 0;
-                this.Progress = default;
-            }
-        }
+            : base(messenger) => this.Messenger.RegisterAll(this);
 
         /// <inheritdoc/>
         public System.Collections.Generic.IEnumerable<SongInformation> Songs => this.songs;
@@ -157,33 +77,6 @@ namespace ITunes.Editor.ViewModels
         /// </summary>
         public System.Collections.Generic.IEnumerable<Models.IArtist> Artists => this.artists;
 
-        /// <inheritdoc/>
-        public System.Windows.Input.ICommand UpdateLyrics { get; }
-
-        /// <inheritdoc/>
-        public System.Windows.Input.ICommand UpdateComposers { get; }
-
-        /// <inheritdoc/>
-        public bool IsLoading
-        {
-            get => this.isLoading;
-            protected set => this.SetProperty(ref this.isLoading, value);
-        }
-
-        /// <inheritdoc/>
-        public string? Progress
-        {
-            get => this.progress;
-            protected set => this.SetProperty(ref this.progress, value);
-        }
-
-        /// <inheritdoc/>
-        public int Percentage
-        {
-            get => this.percentage;
-            protected set => this.SetProperty(ref this.percentage, value);
-        }
-
         /// <summary>
         /// Gets or sets a value indicating whether to force the lyrics search.
         /// </summary>
@@ -198,6 +91,92 @@ namespace ITunes.Editor.ViewModels
         /// Gets or sets a value indicating whether to force the composers search.
         /// </summary>
         public bool ForceComposersSearch { get; set; }
+
+        /// <inheritdoc />
+        async void IRecipient<Models.SongsLoadedEvent>.Receive(Models.SongsLoadedEvent message)
+        {
+            var recipient = this;
+            recipient.songs.Clear();
+            await foreach (var song in message.Information.ConfigureAwait(false))
+            {
+                recipient.IsLoading = true;
+                if (song.GetMediaKind() == MediaKind.Song)
+                {
+                    recipient.songs.Add(song);
+                }
+            }
+
+            var query = recipient.songs
+                .SelectMany(SelectPerfomers)
+                .GroupBy(p => p.Performer, p => p.Song, StringComparer.Ordinal)
+                .OrderBy(g => g.Key)
+                .Select(group => new ArtistViewModel(
+                    recipient,
+                    group.Key,
+                    recipient.songs.Where(song => song.AlbumPerformer.IsNotNullAndContains(group.Key) || song.Performers.Contains(group.Key, StringComparer.Ordinal))));
+
+            recipient.IsLoading = false;
+
+            foreach (var artist in query)
+            {
+                recipient.artists.Add(artist);
+            }
+
+            static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
+            {
+                return song.AlbumPerformer is not null
+                    ? SelectPerfomerImpl(song.AlbumPerformer, song)
+                    : SelectPerfomersImpl(song.Performers, song);
+
+                static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
+                {
+                    return performers.Select(performer => (performer, song));
+                }
+
+                static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomerImpl(string performer, SongInformation song)
+                {
+                    yield return (performer, song);
+                }
+            }
+        }
+
+        [ICommand]
+        private Task UpdateLyricsAsync()
+        {
+            var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
+            return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceLyricsSearch, this.ForceLyricsUpdate));
+        }
+
+        [ICommand]
+        private Task UpdateComposersAsync()
+        {
+            var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
+            return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
+        }
+
+        private async Task UpdateSongsAsync(Func<SongInformation, ValueTask<SongInformation>> processor)
+        {
+            var selectedSongs = this.GetSelectedSongs().ToArray();
+            var count = selectedSongs.Length;
+            var current = 0;
+            foreach (var song in selectedSongs)
+            {
+                // update the UI
+                this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
+                var currentPercentage = 100 * current / count;
+                if (this.percentage != currentPercentage)
+                {
+                    this.Percentage = currentPercentage;
+                }
+
+                _ = await processor(song).ConfigureAwait(false);
+
+                current++;
+            }
+
+            this.Percentage = 0;
+            this.Progress = default;
+        }
 
         private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
         {
@@ -252,25 +231,15 @@ namespace ITunes.Editor.ViewModels
             }
         }
 
-        private abstract class SelectableViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISelectable
+        private abstract partial class SelectableViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISelectable
         {
+            [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
             private bool isSelected;
 
+            [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
             private bool isExpanded;
 
             protected SelectableViewModel(Models.ISelectable? parent) => this.Parent = parent;
-
-            public bool IsSelected
-            {
-                get => this.isSelected;
-                set => this.SetProperty(ref this.isSelected, value);
-            }
-
-            public bool IsExpanded
-            {
-                get => this.isExpanded;
-                set => this.SetProperty(ref this.isExpanded, value);
-            }
 
             public System.Collections.Generic.IEnumerable<Models.ISelectable> Children { get; protected internal set; } = Enumerable.Empty<Models.ISelectable>();
 
