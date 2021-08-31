@@ -251,21 +251,21 @@ namespace ITunes.Editor.Collections
         public int Add(object? value)
         {
             var val = (T)value!;
-            this.Add(val);
+            _ = this.Add(val);
             return this.IndexOf(val);
         }
 
         /// <inheritdoc/>
-        public bool Contains(object? value) => this.Contains((T)value!);
+        public bool Contains(object? value) => this.Contains((T?)value);
 
         /// <inheritdoc/>
-        public int IndexOf(object? value) => this.IndexOf((T)value!);
+        public int IndexOf(object? value) => this.IndexOf((T?)value);
 
         /// <inheritdoc/>
-        public void Insert(int index, object? value) => this.Insert(index, (T)value!);
+        public void Insert(int index, object? value) => this.Insert(index, (T?)value);
 
         /// <inheritdoc/>
-        public void Remove(object? value) => this.Remove((T)value!);
+        public void Remove(object? value) => this.Remove((T?)value);
 
         /// <inheritdoc/>
         void IList.RemoveAt(int index) => this.RemoveAt(index);
@@ -274,16 +274,16 @@ namespace ITunes.Editor.Collections
         public void CopyTo(Array array, int index) => this.items.ToArray().CopyTo(array, index);
 
         /// <inheritdoc/>
-        public int IndexOf(T item) => this.items.IndexOf(item);
+        public int IndexOf(T? item) => this.items.IndexOf(item!);
 
         /// <inheritdoc/>
-        void IList<T>.Insert(int index, T item) => this.Insert(index, item);
+        void IList<T>.Insert(int index, T? item) => this.Insert(index, item!);
 
         /// <inheritdoc/>
         void IList<T>.RemoveAt(int index) => this.RemoveAt(index);
 
         /// <inheritdoc/>
-        void ICollection<T>.Add(T item) => this.Add(item);
+        void ICollection<T>.Add(T? item) => this.Add(item!);
 
         /// <inheritdoc/>
         void IList.Clear() => this.Clear();
@@ -292,15 +292,15 @@ namespace ITunes.Editor.Collections
         void ICollection<T>.Clear() => this.Clear();
 
         /// <inheritdoc/>
-        public bool Contains(T item) => this.items.Contains(item);
+        public bool Contains(T? item) => this.items.Contains(item!);
 
         /// <inheritdoc/>
         public void CopyTo(T[] array, int arrayIndex) => this.items.CopyTo(array, arrayIndex);
 
         /// <inheritdoc/>
-        public bool Remove([System.Diagnostics.CodeAnalysis.MaybeNull] T item)
+        public bool Remove(T? item)
         {
-            if (!this.items.Contains(item))
+            if (item is null || !this.items.Contains(item))
             {
                 return false;
             }
@@ -339,9 +339,9 @@ namespace ITunes.Editor.Collections
         public int IndexOf(T item, int index, int count, IEqualityComparer<T>? equalityComparer) => this.items.IndexOf(item, index, count, equalityComparer);
 
         /// <inheritdoc/>
-        public IImmutableList<T> Insert(int index, [System.Diagnostics.CodeAnalysis.MaybeNull] T element)
+        public IImmutableList<T> Insert(int index, T? element)
         {
-            this.items = this.items.Insert(index, element);
+            this.items = this.items.Insert(index, element!);
             this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, element, index));
             return this;
         }
@@ -361,7 +361,7 @@ namespace ITunes.Editor.Collections
         public IImmutableList<T> Remove(T value, IEqualityComparer<T>? equalityComparer)
         {
             var index = this.items.IndexOf(value, equalityComparer);
-            this.RemoveAt(index);
+            _ = this.RemoveAt(index);
             return this;
         }
 
@@ -402,15 +402,15 @@ namespace ITunes.Editor.Collections
         public IImmutableList<T> Replace(T oldValue, T newValue, IEqualityComparer<T>? equalityComparer)
         {
             var index = this.items.IndexOf(oldValue, equalityComparer);
-            this.SetItem(index, newValue);
+            _ = this.SetItem(index, newValue);
             return this;
         }
 
         /// <inheritdoc/>
-        public IImmutableList<T> SetItem(int index, [System.Diagnostics.CodeAnalysis.MaybeNull] T value)
+        public IImmutableList<T> SetItem(int index, T? value)
         {
             var oldItem = this.items[index];
-            this.items = this.items.SetItem(index, value);
+            this.items = this.items.SetItem(index, value!);
             this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, oldItem, value, index));
             return this;
         }
