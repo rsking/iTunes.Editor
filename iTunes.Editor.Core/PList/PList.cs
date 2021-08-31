@@ -137,7 +137,7 @@ namespace ITunes.Editor.PList
             this.Version = System.Version.Parse(reader.GetAttribute("version"));
 
             // read through the reader
-            if (!reader.Read())
+            if (!ReadWhileWhiteSpace(reader))
             {
                 return;
             }
@@ -150,9 +150,7 @@ namespace ITunes.Editor.PList
 
             this.DictionaryImplementation = ReadDictionary(reader);
 
-            reader.Read();
-
-            if (string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
+            if (ReadWhileWhiteSpace(reader) && string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
             {
                 return;
             }
@@ -182,14 +180,7 @@ namespace ITunes.Editor.PList
             string? key = null;
             object? value = null;
 
-            void AddToDictionary()
-            {
-                dictionary.Add(key!, value!);
-                key = null;
-                value = null;
-            }
-
-            while (reader.Read())
+            while (ReadWhileWhiteSpace(reader))
             {
                 if (string.Equals(reader.Name, DictionaryElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
                 {
@@ -198,19 +189,26 @@ namespace ITunes.Editor.PList
 
                 if (string.Equals(reader.Name, KeyElementName, System.StringComparison.Ordinal))
                 {
-                    reader.Read();
+                    _ = ReadWhileWhiteSpace(reader);
                     if (key is not null)
                     {
                         AddToDictionary();
                     }
 
                     key = reader.Value;
-                    reader.Read();
+                    _ = ReadWhileWhiteSpace(reader);
                     continue;
                 }
 
                 value = ReadValue(reader);
                 AddToDictionary();
+
+                void AddToDictionary()
+                {
+                    dictionary.Add(key!, value!);
+                    key = null;
+                    value = null;
+                }
             }
 
             return dictionary;
@@ -218,72 +216,92 @@ namespace ITunes.Editor.PList
 
         private static object? ReadValue(XmlReader reader)
         {
-            switch (reader.Name)
+            return reader.Name switch
             {
-                case TrueElementName:
-                    return true;
-                case FalseElementName:
-                    return false;
-                case IntegerElementName:
-                    reader.Read();
-                    var longValue = long.Parse(reader.Value, CultureInfo.InvariantCulture);
-                    reader.Read();
-                    return longValue;
-                case RealElementName:
-                    reader.Read();
-                    var doubleValue = double.Parse(reader.Value, CultureInfo.InvariantCulture);
-                    reader.Read();
-                    return doubleValue;
-                case StringElementName:
-                    // read until the end
-                    var builder = new System.Text.StringBuilder();
-                    var first = true;
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType == XmlNodeType.EndElement)
-                        {
-                            return builder.ToString();
-                        }
+                TrueElementName => true,
+                FalseElementName => false,
+                IntegerElementName => ReadInteger(reader),
+                RealElementName => ReadDouble(reader),
+                StringElementName => ReadString(reader),
+                DateElementName => ReadDate(reader),
+                DictionaryElementName => ReadDictionary(reader),
+                ArrayElementName => ReadArray(reader),
+                DataElementName => ReadData(reader),
+                _ => throw new System.ArgumentException(Properties.Resources.InvalidPListValueType, nameof(reader)),
+            };
 
-                        if (!first)
-                        {
-                            builder.AppendLine();
-                        }
-
-                        first = false;
-                        builder.Append(reader.Value);
-                    }
-
-                    return first ? null : builder.ToString();
-                case DateElementName:
-                    reader.Read();
-                    var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
-                    reader.Read();
-                    return dateValue;
-                case DictionaryElementName:
-                    return ReadDictionary(reader);
-                case ArrayElementName:
-                    var list = new List<object?>();
-
-                    while (reader.Read())
-                    {
-                        if (string.Equals(reader.Name, ArrayElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
-                        {
-                            break;
-                        }
-
-                        list.Add(ReadValue(reader));
-                    }
-
-                    return list.ToArray();
-                case DataElementName:
-                    reader.Read();
-                    var dataValue = System.Convert.FromBase64String(reader.Value);
-                    reader.Read();
-                    return dataValue;
+            static long ReadInteger(XmlReader reader)
+            {
+                _ = ReadWhileWhiteSpace(reader);
+                var longValue = long.Parse(reader.Value, CultureInfo.InvariantCulture);
+                _ = ReadWhileWhiteSpace(reader);
+                return longValue;
             }
 
-            throw new System.ArgumentException(Properties.Resources.InvalidPListValueType, nameof(reader));
+            static double ReadDouble(XmlReader reader)
+            {
+                _ = ReadWhileWhiteSpace(reader);
+                var doubleValue = double.Parse(reader.Value, CultureInfo.InvariantCulture);
+                _ = ReadWhileWhiteSpace(reader);
+                return doubleValue;
+            }
+
+            static string? ReadString(XmlReader reader)
+            {
+                // read until the end
+                var builder = new System.Text.StringBuilder();
+                var first = true;
+                while (ReadWhileWhiteSpace(reader))
+                {
+                    if (reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        return builder.ToString();
+                    }
+
+                    if (!first)
+                    {
+                        _ = builder.AppendLine();
+                    }
+
+                    first = false;
+                    _ = builder.Append(reader.Value);
+                }
+
+                return first ? null : builder.ToString();
+            }
+
+            static System.DateTime ReadDate(XmlReader reader)
+            {
+                _ = ReadWhileWhiteSpace(reader);
+                var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
+                _ = ReadWhileWhiteSpace(reader);
+                return dateValue;
+            }
+
+            static object?[] ReadArray(XmlReader reader)
+            {
+                var list = new List<object?>();
+
+                while (ReadWhileWhiteSpace(reader))
+                {
+                    if (string.Equals(reader.Name, ArrayElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        break;
+                    }
+
+                    list.Add(ReadValue(reader));
+                }
+
+                return list.ToArray();
+            }
+
+            static byte[] ReadData(XmlReader reader)
+            {
+                _ = ReadWhileWhiteSpace(reader);
+                var dataValue = System.Convert.FromBase64String(reader.Value);
+                _ = ReadWhileWhiteSpace(reader);
+                return dataValue;
+            }
         }
 
         /// <summary>
@@ -368,6 +386,21 @@ namespace ITunes.Editor.PList
                 var byteValue = (byte[])value;
                 writer.WriteElementString(DataElementName, System.Convert.ToBase64String(byteValue));
             }
+        }
+
+        private static bool ReadWhileWhiteSpace(XmlReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Whitespace)
+                {
+                    continue;
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
