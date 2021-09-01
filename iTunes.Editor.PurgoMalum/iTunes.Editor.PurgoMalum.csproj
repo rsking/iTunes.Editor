@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RestSharp" Version="$(RestSharpVersion).*" />
+    <PackageReference Include="RestSharp" Version="$(RestSharpBaseVersion)" />
   </ItemGroup>
 
   <ItemGroup>

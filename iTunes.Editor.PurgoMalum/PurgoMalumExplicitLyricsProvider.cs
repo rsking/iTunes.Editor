@@ -23,6 +23,6 @@ namespace ITunes.Editor.PurgoMalum
             .AddHeader("Accept", "text/html, application/xhtml+xml, application/xml, text/plain")
             .AddParameter("text", lyrics);
 
-        private static bool? ParseResponse(IRestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : (bool?)null;
+        private static bool? ParseResponse(IRestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : null;
     }
 }

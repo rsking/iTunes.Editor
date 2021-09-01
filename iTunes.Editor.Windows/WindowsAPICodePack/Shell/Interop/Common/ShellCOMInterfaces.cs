@@ -8,7 +8,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Runtime.InteropServices.ComTypes;
-    using System.Text;
     using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
     using MS.WindowsAPICodePack.Internal;
 

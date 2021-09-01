@@ -21,7 +21,7 @@ namespace ITunes.Editor.PList
             var header = stream.ReadByte(offsetTable[index]);
             return (header & 0xF0) switch
             {
-                0 => (header == 0) ? (object?)null : header == 9, // boolean, If the byte is 0 return null, 9 return true, 8 return false
+                0 => (header == 0) ? null : header == 9, // boolean, If the byte is 0 return null, 9 return true, 8 return false
                 0x10 => ReadInt64(stream, offsetTable[index]), // int64
                 0x20 => ReadDouble(stream, offsetTable[index]), // double
                 0x30 => ReadDateTime(stream, offsetTable[index]), // date time

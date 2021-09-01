@@ -15,7 +15,6 @@ namespace ITunes.Editor.Collections
     /// <summary>
     /// Observable collection object.
     /// </summary>
-    [PropertyChanged.DoNotNotify]
     public abstract class ObservableCollectionObject : INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly object lockObj = new();

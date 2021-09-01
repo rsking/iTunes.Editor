@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Movere" Version="0.2.0-build.336" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>

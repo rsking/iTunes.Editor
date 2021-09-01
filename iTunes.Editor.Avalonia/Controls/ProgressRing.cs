@@ -99,8 +99,8 @@ namespace ITunes.Editor.Controls
         protected override void OnApplyTemplate(global::Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
-            double actualMaxSideLength = Math.Min(this.Width, this.Height);
-            double actialEllipseDiameter = 0.1 * actualMaxSideLength;
+            var actualMaxSideLength = Math.Min(this.Width, this.Height);
+            var actialEllipseDiameter = 0.1 * actualMaxSideLength;
             if (actualMaxSideLength <= 40)
             {
                 actialEllipseDiameter++;

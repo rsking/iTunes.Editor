@@ -8,7 +8,6 @@ namespace ITunes.Editor
 {
     using global::Avalonia;
     using global::Avalonia.ReactiveUI;
-    using Microsoft.Extensions.DependencyInjection;
     using Movere;
 
     /// <summary>

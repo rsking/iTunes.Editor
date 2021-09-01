@@ -54,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.HappiDev", "i
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.Windows", "iTunes.Editor.Windows\iTunes.Editor.Windows.csproj", "{5E106CC1-9C65-4673-B1A9-82B321856038}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunes.Editor.UI.Configure", "iTunes.Editor.UI.Configure\iTunes.Editor.UI.Configure.csproj", "{C9E0323F-B0A7-43DE-BABF-D10932289348}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTunes.Editor.UI.Configure", "iTunes.Editor.UI.Configure\iTunes.Editor.UI.Configure.csproj", "{C9E0323F-B0A7-43DE-BABF-D10932289348}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

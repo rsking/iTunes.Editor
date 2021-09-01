@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.8.*" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.2" />
     <PackageReference Include="IsExternalInit" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

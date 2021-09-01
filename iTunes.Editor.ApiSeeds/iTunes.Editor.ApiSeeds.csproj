@@ -11,7 +11,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
-    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion).*" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpBaseVersion)" />
   </ItemGroup>
 
   <ItemGroup>

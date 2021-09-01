@@ -19,6 +19,7 @@
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
     <PackageReference Include="System.CommandLine.Hosting" Version="$(CommandLineVersion)" />
     <PackageReference Include="System.CommandLine.Rendering" Version="$(CommandLineVersion)" />
   </ItemGroup>
