@@ -62,7 +62,7 @@ internal static class DialogExtensions
     {
         var split = filter.Split('|');
         var displayName = split[0];
-        var index = displayName.IndexOf("(", System.StringComparison.OrdinalIgnoreCase);
+        var index = displayName.IndexOf("(", StringComparison.OrdinalIgnoreCase);
         if (index > 0)
         {
             displayName =
@@ -78,7 +78,7 @@ internal static class DialogExtensions
         // get the extensions
         if (split.Length > 1)
         {
-            foreach (var extension in split[1].Split(';').Select(value => System.IO.Path.GetExtension(value)?.TrimStart('.')))
+            foreach (var extension in split[1].Split(';').Select(value => Path.GetExtension(value)?.TrimStart('.')))
             {
                 dialogFilter.Extensions.Add(extension);
             }

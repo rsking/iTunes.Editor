@@ -139,8 +139,8 @@ public class HappiDevLyricsProvider : ILyricsProvider
 
                 static bool CheckName(string? first, string? second)
                 {
-                    return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
+                    return string.Equals(first, second, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(Sanitise(first), Sanitise(second), StringComparison.OrdinalIgnoreCase);
 
                     static string? Sanitise(string? input)
                     {

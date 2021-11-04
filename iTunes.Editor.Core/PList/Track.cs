@@ -215,7 +215,7 @@ internal class Track
                     path.Replace(LocalHostString, string.Empty);
 #endif
             var uri = new Uri(path);
-            path = System.IO.Path.GetFullPath(uri.LocalPath);
+            path = Path.GetFullPath(uri.LocalPath);
         }
 
         var artist = track.Artist.FromJoinedString().ToArray();

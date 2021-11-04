@@ -40,7 +40,7 @@ public static class ExtensionMethods
     /// <returns>The media type.</returns>
     public static MediaKind GetMediaKind(this string path)
     {
-        var values = path.Split(System.IO.Path.DirectorySeparatorChar);
+        var values = path.Split(Path.DirectorySeparatorChar);
 
         for (var i = 0; i < values.Length; i++)
         {

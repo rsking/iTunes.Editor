@@ -168,7 +168,7 @@ internal sealed class Program
         await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken).ConfigureAwait(false))
         {
             //// await stream.WriteLineAsync(song.Name).ConfigureAwait(false);
-            logger.LogInformation(Console.Properties.Resources.ListLog, song.Performers.ToJoinedString(), song.Title, song.Name, System.IO.File.Exists(song.Name));
+            logger.LogInformation(Console.Properties.Resources.ListLog, song.Performers.ToJoinedString(), song.Title, song.Name, File.Exists(song.Name));
         }
     }
 
@@ -249,7 +249,7 @@ internal sealed class Program
 
         await foreach (var song in songsProvider
             .GetTagInformationAsync(cancellationToken)
-            .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name))
+            .Where(_ => _.Name is not null && File.Exists(_.Name))
             .ConfigureAwait(false))
         {
             // check the location
@@ -304,7 +304,7 @@ internal sealed class Program
 
         await foreach (var song in songsProvider
             .GetTagInformationAsync(cancellationToken)
-            .Where(_ => _.Name is not null && System.IO.File.Exists(_.Name))
+            .Where(_ => _.Name is not null && File.Exists(_.Name))
             .ConfigureAwait(false))
         {
             CheckFileImpl(logger, song);
@@ -375,7 +375,7 @@ internal sealed class Program
             .ToArrayAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        var options = new EnumerationOptions { AttributesToSkip = System.IO.FileAttributes.Hidden, RecurseSubdirectories = true };
+        var options = new EnumerationOptions { AttributesToSkip = FileAttributes.Hidden, RecurseSubdirectories = true };
         var files = folder
             .EnumerateFiles("*", options)
             .ToArray();

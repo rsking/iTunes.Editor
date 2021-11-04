@@ -22,7 +22,7 @@ public class TagLibTagProvider : ITagProvider, IFileProvider
             return new(default(TagLib.Tag));
         }
 
-        return new(System.Threading.Tasks.Task.Run(
+        return new(Task.Run(
             () =>
             {
                 using var file = GetFile(this.File);

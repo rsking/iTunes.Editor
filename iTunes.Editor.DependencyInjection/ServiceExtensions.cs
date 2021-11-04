@@ -223,7 +223,7 @@ public static class ServiceExtensions
 #if NETSTANDARD2_0
                     .Replace(suffix, string.Empty);
 #else
-                    .Replace(suffix, string.Empty, System.StringComparison.OrdinalIgnoreCase);
+                    .Replace(suffix, string.Empty, StringComparison.OrdinalIgnoreCase);
 #endif
         }
 

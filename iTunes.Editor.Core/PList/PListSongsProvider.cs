@@ -34,7 +34,7 @@ public class PListSongsProvider : ISongsProvider, IFileProvider
                 IgnoreWhitespace = true,
             });
 
-            plist = await System.Threading.Tasks.Task.Run(() => (PList)serializer.Deserialize(reader), cancellationToken).ConfigureAwait(false);
+            plist = await Task.Run(() => (PList)serializer.Deserialize(reader), cancellationToken).ConfigureAwait(false);
         }
 
         if (plist["Tracks"] is IDictionary<string, object?> dictionary)

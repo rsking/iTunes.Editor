@@ -15,7 +15,7 @@ public class MediaInfoTagProvider : ITagProvider, IFileProvider
     public string? File { get; set; }
 
     /// <inheritdoc/>
-    public ValueTask<TagLib.Tag?> GetTagAsync(CancellationToken cancellationToken) => new(System.Threading.Tasks.Task.Run(
+    public ValueTask<TagLib.Tag?> GetTagAsync(CancellationToken cancellationToken) => new(Task.Run(
         () =>
         {
             var handle = NativeMethods.MediaInfo_New();

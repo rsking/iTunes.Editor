@@ -109,7 +109,7 @@ public record SongInformation
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The song information.</returns>
     public static Task<SongInformation> FromFileAsync(string path, CancellationToken cancellationToken = default) =>
-        System.Threading.Tasks.Task.Run(
+        Task.Run(
             () => FromFile(path),
             cancellationToken);
 

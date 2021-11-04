@@ -37,8 +37,8 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
             }
 
             // get all the files
-            foreach (var fullName in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
-                .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0)
+            foreach (var fullName in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
+                .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == 0 || (fileInfo.Attributes & FileAttributes.System) == 0)
                 .Select(fileInfo => fileInfo.FullName))
             {
                 using var shellObject = ShellObject.FromParsingName(fullName);

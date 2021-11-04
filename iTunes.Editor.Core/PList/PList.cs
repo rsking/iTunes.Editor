@@ -81,7 +81,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     /// <summary>
     /// Gets the implementation.
     /// </summary>
-    protected IDictionary<string, object> DictionaryImplementation { get; private set; } = new Dictionary<string, object>(System.StringComparer.Ordinal);
+    protected IDictionary<string, object> DictionaryImplementation { get; private set; } = new Dictionary<string, object>(StringComparer.Ordinal);
 
     /// <inheritdoc />
     public object this[string key]
@@ -129,12 +129,12 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     /// <inheritdoc />
     public void ReadXml(XmlReader reader)
     {
-        if (reader is null || !string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) || reader.NodeType != XmlNodeType.Element)
+        if (reader is null || !string.Equals(reader.Name, PListElementName, StringComparison.Ordinal) || reader.NodeType != XmlNodeType.Element)
         {
             return;
         }
 
-        this.Version = System.Version.Parse(reader.GetAttribute("version"));
+        this.Version = Version.Parse(reader.GetAttribute("version"));
 
         // read through the reader
         if (!ReadWhileWhiteSpace(reader))
@@ -143,14 +143,14 @@ public class PList : IDictionary<string, object>, IXmlSerializable
         }
 
         // read through the dictionary
-        if (!string.Equals(reader.Name, DictionaryElementName, System.StringComparison.Ordinal))
+        if (!string.Equals(reader.Name, DictionaryElementName, StringComparison.Ordinal))
         {
             return;
         }
 
         this.DictionaryImplementation = ReadDictionary(reader);
 
-        if (ReadWhileWhiteSpace(reader) && string.Equals(reader.Name, PListElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
+        if (ReadWhileWhiteSpace(reader) && string.Equals(reader.Name, PListElementName, StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
         {
             return;
         }
@@ -176,18 +176,18 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     /// <returns>The dictionary.</returns>
     private static IDictionary<string, object> ReadDictionary(XmlReader reader)
     {
-        IDictionary<string, object> dictionary = new Dictionary<string, object>(System.StringComparer.Ordinal);
+        IDictionary<string, object> dictionary = new Dictionary<string, object>(StringComparer.Ordinal);
         string? key = null;
         object? value = null;
 
         while (ReadWhileWhiteSpace(reader))
         {
-            if (string.Equals(reader.Name, DictionaryElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
+            if (string.Equals(reader.Name, DictionaryElementName, StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
             {
                 return dictionary;
             }
 
-            if (string.Equals(reader.Name, KeyElementName, System.StringComparison.Ordinal))
+            if (string.Equals(reader.Name, KeyElementName, StringComparison.Ordinal))
             {
                 _ = ReadWhileWhiteSpace(reader);
                 if (key is not null)
@@ -273,7 +273,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
         static DateTime ReadDate(XmlReader reader)
         {
             _ = ReadWhileWhiteSpace(reader);
-            var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
+            var dateValue = DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
             _ = ReadWhileWhiteSpace(reader);
             return dateValue;
         }
@@ -284,7 +284,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
 
             while (ReadWhileWhiteSpace(reader))
             {
-                if (string.Equals(reader.Name, ArrayElementName, System.StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
+                if (string.Equals(reader.Name, ArrayElementName, StringComparison.Ordinal) && reader.NodeType == XmlNodeType.EndElement)
                 {
                     break;
                 }
@@ -298,7 +298,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
         static byte[] ReadData(XmlReader reader)
         {
             _ = ReadWhileWhiteSpace(reader);
-            var dataValue = System.Convert.FromBase64String(reader.Value);
+            var dataValue = Convert.FromBase64String(reader.Value);
             _ = ReadWhileWhiteSpace(reader);
             return dataValue;
         }
@@ -314,7 +314,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     {
         writer.WriteWhitespace(new string('\t', indentLevel));
         writer.WriteStartElement(DictionaryElementName);
-        writer.WriteWhitespace(System.Environment.NewLine);
+        writer.WriteWhitespace(Environment.NewLine);
 
         var indent = new string('\t', indentLevel + 1);
         foreach (var kvp in dictionary)
@@ -322,7 +322,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
             writer.WriteWhitespace(indent);
             writer.WriteElementString(KeyElementName, kvp.Key);
             WriteValue(writer, indentLevel + 1, kvp.Value);
-            writer.WriteWhitespace(System.Environment.NewLine);
+            writer.WriteWhitespace(Environment.NewLine);
         }
 
         writer.WriteWhitespace(new string('\t', indentLevel));
@@ -367,7 +367,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
         else if (typeof(IDictionary<string, object>).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
         {
             // put the dictionary on a new line.
-            writer.WriteWhitespace(System.Environment.NewLine);
+            writer.WriteWhitespace(Environment.NewLine);
             WriteDictionary(writer, indentLevel, (IDictionary<string, object>)value);
         }
         else if (type == typeof(object[]))
@@ -384,7 +384,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
         else if (type == typeof(byte[]))
         {
             var byteValue = (byte[])value;
-            writer.WriteElementString(DataElementName, System.Convert.ToBase64String(byteValue));
+            writer.WriteElementString(DataElementName, Convert.ToBase64String(byteValue));
         }
     }
 

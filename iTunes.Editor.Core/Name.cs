@@ -110,8 +110,8 @@ public readonly struct Name : IEquatable<Name>
     }
 
     /// <inheritdoc/>
-    public bool Equals(Name other) => string.Equals(this.First, other.First, System.StringComparison.Ordinal)
-        && string.Equals(this.Last, other.Last, System.StringComparison.Ordinal);
+    public bool Equals(Name other) => string.Equals(this.First, other.First, StringComparison.Ordinal)
+        && string.Equals(this.Last, other.Last, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object obj) => obj is Name name ? this.Equals(name) : base.Equals(obj);

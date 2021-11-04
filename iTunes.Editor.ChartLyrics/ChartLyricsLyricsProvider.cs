@@ -79,8 +79,8 @@ public sealed class ChartLyricsLyricsProvider : ILyricsProvider, IDisposable
             return null;
         }
 
-        if (getLyricResult.LyricArtist.Equals(artist, System.StringComparison.OrdinalIgnoreCase)
-            && getLyricResult.LyricSong.Equals(song, System.StringComparison.OrdinalIgnoreCase))
+        if (getLyricResult.LyricArtist.Equals(artist, StringComparison.OrdinalIgnoreCase)
+            && getLyricResult.LyricSong.Equals(song, StringComparison.OrdinalIgnoreCase))
         {
             return getLyricResult.Lyric;
         }

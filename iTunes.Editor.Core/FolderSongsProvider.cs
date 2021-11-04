@@ -27,8 +27,8 @@ public class FolderSongsProvider : ISongsProvider, IFolderProvider
         }
 
         // get all the files
-        foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
-            .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0))
+        foreach (var fileInfo in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
+            .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == 0 || (fileInfo.Attributes & FileAttributes.System) == 0))
         {
             SongInformation? songInformation = null;
             try

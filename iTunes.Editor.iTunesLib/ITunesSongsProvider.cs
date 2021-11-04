@@ -57,7 +57,7 @@ public class ITunesSongsProvider : ISongsProvider
 #if COM_AVAILABLE
     public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var librarySource = await System.Threading.Tasks.Task.Run(() =>
+        var librarySource = await Task.Run(() =>
         {
             var app = new iTunesLib.iTunesApp();
             return app.LibrarySource;
@@ -110,7 +110,7 @@ public class ITunesSongsProvider : ISongsProvider
                         }
 
                         if (string.IsNullOrWhiteSpace(track.SortAlbumArtist)
-                            && string.Equals(track.AlbumArtist, track.Artist, System.StringComparison.Ordinal)
+                            && string.Equals(track.AlbumArtist, track.Artist, StringComparison.Ordinal)
                             && !string.IsNullOrWhiteSpace(track.SortArtist))
                         {
                             track.SortAlbumArtist = track.SortArtist;
@@ -128,7 +128,7 @@ public class ITunesSongsProvider : ISongsProvider
                             grouping = grouping.AddNoLyrics();
                         }
 
-                        if (!string.Equals(grouping, original, System.StringComparison.Ordinal))
+                        if (!string.Equals(grouping, original, StringComparison.Ordinal))
                         {
                             track.Grouping = grouping ?? string.Empty;
                         }
@@ -143,13 +143,13 @@ public class ITunesSongsProvider : ISongsProvider
                         var original = track.Comment;
                         var comment = original switch
                         {
-                            _ when original.StartsWith(By, System.StringComparison.Ordinal) => LowerPrefix(original, By),
-                            _ when original.StartsWith(From, System.StringComparison.Ordinal) => LowerPrefix(original, From),
-                            _ when original.StartsWith(Produced, System.StringComparison.Ordinal) => LowerPrefix(original, Produced),
+                            _ when original.StartsWith(By, StringComparison.Ordinal) => LowerPrefix(original, By),
+                            _ when original.StartsWith(From, StringComparison.Ordinal) => LowerPrefix(original, From),
+                            _ when original.StartsWith(Produced, StringComparison.Ordinal) => LowerPrefix(original, Produced),
                             _ => original,
                         };
 
-                        if (!string.Equals(comment, original, System.StringComparison.Ordinal))
+                        if (!string.Equals(comment, original, StringComparison.Ordinal))
                         {
                             track.Comment = comment ?? string.Empty;
                         }
@@ -182,7 +182,7 @@ public class ITunesSongsProvider : ISongsProvider
                 }
                 catch (System.Runtime.InteropServices.COMException exception) when (exception.Message
 #if NETSTANDARD2_1_OR_GREATER
-                        .Contains("deleted", System.StringComparison.Ordinal))
+                        .Contains("deleted", StringComparison.Ordinal))
 #else
                         .Contains("deleted"))
 #endif
@@ -197,7 +197,7 @@ public class ITunesSongsProvider : ISongsProvider
 
         static Task<iTunesLib.IITPlaylist> GetLibraryPlaylist()
         {
-            return System.Threading.Tasks.Task.Run<iTunesLib.IITPlaylist>(() =>
+            return Task.Run<iTunesLib.IITPlaylist>(() =>
             {
                 var app = new iTunesLib.iTunesApp();
                 return app.LibraryPlaylist;

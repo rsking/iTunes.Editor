@@ -24,21 +24,21 @@ public class IPodSongsProvider : ISongsProvider, IFolderProvider
     public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         // see if this has the requisit parts
-        var controlDirectory = System.IO.Path.Combine(this.Folder, "iPod_Control");
-        if (!System.IO.Directory.Exists(controlDirectory))
+        var controlDirectory = Path.Combine(this.Folder, "iPod_Control");
+        if (!Directory.Exists(controlDirectory))
         {
             throw new DirectoryNotFoundException($"Failed to find iPod Control folder under {this.Folder}");
         }
 
-        var iTunesDB = System.IO.Path.Combine(controlDirectory, "iTunes\\iTunesDB");
+        var iTunesDB = Path.Combine(controlDirectory, "iTunes\\iTunesDB");
 
-        if (!System.IO.File.Exists(iTunesDB))
+        if (!File.Exists(iTunesDB))
         {
             throw new FileNotFoundException($"Failed to find iTunesDB file under {controlDirectory}");
         }
 
         // read in the database
-        var trackDatabase = await System.Threading.Tasks.Task.Run(() => new TrackDatabase(iTunesDB), cancellationToken).ConfigureAwait(false);
+        var trackDatabase = await Task.Run(() => new TrackDatabase(iTunesDB), cancellationToken).ConfigureAwait(false);
         var count = trackDatabase.Tracks.Count;
 
         for (var i = 0; i < count; i++)
