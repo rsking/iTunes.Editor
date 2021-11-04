@@ -56,7 +56,7 @@ namespace ITunes.Editor.HappiDev
             this.httpClient = httpClient;
             if (apiKey is not null)
             {
-                this.restClient.AddDefaultHeader("x-happi-key", apiKey);
+                _ = this.restClient.AddDefaultHeader("x-happi-key", apiKey);
                 this.httpClient.DefaultRequestHeaders.Add("x-happi-key", apiKey);
             }
         }
@@ -88,21 +88,21 @@ namespace ITunes.Editor.HappiDev
             var result = await this.httpClient
                 .GetFromJsonAsync<Lyrics>(lyricsAddress, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            if (result is not null && result.Success && result.Length == 1)
-            {
-                return result.Result.Lyrics;
-            }
 
-            return default;
+            return result switch
+            {
+                not null when result.Success && result.Length == 1 => result.Result.Lyrics,
+                _ => default,
+            };
 
             async Task<string?> GetLyricsAddressAsync(SongInformation tagInformation, CancellationToken cancellationToken)
             {
-                var request = new RestRequest();
                 var title = tagInformation.Title;
                 var artist = tagInformation.Performers.ToJoinedString();
-                request.AddQueryParameter("q", $"{artist} {title}");
-                request.AddQueryParameter("lyrics", "1");
-                request.AddQueryParameter("type", "track");
+                var request = new RestRequest()
+                    .AddQueryParameter("q", $"{artist} {title}")
+                    .AddQueryParameter("lyrics", "1")
+                    .AddQueryParameter("type", "track");
                 var response = await this.restClient.ExecuteGetAsync<Track>(request, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessful)
                 {
@@ -110,16 +110,11 @@ namespace ITunes.Editor.HappiDev
                     return default;
                 }
 
-                if (!response.Data.Success || response.Data.Length == 0)
+                return response.Data switch
                 {
-                    return default;
-                }
-
-                return GetLyricsImpl(
-                    this.logger,
-                    artist,
-                    title,
-                    response.Data.Result[0]);
+                    not null when response.Data.Success && response.Data.Length != 0 => GetLyricsImpl(this.logger, artist, title, response.Data.Result[0]),
+                    _ => default,
+                };
 
                 static string? GetLyricsImpl(
                     ILogger logger,
@@ -163,9 +158,9 @@ namespace ITunes.Editor.HappiDev
 
         private record Return<T>(bool Success, int Length, T Result);
 
-        private record Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
+        private sealed record Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
 
-        private record TrackResult(
+        private sealed record TrackResult(
             string Track,
             int Id_Track,
             string Artist,
@@ -183,9 +178,9 @@ namespace ITunes.Editor.HappiDev
             string Api_Track,
             string Api_Lyrics);
 
-        private record Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
+        private sealed record Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
 
-        private record LyricsResult(
+        private sealed record LyricsResult(
             string Artist,
             int Id_Artist,
             string Track,

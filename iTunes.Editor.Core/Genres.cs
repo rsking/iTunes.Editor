@@ -89,7 +89,7 @@ namespace ITunes.Editor
         /// </summary>
         public static Genre Ringtones { get; }
 
-        private class InternalGenre
+        private sealed class InternalGenre
         {
             public InternalGenre(string name, InternalGenre? parent) => (this.Name, this.Parent) = (name, parent);
 

@@ -39,10 +39,11 @@ namespace ITunes.Editor.Windows
                 }
 
                 // get all the files
-                foreach (var fileInfo in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
-                    .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0))
+                foreach (var fullName in directoryInfo.EnumerateFiles("*", System.IO.SearchOption.AllDirectories)
+                    .Where(fileInfo => (fileInfo.Attributes & System.IO.FileAttributes.Hidden) == 0 || (fileInfo.Attributes & System.IO.FileAttributes.System) == 0)
+                    .Select(fileInfo => fileInfo.FullName))
                 {
-                    using var shellObject = ShellObject.FromParsingName(fileInfo.FullName);
+                    using var shellObject = ShellObject.FromParsingName(fullName);
 
                     var title = shellObject.Properties.GetProperty<string>(SystemProperties.System.Title);
                     var performers = shellObject.Properties.GetProperty<string[]>(SystemProperties.System.Music.Artist);
@@ -64,7 +65,7 @@ namespace ITunes.Editor.Windows
                             AlbumPerformer = albumPerformersValue,
                             SortAlbumPerformer = sortAlbumPerformers.Value ?? albumPerformersValue,
                             Album = album.Value,
-                            Name = fileInfo.FullName,
+                            Name = fullName,
                             Genre = genres.Value?.ToJoinedString(),
                         };
                     }

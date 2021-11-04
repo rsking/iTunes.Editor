@@ -16,7 +16,6 @@ namespace ITunes.Editor.PList
     /// </summary>
     public class ExtensionMethodsTests
     {
-#pragma warning disable S2699 // Tests should include assertions
         [Fact]
         internal void TestGetNullableInt32WithValidData() => TestGetWithValidData(ExtensionMethods.GetNullableInt32, 1234L);
 
@@ -73,7 +72,6 @@ namespace ITunes.Editor.PList
 
         [Fact]
         internal void TestGetStringWithInvalidData() => new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", 123456M } }.Invoking(values => values.GetNullableString("value")).Should().Throw<InvalidCastException>();
-#pragma warning restore S2699 // Tests should include assertions
 
         private static void TestGetWithValidData<T1, T2>(Func<IDictionary<string, object?>, string, T1?> function, T2 value)
             where T1 : struct => function(new Dictionary<string, object?>(StringComparer.Ordinal) { { "value", value } }, "value").Should().Be(value);

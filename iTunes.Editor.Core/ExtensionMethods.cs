@@ -33,15 +33,9 @@ namespace ITunes.Editor
         /// </summary>
         /// <param name="songInformation">The song information.</param>
         /// <returns>The media type.</returns>
-        public static MediaKind GetMediaKind(this SongInformation songInformation)
-        {
-            if (songInformation?.Name is null)
-            {
-                return MediaKind.Unknown;
-            }
-
-            return songInformation.Name.GetMediaKind();
-        }
+        public static MediaKind GetMediaKind(this SongInformation songInformation) => songInformation?.Name is null
+            ? MediaKind.Unknown
+            : songInformation.Name.GetMediaKind();
 
         /// <summary>
         /// Gets the media type.
@@ -91,18 +85,18 @@ namespace ITunes.Editor
             }
 
             // check to see if these are "null" dates
-            if (dateTime.IsNull() && other.IsNull())
-            {
-                return true;
-            }
+            return (dateTime.IsNull() && other.IsNull()) || EqualsCore(dateTime, other);
 
-            return dateTime.Year == other.Year
-                && dateTime.Month == other.Month
-                && dateTime.Day == other.Day
-                && dateTime.Hour == other.Hour
-                && dateTime.Minute == other.Minute
-                && dateTime.Second == other.Second
-                && dateTime.Millisecond == other.Millisecond;
+            static bool EqualsCore(DateTime first, DateTime second)
+            {
+                return first.Year == second.Year
+                    && first.Month == second.Month
+                    && first.Day == second.Day
+                    && first.Hour == second.Hour
+                    && first.Minute == second.Minute
+                    && first.Second == second.Second
+                    && first.Millisecond == second.Millisecond;
+            }
         }
 
         /// <summary>
@@ -150,12 +144,9 @@ namespace ITunes.Editor
         /// <returns>The cleaned lyrics.</returns>
         public static string? CleanLyrics(this string? lyrics, string newLine = "\r")
         {
-            if (string.IsNullOrEmpty(lyrics))
-            {
-                return default;
-            }
-
-            return string.Join(
+            return string.IsNullOrEmpty(lyrics)
+                ? default
+                : string.Join(
                     newLine,
                     RemoveMultipleNull(lyrics
                         .SplitLines()
@@ -354,14 +345,13 @@ namespace ITunes.Editor
         /// <returns>The songs provider.</returns>
         public static ISongsProvider SetPath(this ISongsProvider provider, System.IO.FileSystemInfo path)
         {
-            switch (provider)
+            if (provider is IFolderProvider folderProvider)
             {
-                case IFolderProvider folderProvider:
-                    folderProvider.Folder = path.FullName;
-                    break;
-                case IFileProvider fileProvider:
-                    fileProvider.File = path.FullName;
-                    break;
+                folderProvider.Folder = path.FullName;
+            }
+            else if (provider is IFileProvider fileProvider)
+            {
+                fileProvider.File = path.FullName;
             }
 
             return provider;
@@ -388,6 +378,9 @@ namespace ITunes.Editor
         /// <param name="keySelector">The key selector.</param>
         /// <param name="comparer">The equality comparer.</param>
         /// <returns>A sequence that contains the set difference of the elements of two sequences.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="first"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="second"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
         public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             if (first is null)
@@ -454,14 +447,7 @@ namespace ITunes.Editor
         private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             var set = new HashSet<TKey>(second, comparer);
-
-            foreach (var element in first)
-            {
-                if (set.Add(keySelector(element)))
-                {
-                    yield return element;
-                }
-            }
+            return first.Where(element => set.Add(keySelector(element)));
         }
 
         private static string AddTagImpl(this string? tags, string tag)
@@ -612,18 +598,18 @@ namespace ITunes.Editor
                         }
 
                         yield return returnString.ToString();
-                        returnString.Clear();
+                        _ = returnString.Clear();
                         break;
                     case '\n':
                         if (i <= 0 || lyrics[i - 1] != '\r')
                         {
                             yield return returnString.ToString();
-                            returnString.Clear();
+                            _ = returnString.Clear();
                         }
 
                         break;
                     default:
-                        returnString.Append(character);
+                        _ = returnString.Append(character);
                         break;
                 }
             }
@@ -633,6 +619,6 @@ namespace ITunes.Editor
 
         private static string Capitalize(this string line) => Humanizer.To.SentenceCase.Transform(line);
 
-        private static bool IsNull(this DateTime dateTime) => dateTime.Year == 1 || dateTime.Year == 1899;
+        private static bool IsNull(this DateTime dateTime) => dateTime.Year is 1 or 1899;
     }
 }

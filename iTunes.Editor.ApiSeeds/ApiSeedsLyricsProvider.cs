@@ -32,7 +32,7 @@ namespace ITunes.Editor.ApiSeeds
             this.logger = logger;
             if (apiKey is not null)
             {
-                this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
+                _ = this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
             }
         }
 
@@ -102,16 +102,16 @@ namespace ITunes.Editor.ApiSeeds
             }
         }
 
-        private record GetLyricsResponse(GetLyricsResult? Result);
+        private sealed record GetLyricsResponse(GetLyricsResult? Result);
 
-        private record GetLyricsResult(Artist? Artist, Track? Track, Copyright? Copyright);
+        private sealed record GetLyricsResult(Artist? Artist, Track? Track, Copyright? Copyright);
 
-        private record Artist(string? Name);
+        private sealed record Artist(string? Name);
 
-        private record Track(string? Name, string? Text, Language? Lang);
+        private sealed record Track(string? Name, string? Text, Language? Lang);
 
-        private record Language(string? Code, string? Name);
+        private sealed record Language(string? Code, string? Name);
 
-        private record Copyright(string? Notice, string? Artist, string? Text);
+        private sealed record Copyright(string? Notice, string? Artist, string? Text);
     }
 }

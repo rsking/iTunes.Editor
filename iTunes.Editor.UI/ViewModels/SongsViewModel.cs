@@ -246,7 +246,7 @@ namespace ITunes.Editor.ViewModels
             public Models.ISelectable? Parent { get; }
         }
 
-        private class ArtistViewModel : SelectableViewModel, Models.IArtist
+        private sealed class ArtistViewModel : SelectableViewModel, Models.IArtist
         {
             private readonly Models.ISongs parent;
 
@@ -270,7 +270,7 @@ namespace ITunes.Editor.ViewModels
             internal void SelectSong(SongInformation songInformation) => this.parent.SelectedSong = songInformation;
         }
 
-        private class AlbumViewModel : SelectableViewModel, Models.IAlbum
+        private sealed class AlbumViewModel : SelectableViewModel, Models.IAlbum
         {
             public AlbumViewModel(ArtistViewModel artist, string? name, System.Collections.Generic.IEnumerable<SongInformation> songs)
                 : base(artist)
@@ -299,7 +299,7 @@ namespace ITunes.Editor.ViewModels
             }
         }
 
-        private class SongViewModel : SelectableViewModel, Models.ISong
+        private sealed class SongViewModel : SelectableViewModel, Models.ISong
         {
             public SongViewModel(AlbumViewModel album, SongInformation song)
                 : base(album)

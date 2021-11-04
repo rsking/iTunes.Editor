@@ -60,6 +60,6 @@ namespace ITunes.Editor.Lyrics.Ovh
             return response.Data.Lyrics;
         }
 
-        private record GetLyricsResponse(string? Lyrics, string? Error);
+        private sealed record GetLyricsResponse(string? Lyrics, string? Error);
     }
 }

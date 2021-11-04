@@ -1,6 +1,8 @@
-﻿// <copyright file="HostBuilderExtensions.cs" company="RossKing">
+﻿// -----------------------------------------------------------------------
+// <copyright file="HostBuilderExtensions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace Microsoft.Extensions.Hosting
 {

@@ -1,6 +1,8 @@
-﻿// <copyright file="ServiceExtensions.cs" company="RossKing">
+﻿// -----------------------------------------------------------------------
+// <copyright file="ServiceExtensions.cs" company="RossKing">
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
+// -----------------------------------------------------------------------
 
 namespace Microsoft.Extensions.DependencyInjection
 {

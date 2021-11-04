@@ -69,10 +69,10 @@ namespace ITunes.Editor.Composers.ApraAmcos
             }
         }
 
-        private record SearchResult(bool Success, System.Collections.Generic.IReadOnlyCollection<Work> Result);
+        private sealed record SearchResult(bool Success, System.Collections.Generic.IReadOnlyCollection<Work> Result);
 
-        private record Work(string Title, string? Writers, System.Collections.Generic.IReadOnlyCollection<Writer>? WorkWriters);
+        private sealed record Work(string Title, string? Writers, System.Collections.Generic.IReadOnlyCollection<Writer>? WorkWriters);
 
-        private record Writer(string Contract, string WriterName);
+        private sealed record Writer(string Contract, string WriterName);
     }
 }

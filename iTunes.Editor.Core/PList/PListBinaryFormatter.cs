@@ -55,7 +55,7 @@ namespace ITunes.Editor.PList
             var offsetTableOffset = BitConverter.ToInt64(offsetTableOffsetBytes, 0);
 
             var offsetTable = new int[refCount];
-            serializationStream.Seek(offsetTableOffset, SeekOrigin.Begin);
+            _ = serializationStream.Seek(offsetTableOffset, SeekOrigin.Begin);
             for (var i = 0; i < refCount; i++)
             {
                 var buffer = serializationStream.Read(offsetByteSize);
@@ -63,12 +63,11 @@ namespace ITunes.Editor.PList
                 offsetTable[i] = BitConverter.ToInt32(RegulateNullBytes(buffer, 4), 0);
             }
 
-            if (Read(serializationStream, offsetTable, 0, objectReferenceSize) is IDictionary<string, object> dictionary)
+            return Read(serializationStream, offsetTable, 0, objectReferenceSize) switch
             {
-                return new PList(dictionary);
-            }
-
-            return null;
+                IDictionary<string, object> dictionary => new PList(dictionary),
+                _ => null,
+            };
         }
 
         /// <inheritdoc/>
@@ -118,8 +117,10 @@ namespace ITunes.Editor.PList
             {
                 if (bytes[i] == 0 && bytes.Count > minBytes)
                 {
-                    bytes.Remove(bytes[i]);
-                    i--;
+                    if (bytes.Remove(bytes[i]))
+                    {
+                        i--;
+                    }
                 }
                 else
                 {
