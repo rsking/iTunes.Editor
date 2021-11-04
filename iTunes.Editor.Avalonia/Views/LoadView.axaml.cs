@@ -26,8 +26,8 @@ public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMode
 
     private async void OnProviderButton(object sender, global::Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var dataContextProvider = sender as IDataContextProvider ?? throw new System.ArgumentException($"{nameof(sender)} must be a {nameof(IDataContextProvider)}", nameof(sender));
-        var provider = dataContextProvider.DataContext as ISongsProvider ?? throw new System.ArgumentException($"{nameof(sender)} must have a data context of {nameof(ISongsProvider)}", nameof(sender));
+        var dataContextProvider = sender as IDataContextProvider ?? throw new ArgumentException($"{nameof(sender)} must be a {nameof(IDataContextProvider)}", nameof(sender));
+        var provider = dataContextProvider.DataContext as ISongsProvider ?? throw new ArgumentException($"{nameof(sender)} must have a data context of {nameof(ISongsProvider)}", nameof(sender));
         var songs = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<Models.ISongs>();
 
         if (this.DataContext is Models.ILoad load)

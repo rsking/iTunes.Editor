@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor.Controls;
 
-using System;
 using global::Avalonia;
 
 /// <summary>

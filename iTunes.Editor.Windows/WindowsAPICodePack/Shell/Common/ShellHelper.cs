@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell;
 
-using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;

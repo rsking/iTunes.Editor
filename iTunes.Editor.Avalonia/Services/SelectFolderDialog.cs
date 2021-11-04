@@ -32,7 +32,7 @@ public class SelectFolderDialog : Contracts.ISelectFolder
     /// </summary>
     /// <param name="path">The initial path.</param>
     /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-    public System.Threading.Tasks.ValueTask<string?> GetSelectedPathAsync(string? path = default)
+    public ValueTask<string?> GetSelectedPathAsync(string? path = default)
     {
         var dialog = new global::Avalonia.Controls.OpenFolderDialog { Directory = path };
         return new(dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()));

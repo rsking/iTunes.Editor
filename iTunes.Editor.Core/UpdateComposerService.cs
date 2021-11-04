@@ -6,10 +6,6 @@
 
 namespace ITunes.Editor;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// The implementation of <see cref="IUpdateComposerService"/>.
 /// </summary>
@@ -24,7 +20,7 @@ public class UpdateComposerService : IUpdateComposerService
     public UpdateComposerService(IEnumerable<IComposerProvider> providers) => this.providers = providers.ToArray();
 
     /// <inheritdoc />
-    public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default)
+    public async ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, CancellationToken cancellationToken = default)
     {
         if (songInformation is null)
         {
@@ -76,7 +72,7 @@ public class UpdateComposerService : IUpdateComposerService
 
         public bool ShouldUpdate(bool force) => this.appleTag is not null && (string.IsNullOrEmpty(this.appleTag.FirstComposer) || force);
 
-        public async System.Threading.Tasks.Task<SongInformation> UpdateAsync(IAsyncEnumerable<Name> composers)
+        public async Task<SongInformation> UpdateAsync(IAsyncEnumerable<Name> composers)
         {
             if (this.file is null || this.appleTag is null)
             {

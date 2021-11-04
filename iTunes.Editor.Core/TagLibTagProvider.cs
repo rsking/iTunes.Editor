@@ -15,7 +15,7 @@ public class TagLibTagProvider : ITagProvider, IFileProvider
     public string? File { get; set; }
 
     /// <inheritdoc/>
-    public System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken)
+    public ValueTask<TagLib.Tag?> GetTagAsync(CancellationToken cancellationToken)
     {
         if (this.File is null)
         {

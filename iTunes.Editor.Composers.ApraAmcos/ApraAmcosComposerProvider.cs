@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor.Composers.ApraAmcos;
 
-using System.Linq;
 using RestSharp;
 using RestSharp.Serializers.SystemTextJson;
 
@@ -18,15 +17,15 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
         .UseQueryEncoder((value, encoding) => System.Web.HttpUtility.UrlEncode(value.ToLowerInvariant(), encoding));
 
     /// <inheritdoc />
-    public System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(
+    public IAsyncEnumerable<Name> GetComposersAsync(
         SongInformation tagInformation,
-        System.Threading.CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         return GetNamesAsync(tagInformation, cancellationToken)
             .OrderBy(name => name.Last)
             .ThenBy(name => name.First);
 
-        async System.Collections.Generic.IAsyncEnumerable<Name> GetNamesAsync(SongInformation tagInformation, [System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
+        async IAsyncEnumerable<Name> GetNamesAsync(SongInformation tagInformation, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (tagInformation is null)
             {
@@ -69,9 +68,9 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
         }
     }
 
-    private sealed record SearchResult(bool Success, System.Collections.Generic.IReadOnlyCollection<Work> Result);
+    private sealed record SearchResult(bool Success, IReadOnlyCollection<Work> Result);
 
-    private sealed record Work(string Title, string? Writers, System.Collections.Generic.IReadOnlyCollection<Writer>? WorkWriters);
+    private sealed record Work(string Title, string? Writers, IReadOnlyCollection<Writer>? WorkWriters);
 
     private sealed record Writer(string Contract, string WriterName);
 }

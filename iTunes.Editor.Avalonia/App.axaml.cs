@@ -25,27 +25,27 @@ public class App : Application
             .UseDefaultITunes()
             .ConfigureServices((_, services) =>
             {
-                    // services
-                    services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
+                // services
+                services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
                 services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                 services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                 services
                     .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
-                    .AddSingleton<System.Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model))
+                    .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model))
                     .AddTransient(Create<ViewModels.ITunesConfigureViewModel>);
 
-                    // view models
-                    services.AddSingleton<ReactiveUI.IScreen, ViewModels.ShellViewModel>();
+                // view models
+                services.AddSingleton<ReactiveUI.IScreen, ViewModels.ShellViewModel>();
                 services.AddSingleton<Models.ILoad, ViewModels.LoadRoutableViewModel>();
                 services.AddSingleton<Models.ISongs, ViewModels.SongsRoutableViewModel>();
 
-                    // views
-                    services.AddSingleton<Views.ShellView>();
+                // views
+                services.AddSingleton<Views.ShellView>();
                 services.AddTransient<Views.LoadView>();
                 services.AddTransient<Views.SongsView>();
 
                 [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is required for the signature")]
-                Movere.Services.IContentDialogService<T> Create<T>(System.IServiceProvider services)
+                Movere.Services.IContentDialogService<T> Create<T>(IServiceProvider services)
                     where T : Models.IConfigure
                 {
                     var owner = this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop

@@ -17,5 +17,5 @@ public interface IComposerProvider
     /// <param name="tagInformation">The tag information.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The composers.</returns>
-    System.Collections.Generic.IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken);
+    IAsyncEnumerable<Name> GetComposersAsync(SongInformation tagInformation, CancellationToken cancellationToken);
 }

@@ -6,7 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
 using FluentAssertions;
 using Xunit;
 

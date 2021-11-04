@@ -7,7 +7,7 @@
 namespace ITunes.Editor.PList;
 
 using System.Collections;
-using System.Collections.Generic;
+
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
@@ -57,7 +57,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     /// <param name="dictionary">The dictionary.</param>
     internal PList(IDictionary<string, object> dictionary)
     {
-        this.Version = new System.Version(1, 0);
+        this.Version = new Version(1, 0);
         this.DictionaryImplementation = dictionary;
     }
 
@@ -70,7 +70,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     /// <summary>
     /// Gets the version.
     /// </summary>
-    public System.Version? Version { get; private set; }
+    public Version? Version { get; private set; }
 
     /// <inheritdoc />
     public ICollection<string> Keys => this.DictionaryImplementation.Keys;
@@ -155,7 +155,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
             return;
         }
 
-        throw new System.ArgumentException(Properties.Resources.InvalidXml, nameof(reader));
+        throw new ArgumentException(Properties.Resources.InvalidXml, nameof(reader));
     }
 
     /// <inheritdoc />
@@ -163,7 +163,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
     {
         if (writer is null)
         {
-            throw new System.ArgumentNullException(nameof(writer));
+            throw new ArgumentNullException(nameof(writer));
         }
 
         WriteDictionary(writer, 0, this);
@@ -227,7 +227,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
             DictionaryElementName => ReadDictionary(reader),
             ArrayElementName => ReadArray(reader),
             DataElementName => ReadData(reader),
-            _ => throw new System.ArgumentException(Properties.Resources.InvalidPListValueType, nameof(reader)),
+            _ => throw new ArgumentException(Properties.Resources.InvalidPListValueType, nameof(reader)),
         };
 
         static long ReadInteger(XmlReader reader)
@@ -270,7 +270,7 @@ public class PList : IDictionary<string, object>, IXmlSerializable
             return first ? null : builder.ToString();
         }
 
-        static System.DateTime ReadDate(XmlReader reader)
+        static DateTime ReadDate(XmlReader reader)
         {
             _ = ReadWhileWhiteSpace(reader);
             var dateValue = System.DateTime.Parse(reader.Value, CultureInfo.InvariantCulture);
@@ -359,9 +359,9 @@ public class PList : IDictionary<string, object>, IXmlSerializable
             var stringValue = (string)value;
             writer.WriteElementString(StringElementName, stringValue);
         }
-        else if (type == typeof(System.DateTime))
+        else if (type == typeof(DateTime))
         {
-            var dateValue = (System.DateTime)value;
+            var dateValue = (DateTime)value;
             writer.WriteElementString(DateElementName, dateValue.ToUniversalTime().ToString("s", CultureInfo.InvariantCulture) + "Z");
         }
         else if (typeof(IDictionary<string, object>).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))

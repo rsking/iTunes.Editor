@@ -4,10 +4,6 @@
 
 namespace ITunes.Editor;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// Static class for genres.
 /// </summary>
@@ -65,7 +61,7 @@ public static class Genres
 
         static IEnumerable<string> Split(string input)
         {
-            using var reader = new System.IO.StringReader(input);
+            using var reader = new StringReader(input);
 
             for (var line = reader.ReadLine(); line is not null; line = reader.ReadLine())
             {

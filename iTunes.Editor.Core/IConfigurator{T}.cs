@@ -24,5 +24,5 @@ public interface IConfigurator<in T>
     /// </summary>
     /// <param name="source">The source.</param>
     /// <returns><see langword="true"/> if <paramref name="source"/> was successfully configured; otherwise <see langword="false"/>.</returns>
-    System.Threading.Tasks.ValueTask<bool> ConfigureAsync(T source);
+    ValueTask<bool> ConfigureAsync(T source);
 }

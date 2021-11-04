@@ -6,7 +6,6 @@
 
 namespace ITunes.Editor;
 
-using System;
 using global::Avalonia.Controls;
 using global::Avalonia.Controls.Templates;
 using Microsoft.Extensions.DependencyInjection;

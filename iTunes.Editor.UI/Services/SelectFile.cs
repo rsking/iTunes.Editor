@@ -29,7 +29,7 @@ public abstract class SelectFile : Contracts.ISelectFile
     /// <summary>
     /// Gets the filters.
     /// </summary>
-    public System.Collections.Generic.IList<string> Filters { get; } = new System.Collections.Generic.List<string>();
+    public IList<string> Filters { get; } = new List<string>();
 
     /// <summary>
     /// Gets or sets the selected filter.
@@ -48,5 +48,5 @@ public abstract class SelectFile : Contracts.ISelectFile
     /// </summary>
     /// <param name="path">The starting path.</param>
     /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-    public abstract System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default);
+    public abstract ValueTask<string?> GetFileNameAsync(string? path = default);
 }

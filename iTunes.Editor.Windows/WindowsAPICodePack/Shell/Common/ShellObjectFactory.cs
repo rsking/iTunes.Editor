@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell;
 
-using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
@@ -36,11 +35,9 @@ internal static class ShellObjectFactory
         }
 
         // Get the System.ItemType property
-        var itemType = ShellHelper.GetItemType(nativeShellItem2);
-        if (itemType is not null)
-        {
-            itemType = itemType.ToLowerInvariant();
-        }
+        var itemType = ShellHelper.GetItemType(nativeShellItem2) is string tempType
+            ? tempType.ToLowerInvariant()
+            : default;
 
         // Get some IShellItem attributes
         nativeShellItem2.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem | ShellNativeMethods.ShellFileGetAttributesOptions.Folder, out var sfgao);

@@ -11,7 +11,7 @@ using Humanizer;
 /// <summary>
 /// The performer name.
 /// </summary>
-public readonly struct Name : System.IEquatable<Name>
+public readonly struct Name : IEquatable<Name>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Name"/> struct.

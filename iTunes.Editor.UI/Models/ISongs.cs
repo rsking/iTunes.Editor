@@ -24,7 +24,7 @@ public interface ISongs
     /// <summary>
     /// Gets the songs.
     /// </summary>
-    System.Collections.Generic.IEnumerable<SongInformation> Songs { get; }
+    IEnumerable<SongInformation> Songs { get; }
 
     /// <summary>
     /// Gets or sets the selected song.

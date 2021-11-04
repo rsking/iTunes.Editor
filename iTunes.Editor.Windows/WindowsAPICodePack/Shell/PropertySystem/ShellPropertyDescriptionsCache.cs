@@ -4,8 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System.Collections.Generic;
-
 /// <summary>
 /// The shell property description cache.
 /// </summary>

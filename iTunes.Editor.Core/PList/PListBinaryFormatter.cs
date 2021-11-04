@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 
@@ -16,6 +14,8 @@ using System.Runtime.Serialization;
 /// </summary>
 public partial class PListBinaryFormatter : IFormatter
 {
+    private static readonly DateTime Origin = new(2001, 1, 1, 0, 0, 0, 0);
+
     /// <inheritdoc/>
     public SerializationBinder? Binder { get; set; }
 
@@ -90,7 +90,7 @@ public partial class PListBinaryFormatter : IFormatter
         Write(serializationStream, offsetTable, new List<object?>() { null }, referenceSize, graph);
 
         var offsetTableOffset = serializationStream.Length;
-        var offsetByteSize = RegulateNullBytes(BitConverter.GetBytes(offsetTable[offsetTable.Count - 1])).Length;
+        var offsetByteSize = RegulateNullBytes(BitConverter.GetBytes(GetLast(offsetTable))).Length;
 
         for (var i = 0; i < offsetTable.Count; i++)
         {
@@ -105,7 +105,16 @@ public partial class PListBinaryFormatter : IFormatter
 
         serializationStream.Write(BitConverter.GetBytes(0L));
         serializationStream.Write(BitConverter.GetBytes(offsetTableOffset).Reverse());
-    }
+
+        static int GetLast(IList<int> offsetTable)
+        {
+#if NETSTANDARD2_1_OR_GREATER
+            return offsetTable[^1];
+#else
+            return offsetTable[offsetTable.Count - 1];
+#endif
+        }
+}
 
     private static byte[] RegulateNullBytes(byte[] value, int start, int length, int minBytes = 1) => RegulateNullBytes(value.GetRange(start, length), minBytes);
 
@@ -140,18 +149,5 @@ public partial class PListBinaryFormatter : IFormatter
         value = bytes.ToArray();
         Array.Reverse(value);
         return value;
-    }
-
-    private static class PlistDateConverter
-    {
-        private static readonly DateTime Origin = new(2001, 1, 1, 0, 0, 0, 0);
-
-        public static DateTime ConvertFromAppleTimeStamp(double timestamp) => Origin.AddSeconds(timestamp);
-
-        public static double ConvertToAppleTimeStamp(DateTime date)
-        {
-            var diff = date - Origin;
-            return Math.Floor(diff.TotalSeconds);
-        }
     }
 }

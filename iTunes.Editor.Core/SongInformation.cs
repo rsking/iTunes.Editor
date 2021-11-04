@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor;
 
-using System.Linq;
-
 /// <summary>
 /// The song information.
 /// </summary>
@@ -32,12 +30,12 @@ public record SongInformation
     /// <summary>
     /// Gets the performers.
     /// </summary>
-    public System.Collections.Generic.IEnumerable<string> Performers { get; init; } = Enumerable.Empty<string>();
+    public IEnumerable<string> Performers { get; init; } = Enumerable.Empty<string>();
 
     /// <summary>
     /// Gets the sort performers.
     /// </summary>
-    public System.Collections.Generic.IEnumerable<string> SortPerformers { get; init; } = Enumerable.Empty<string>();
+    public IEnumerable<string> SortPerformers { get; init; } = Enumerable.Empty<string>();
 
     /// <summary>
     /// Gets the album performers.
@@ -79,7 +77,7 @@ public record SongInformation
     /// </summary>
     /// <param name="file">The file to convert.</param>
     public static explicit operator SongInformation(TagLib.File file) => file is null
-        ? throw new System.ArgumentNullException(nameof(file))
+        ? throw new ArgumentNullException(nameof(file))
         : new SongInformation(file.Tag.Title)
         {
             Performers = file.Tag.Performers,
@@ -110,7 +108,7 @@ public record SongInformation
     /// <param name="path">The path.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The song information.</returns>
-    public static System.Threading.Tasks.Task<SongInformation> FromFileAsync(string path, System.Threading.CancellationToken cancellationToken = default) =>
+    public static Task<SongInformation> FromFileAsync(string path, CancellationToken cancellationToken = default) =>
         System.Threading.Tasks.Task.Run(
             () => FromFile(path),
             cancellationToken);

@@ -7,8 +7,7 @@
 namespace ITunes.Editor.HappiDev;
 
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
+
 using Microsoft.Extensions.Logging;
 using RestSharp;
 using RestSharp.Serializers.SystemTextJson;
@@ -18,11 +17,11 @@ using RestSharp.Serializers.SystemTextJson;
 /// </summary>
 public class HappiDevLyricsProvider : ILyricsProvider
 {
-    private static readonly System.Uri Uri = new("https://api.happi.dev/v1/music/");
+    private static readonly Uri Uri = new("https://api.happi.dev/v1/music/");
 
     private readonly ILogger logger;
 
-    private readonly System.Net.Http.HttpClient httpClient;
+    private readonly HttpClient httpClient;
 
     private readonly IRestClient restClient = new RestClient(Uri)
         .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -34,7 +33,7 @@ public class HappiDevLyricsProvider : ILyricsProvider
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
     public HappiDevLyricsProvider(
-        System.Net.Http.IHttpClientFactory httpClientFactory,
+        IHttpClientFactory httpClientFactory,
         Microsoft.Extensions.Options.IOptions<HappiDevOptions> options,
         ILogger<HappiDevLyricsProvider> logger)
         : this(logger, httpClientFactory.CreateClient(nameof(HappiDevLyricsProvider)), options)
@@ -48,7 +47,7 @@ public class HappiDevLyricsProvider : ILyricsProvider
     /// <param name="apiKey">The API key.</param>
     /// <param name="logger">The logger.</param>
     public HappiDevLyricsProvider(
-        System.Net.Http.HttpClient httpClient,
+        HttpClient httpClient,
         string? apiKey,
         ILogger<HappiDevLyricsProvider> logger)
     {
@@ -69,9 +68,9 @@ public class HappiDevLyricsProvider : ILyricsProvider
     /// <param name="options">The options.</param>
     public HappiDevLyricsProvider(
         ILogger<HappiDevLyricsProvider> logger,
-        System.Net.Http.HttpClient httpClient,
+        HttpClient httpClient,
         Microsoft.Extensions.Options.IOptions<HappiDevOptions> options)
-        : this(httpClient, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey, logger)
+        : this(httpClient, options is null ? throw new ArgumentNullException(nameof(options)) : options.Value.ApiKey, logger)
     {
     }
 

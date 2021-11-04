@@ -4,10 +4,7 @@
 
 namespace ITunes.Editor.Collections;
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 /// <summary>
 /// Helper class for observable collections.

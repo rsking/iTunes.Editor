@@ -4,8 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System;
-
 #pragma warning disable MA0048, MA0062, S4070, SA1649
 /// <summary>Property Enumeration Types.</summary>
 public enum PropEnumType

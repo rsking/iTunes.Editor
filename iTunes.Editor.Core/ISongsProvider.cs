@@ -16,5 +16,5 @@ public interface ISongsProvider : INamedProvider
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The async enumerable to get the tag information.</returns>
-    System.Collections.Generic.IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default);
+    IAsyncEnumerable<SongInformation> GetTagInformationAsync(CancellationToken cancellationToken = default);
 }

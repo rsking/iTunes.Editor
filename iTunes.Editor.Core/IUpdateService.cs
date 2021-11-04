@@ -18,5 +18,5 @@ public interface IUpdateService
     /// <param name="force">Set to <see langword="true"/> to force the update.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The updated <see cref="SongInformation"/>.</returns>
-    System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default);
+    ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, CancellationToken cancellationToken = default);
 }

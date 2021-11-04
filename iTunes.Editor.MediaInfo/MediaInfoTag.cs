@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor.MediaInfo;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using TagLib;
 
 /// <summary>
@@ -64,7 +61,13 @@ public class MediaInfoTag : Tag
                 continue;
             }
 
-            var key = line.Substring(0, index).Trim();
+            var key =
+#if NETSTANDARD2_1_OR_GREATER
+                line[..index]
+#else
+                line.Substring(0, index)
+#endif
+                .Trim();
             var value =
 #if NETSTANDARD2_1_OR_GREATER
                     line[(index + 1)..]

@@ -8,15 +8,14 @@
 
 namespace ITunes.Editor.ChartLyrics;
 
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// The <see cref="ILyricsProvider"/> for www.chartlyrics.com.
 /// </summary>
-public sealed class ChartLyricsLyricsProvider : ILyricsProvider, System.IDisposable
+public sealed class ChartLyricsLyricsProvider : ILyricsProvider, IDisposable
 {
-    private readonly System.Uri uri = new("http://api.chartlyrics.com/apiv1.asmx");
+    private readonly Uri uri = new("http://api.chartlyrics.com/apiv1.asmx");
 
     private readonly ILogger logger;
 
@@ -35,7 +34,7 @@ public sealed class ChartLyricsLyricsProvider : ILyricsProvider, System.IDisposa
     }
 
     /// <inheritdoc/>
-    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
     {
         if (tagInformation is null)
         {
@@ -67,7 +66,7 @@ public sealed class ChartLyricsLyricsProvider : ILyricsProvider, System.IDisposa
     /// <inheritdoc/>
     public void Dispose()
     {
-        if (this.channel is System.IDisposable disposable)
+        if (this.channel is IDisposable disposable)
         {
             disposable.Dispose();
         }

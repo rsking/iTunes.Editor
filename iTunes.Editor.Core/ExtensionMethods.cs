@@ -8,10 +8,6 @@
 
 namespace ITunes.Editor;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// Extension methods.
 /// </summary>
@@ -234,7 +230,7 @@ public static class ExtensionMethods
     /// <param name="explicitLyricsProvider">The explicit lyrics provider.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Returns <see langword="true"/> if the explicit flag is updates; otherwise <see langword="false"/>.</returns>
-    public static async System.Threading.Tasks.Task<bool> UpdateRatingAsync(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider, System.Threading.CancellationToken cancellationToken)
+    public static async Task<bool> UpdateRatingAsync(this TagLib.Tag tag, IExplicitLyricsProvider explicitLyricsProvider, CancellationToken cancellationToken)
     {
         if (tag is null)
         {
@@ -343,7 +339,7 @@ public static class ExtensionMethods
     /// <param name="provider">The provider.</param>
     /// <param name="path">The path.</param>
     /// <returns>The songs provider.</returns>
-    public static ISongsProvider SetPath(this ISongsProvider provider, System.IO.FileSystemInfo path)
+    public static ISongsProvider SetPath(this ISongsProvider provider, FileSystemInfo path)
     {
         if (provider is IFolderProvider folderProvider)
         {

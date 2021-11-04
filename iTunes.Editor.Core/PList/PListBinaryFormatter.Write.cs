@@ -6,10 +6,7 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 /// <summary>
 /// The write methods for <see cref="PListBinaryFormatter"/>.
@@ -170,9 +167,15 @@ public partial class PListBinaryFormatter
 
     private static void Write(Stream stream, DateTime value)
     {
-        var buffer = RegulateNullBytes(BitConverter.GetBytes(PlistDateConverter.ConvertToAppleTimeStamp(value)), 8).Reverse();
+        var buffer = RegulateNullBytes(BitConverter.GetBytes(ConvertToAppleTimeStamp(value)), 8).Reverse();
         stream.WriteByte(0x33);
         stream.Write(buffer, 0, buffer.Length);
+
+        static double ConvertToAppleTimeStamp(DateTime date)
+        {
+            var diff = date - Origin;
+            return Math.Floor(diff.TotalSeconds);
+        }
     }
 
     private static void Write(Stream stream, bool value) => stream.WriteByte(value ? (byte)0x09 : (byte)0x08);

@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor.ViewModels;
 
-using System.Collections.Generic;
 using System.ComponentModel;
 
 /// <summary>

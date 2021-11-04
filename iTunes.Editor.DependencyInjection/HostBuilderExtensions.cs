@@ -23,7 +23,7 @@ public static class HostBuilderExtensions
     {
         if (builder is null)
         {
-            throw new System.ArgumentNullException(nameof(builder));
+            throw new ArgumentNullException(nameof(builder));
         }
 
         return builder.ConfigureServices((hostingContext, serviceCollection) =>

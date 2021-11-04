@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.ViewModels;
 
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
 /// <summary>
@@ -42,7 +40,7 @@ public class LoadViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRec
     public IEnumerable<ISongsProvider> Providers { get; }
 
     /// <inheritdoc />
-    public async System.Threading.Tasks.Task LoadAsync(ISongsProvider provider)
+    public async Task LoadAsync(ISongsProvider provider)
     {
         if (provider is null)
         {

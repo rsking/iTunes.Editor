@@ -6,6 +6,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
+    <ImplicitUsings>true</ImplicitUsings>
     <UserSecretsId>fc9242ee-946e-4f14-bcfc-b7908d9671fd</UserSecretsId>
   </PropertyGroup>
 

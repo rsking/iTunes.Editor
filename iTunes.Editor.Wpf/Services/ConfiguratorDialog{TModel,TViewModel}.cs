@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor.Services;
 
-using System.Threading.Tasks;
 using ITunes.Editor.Controls.Dialogs;
 
 /// <summary>
@@ -24,7 +23,7 @@ public class ConfiguratorDialog<TModel, TViewModel> : Configurator<TModel, TView
     /// <param name="viewModelCreator">The view model creator.</param>
     public ConfiguratorDialog(
         MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator,
-        System.Func<TModel, TViewModel> viewModelCreator)
+        Func<TModel, TViewModel> viewModelCreator)
         : base(viewModelCreator) => this.dialogCoordinator = dialogCoordinator;
 
     /// <inheritdoc/>

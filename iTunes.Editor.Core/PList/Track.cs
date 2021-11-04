@@ -6,10 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// The track.
 /// </summary>

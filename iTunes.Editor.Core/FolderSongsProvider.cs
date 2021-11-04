@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor;
 
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// A <see cref="ISongsProvider"/> for a folder of files.
 /// </summary>
@@ -21,12 +18,12 @@ public class FolderSongsProvider : ISongsProvider, IFolderProvider
     public string Name => Properties.Resources.FolderName;
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var directoryInfo = new System.IO.DirectoryInfo(this.Folder);
+        var directoryInfo = new DirectoryInfo(this.Folder);
         if (!directoryInfo.Exists)
         {
-            throw new System.IO.DirectoryNotFoundException($"Failed to find {this.Folder}");
+            throw new DirectoryNotFoundException($"Failed to find {this.Folder}");
         }
 
         // get all the files

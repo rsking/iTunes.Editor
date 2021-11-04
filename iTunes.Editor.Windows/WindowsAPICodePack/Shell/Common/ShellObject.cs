@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell;
 
-using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
@@ -12,7 +11,7 @@ using Microsoft.WindowsAPICodePack.Shell.Resources;
 using MS.WindowsAPICodePack.Internal;
 
 /// <summary>The base class for all Shell objects in Shell Namespace.</summary>
-public abstract class ShellObject : IDisposable, IEquatable<ShellObject>, System.Collections.Generic.IEqualityComparer<ShellObject>, System.Collections.IEqualityComparer
+public abstract class ShellObject : IDisposable, IEquatable<ShellObject>, IEqualityComparer<ShellObject>, System.Collections.IEqualityComparer
 {
     private IShellItem2? nativeShellItem;
 

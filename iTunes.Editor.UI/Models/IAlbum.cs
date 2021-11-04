@@ -17,5 +17,5 @@ public interface IAlbum : INamed
     /// <summary>
     /// Gets the songs.
     /// </summary>
-    System.Collections.Generic.IEnumerable<ISong> Songs { get; }
+    IEnumerable<ISong> Songs { get; }
 }

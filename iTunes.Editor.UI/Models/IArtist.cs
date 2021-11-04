@@ -12,5 +12,5 @@ public interface IArtist : INamed
     /// <summary>
     /// Gets the albums.
     /// </summary>
-    System.Collections.Generic.IEnumerable<IAlbum> Albums { get; }
+    IEnumerable<IAlbum> Albums { get; }
 }

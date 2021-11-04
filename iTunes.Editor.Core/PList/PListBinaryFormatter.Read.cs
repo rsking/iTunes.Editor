@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -106,7 +104,12 @@ public partial class PListBinaryFormatter
     {
         var buffer = stream.Read(headerPosition + 1, 8).Reverse();
         var appleTime = BitConverter.ToDouble(buffer, 0);
-        return PlistDateConverter.ConvertFromAppleTimeStamp(appleTime);
+        return ConvertFromAppleTimeStamp(appleTime);
+
+        static DateTime ConvertFromAppleTimeStamp(double timestamp)
+        {
+            return Origin.AddSeconds(timestamp);
+        }
     }
 
     private static double ReadDouble(Stream stream, int headerPosition)

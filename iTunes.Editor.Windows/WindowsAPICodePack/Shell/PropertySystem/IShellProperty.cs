@@ -4,8 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System;
-
 /// <summary>Defines the properties used by a Shell Property.</summary>
 public interface IShellProperty
 {

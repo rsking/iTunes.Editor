@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.IPod;
 
-using System.Collections.Generic;
-using System.Linq;
 using global::IPod;
 
 /// <summary>
@@ -23,20 +21,20 @@ public class IPodSongsProvider : ISongsProvider, IFolderProvider
     public string Name => Properties.Resources.IPodName;
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         // see if this has the requisit parts
         var controlDirectory = System.IO.Path.Combine(this.Folder, "iPod_Control");
         if (!System.IO.Directory.Exists(controlDirectory))
         {
-            throw new System.IO.DirectoryNotFoundException($"Failed to find iPod Control folder under {this.Folder}");
+            throw new DirectoryNotFoundException($"Failed to find iPod Control folder under {this.Folder}");
         }
 
         var iTunesDB = System.IO.Path.Combine(controlDirectory, "iTunes\\iTunesDB");
 
         if (!System.IO.File.Exists(iTunesDB))
         {
-            throw new System.IO.FileNotFoundException($"Failed to find iTunesDB file under {controlDirectory}");
+            throw new FileNotFoundException($"Failed to find iTunesDB file under {controlDirectory}");
         }
 
         // read in the database

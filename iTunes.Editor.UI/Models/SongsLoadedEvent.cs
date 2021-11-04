@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.Models;
 
-using System.Collections.Generic;
-
 /// <summary>
 /// Contains information when songs are loaded.
 /// </summary>

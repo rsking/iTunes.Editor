@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// A <see cref="ISongsProvider"/> that loads from an Apple plist file.
 /// </summary>
@@ -21,7 +18,7 @@ public class PListSongsProvider : ISongsProvider, IFileProvider
     public string Name => Properties.Resources.PListName;
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         PList plist;
         var stream = System.IO.File.OpenRead(this.File);
@@ -44,7 +41,7 @@ public class PListSongsProvider : ISongsProvider, IFileProvider
         {
             foreach (var track in dictionary
                 .Select(kvp => kvp.Value as IDictionary<string, object?>)
-                .Where(dict => !(dict is null))
+                .Where(dict => dict is not null)
                 .Select(dict => new Track(dict!)))
             {
                 yield return (SongInformation)track;

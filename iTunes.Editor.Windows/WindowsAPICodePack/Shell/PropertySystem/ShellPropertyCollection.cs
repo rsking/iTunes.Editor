@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using MS.WindowsAPICodePack.Internal;
@@ -17,7 +16,7 @@ public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisp
     /// </summary>
     /// <param name="parent">Parent ShellObject.</param>
     public ShellPropertyCollection(ShellObject parent)
-        : base(new System.Collections.Generic.List<IShellProperty>())
+        : base(new List<IShellProperty>())
     {
         this.ParentShellObject = parent;
         IPropertyStore? nativePropertyStore = null;
@@ -28,11 +27,7 @@ public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisp
         }
         catch
         {
-            if (parent is not null)
-            {
-                parent.Dispose();
-            }
-
+            parent?.Dispose();
             throw;
         }
         finally

@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell;
 
-using System;
 using System.Runtime.InteropServices;
 
 #pragma warning disable MA0062, S4070, SA1600, SA1602
@@ -160,6 +159,18 @@ internal static class ShellNativeMethods
     [Flags]
     internal enum ShellFileGetAttributesOptions
     {
+        /// <summary>The specified folders have subfolders = and are, therefore, expandable in the left pane of Windows Explorer).</summary>
+        HasSubFolder = unchecked((int)0x80000000),
+
+        /// <summary>This flag is a mask for the contents attributes.</summary>
+        ContentsMask = HasSubFolder,
+
+        /// <summary>
+        /// Mask used by PKEY_SFGAOFlags to remove certain values that are considered to cause slow calculations or lack context. Equal
+        /// to SFGAO_VALIDATE | SFGAO_ISSLOW | SFGAO_HASSUBFOLDER.
+        /// </summary>
+        PkeyMask = ContentsMask | IsSlow | ReadOnly | Validate,
+
         /// <summary>The specified items can be copied.</summary>
         CanCopy = 1,
 
@@ -227,40 +238,6 @@ internal static class ShellNativeMethods
         /// <summary>This flag is a mask for the display attributes.</summary>
         DisplayAttributeMask = IsSlow | Ghosted | Link | Share | ReadOnly | Hidden,
 
-        /// <summary>The specified folders contain one or more file system folders.</summary>
-        FileSystemAncestor = 1 << 28,
-
-        /// <summary>The specified items are folders.</summary>
-        Folder = 1 << 29,
-
-        /// <summary>
-        /// The specified folders or file objects are part of the file system that is, they are files, directories, or root directories).
-        /// </summary>
-        FileSystem = 1 << 30,
-
-        /// <summary>The specified folders have subfolders = and are, therefore, expandable in the left pane of Windows Explorer).</summary>
-        HasSubFolder = unchecked((int)0x80000000),
-
-        /// <summary>This flag is a mask for the contents attributes.</summary>
-        ContentsMask = HasSubFolder,
-
-        /// <summary>
-        /// When specified as input, SFGAO_VALIDATE instructs the folder to validate that the items pointed to by the contents of apidl
-        /// exist. If one or more of those items do not exist, IShellFolder::GetAttributesOf returns a failure code. When used with the
-        /// file system folder, SFGAO_VALIDATE instructs the folder to discard cached properties retrieved by clients of
-        /// IShellFolder2::GetDetailsEx that may have accumulated for the specified items.
-        /// </summary>
-        Validate = 1 << 24,
-
-        /// <summary>The specified items are on removable media or are themselves removable devices.</summary>
-        Removable = 1 << 25,
-
-        /// <summary>The specified items are compressed.</summary>
-        Compressed = 1 << 26,
-
-        /// <summary>The specified items can be browsed in place.</summary>
-        Browsable = 1 << 27,
-
         /// <summary>The items are nonenumerated items.</summary>
         Nonenumerated = 1 << 20,
 
@@ -284,14 +261,36 @@ internal static class ShellNativeMethods
         /// </summary>
         StorageAncestor = 1 << 23,
 
-        /// <summary>This flag is a mask for the storage capability attributes.</summary>
-        StorageCapabilityMask = Storage | Link | ReadOnly | CanMoniker | StorageAncestor | FileSystemAncestor | Folder | FileSystem,
+        /// <summary>
+        /// When specified as input, SFGAO_VALIDATE instructs the folder to validate that the items pointed to by the contents of apidl
+        /// exist. If one or more of those items do not exist, IShellFolder::GetAttributesOf returns a failure code. When used with the
+        /// file system folder, SFGAO_VALIDATE instructs the folder to discard cached properties retrieved by clients of
+        /// IShellFolder2::GetDetailsEx that may have accumulated for the specified items.
+        /// </summary>
+        Validate = 1 << 24,
+
+        /// <summary>The specified items are on removable media or are themselves removable devices.</summary>
+        Removable = 1 << 25,
+
+        /// <summary>The specified items are compressed.</summary>
+        Compressed = 1 << 26,
+
+        /// <summary>The specified items can be browsed in place.</summary>
+        Browsable = 1 << 27,
+
+        /// <summary>The specified folders contain one or more file system folders.</summary>
+        FileSystemAncestor = 1 << 28,
+
+        /// <summary>The specified items are folders.</summary>
+        Folder = 1 << 29,
 
         /// <summary>
-        /// Mask used by PKEY_SFGAOFlags to remove certain values that are considered to cause slow calculations or lack context. Equal
-        /// to SFGAO_VALIDATE | SFGAO_ISSLOW | SFGAO_HASSUBFOLDER.
+        /// The specified folders or file objects are part of the file system that is, they are files, directories, or root directories).
         /// </summary>
-        PkeyMask = ContentsMask | IsSlow | ReadOnly | Validate,
+        FileSystem = 1 << 30,
+
+        /// <summary>This flag is a mask for the storage capability attributes.</summary>
+        StorageCapabilityMask = Storage | Link | ReadOnly | CanMoniker | StorageAncestor | FileSystemAncestor | Folder | FileSystem,
     }
 
     [Flags]

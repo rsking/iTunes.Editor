@@ -13,7 +13,7 @@ using RestSharp.Serializers.SystemTextJson;
 /// </summary>
 public class OvhLyricsProvider : ILyricsProvider
 {
-    private static readonly System.Uri Uri = new("https://api.lyrics.ovh/v1");
+    private static readonly Uri Uri = new("https://api.lyrics.ovh/v1");
 
     private readonly ILogger logger;
 
@@ -27,7 +27,7 @@ public class OvhLyricsProvider : ILyricsProvider
     public OvhLyricsProvider(ILogger<OvhLyricsProvider> logger) => this.logger = logger;
 
     /// <inheritdoc />
-    public async System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
     {
         if (tagInformation is null)
         {

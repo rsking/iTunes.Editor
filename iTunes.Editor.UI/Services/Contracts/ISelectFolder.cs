@@ -23,5 +23,5 @@ public interface ISelectFolder
     /// </summary>
     /// <param name="path">The initial path.</param>
     /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-    System.Threading.Tasks.ValueTask<string?> GetSelectedPathAsync(string? path = default);
+    ValueTask<string?> GetSelectedPathAsync(string? path = default);
 }

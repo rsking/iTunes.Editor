@@ -17,6 +17,6 @@ internal class CustomContentViewResolver : global::Avalonia.Controls.Templates.I
         param switch
         {
             ViewModels.ITunesConfigureViewModel _ => new Views.ITunesConfigureView(),
-            _ => throw new System.InvalidOperationException(),
+            _ => throw new InvalidOperationException(),
         };
 }

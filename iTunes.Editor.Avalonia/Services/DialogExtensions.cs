@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.Services;
 
-using System.Linq;
-
 /// <summary>
 /// Dialog extension methods.
 /// </summary>
@@ -27,7 +25,7 @@ internal static class DialogExtensions
             _ => default,
         };
 
-        static global::Avalonia.Controls.Window? GetWindowFromWindows(System.Collections.Generic.IEnumerable<global::Avalonia.Controls.Window> windows)
+        static global::Avalonia.Controls.Window? GetWindowFromWindows(IEnumerable<global::Avalonia.Controls.Window> windows)
         {
             var window = windows.SingleOrDefault(x => x.IsActive);
             if (window is null)
@@ -60,14 +58,19 @@ internal static class DialogExtensions
     /// </summary>
     /// <param name="filterCollection">The filter collection.</param>
     /// <param name="filter">The filter to add.</param>
-    internal static void Add(this System.Collections.Generic.IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter)
+    internal static void Add(this IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter)
     {
         var split = filter.Split('|');
         var displayName = split[0];
         var index = displayName.IndexOf("(", System.StringComparison.OrdinalIgnoreCase);
         if (index > 0)
         {
-            displayName = displayName.Substring(0, index);
+            displayName =
+#if NETCOREAPP3_1_OR_GREATER
+                displayName[..index];
+#else
+                displayName.Substring(0, index);
+#endif
         }
 
         var dialogFilter = new global::Avalonia.Controls.FileDialogFilter { Name = displayName };

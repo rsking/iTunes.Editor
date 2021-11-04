@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell;
 
-using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
@@ -174,7 +173,7 @@ internal interface IShellItem2 : IShellItem
     void GetCLSID([In] ref PropertyKey key, out Guid pclsid);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    void GetFileTime([In] ref PropertyKey key, out System.Runtime.InteropServices.ComTypes.FILETIME pft);
+    void GetFileTime([In] ref PropertyKey key, out FILETIME pft);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetInt32([In] ref PropertyKey key, out int pi);

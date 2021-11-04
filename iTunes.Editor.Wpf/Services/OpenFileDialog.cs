@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.Services;
 
-using System.Linq;
-
 /// <summary>
 /// Represents the service implementation for an open file dialog.
 /// </summary>
@@ -30,21 +28,21 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     /// </summary>
     /// <param name="path">The starting path.</param>
     /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-    public override System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default) => new(this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault());
+    public override ValueTask<string?> GetFileNameAsync(string? path = default) => new(this.GetFileNamesImpl(path, multiselect: false)?.FirstOrDefault());
 
     /// <summary>
     /// Gets multiple file names.
     /// </summary>
     /// <returns>The list of file names.</returns>
-    public System.Collections.Generic.IEnumerable<string> GetFileNames() => this.GetFileNamesImpl(path: null, multiselect: true);
+    public IEnumerable<string> GetFileNames() => this.GetFileNamesImpl(path: null, multiselect: true);
 
     /// <summary>
     /// Gets multiple file names asynchronously.
     /// </summary>
     /// <returns>The list of file names.</returns>
-    public System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => new(this.GetFileNamesImpl(path: null, multiselect: true));
+    public ValueTask<IEnumerable<string>> GetFileNamesAsync() => new(this.GetFileNamesImpl(path: null, multiselect: true));
 
-    private System.Collections.Generic.IEnumerable<string> GetFileNamesImpl(string? path, bool multiselect)
+    private IEnumerable<string> GetFileNamesImpl(string? path, bool multiselect)
     {
         var openFileDialog = new Microsoft.Win32.OpenFileDialog
         {

@@ -4,8 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System;
-
 /// <summary>
 /// Provides easy access to all the system properties (property keys and their descriptions).
 /// </summary>

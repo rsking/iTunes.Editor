@@ -4,9 +4,6 @@
 
 namespace ITunes.Editor.Controls.Dialogs;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;

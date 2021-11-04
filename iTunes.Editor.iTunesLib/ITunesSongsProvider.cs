@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.ITunesLib;
 
-using System.Linq;
-
 /// <summary>
 /// The iTunes song loader.
 /// </summary>
@@ -28,7 +26,7 @@ public class ITunesSongsProvider : ISongsProvider
     /// <summary>
     /// Gets the playlists.
     /// </summary>
-    public System.Collections.Generic.IEnumerable<string> Playlists { get; private set; } = Enumerable.Empty<string>();
+    public IEnumerable<string> Playlists { get; private set; } = Enumerable.Empty<string>();
 
     /// <summary>
     /// Gets or sets the selected playlist.
@@ -57,7 +55,7 @@ public class ITunesSongsProvider : ISongsProvider
 
     /// <inheritdoc />
 #if COM_AVAILABLE
-    public async System.Collections.Generic.IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var librarySource = await System.Threading.Tasks.Task.Run(() =>
         {
@@ -161,9 +159,9 @@ public class ITunesSongsProvider : ISongsProvider
                             return string.Concat(
                                 prefix.ToLowerInvariant(),
 #if NETSTANDARD2_1_OR_GREATER
-                                    original[prefix.Length..]);
+                                original[prefix.Length..]);
 #else
-                                    original.Substring(prefix.Length));
+                                original.Substring(prefix.Length));
 #endif
                         }
                     }
@@ -197,7 +195,7 @@ public class ITunesSongsProvider : ISongsProvider
             }
         }
 
-        static System.Threading.Tasks.Task<iTunesLib.IITPlaylist> GetLibraryPlaylist()
+        static Task<iTunesLib.IITPlaylist> GetLibraryPlaylist()
         {
             return System.Threading.Tasks.Task.Run<iTunesLib.IITPlaylist>(() =>
             {

@@ -4,8 +4,6 @@
 
 namespace ITunes.Editor;
 
-using System.Threading.Tasks;
-
 /// <summary>
 /// A null configurator.
 /// </summary>

@@ -4,8 +4,6 @@
 
 namespace ITunes.Editor.Windows;
 
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
@@ -21,7 +19,7 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
     public string Name => Properties.Resources.FolderName;
 
     /// <inheritdoc />
-    public IAsyncEnumerable<SongInformation> GetTagInformationAsync(System.Threading.CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<SongInformation> GetTagInformationAsync(CancellationToken cancellationToken = default)
     {
         return GetEnumerable().ToAsyncEnumerable();
 
@@ -32,10 +30,10 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
                 yield break;
             }
 
-            var directoryInfo = new System.IO.DirectoryInfo(this.Folder);
+            var directoryInfo = new DirectoryInfo(this.Folder);
             if (!directoryInfo.Exists)
             {
-                throw new System.IO.DirectoryNotFoundException($"Failed to find {this.Folder}");
+                throw new DirectoryNotFoundException($"Failed to find {this.Folder}");
             }
 
             // get all the files

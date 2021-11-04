@@ -4,7 +4,6 @@
 
 namespace ITunes.Editor;
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +26,8 @@ public partial class App : Application
             .UseDefaultITunes()
             .ConfigureServices((_, services) =>
             {
-                    // services
-                    services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
+                // services
+                services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
                 services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                 services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                 services
@@ -36,12 +35,12 @@ public partial class App : Application
                     .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model));
                 services.AddSingleton(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
 
-                    // view models
-                    services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();
+                // view models
+                services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();
                 services.AddSingleton<Models.ISongs, ViewModels.SongsViewModel>();
 
-                    // views
-                    services.AddSingleton<Views.ShellView>();
+                // views
+                services.AddSingleton<Views.ShellView>();
                 services.AddTransient<Views.LoadView>();
                 services.AddTransient<Views.SongsView>();
 

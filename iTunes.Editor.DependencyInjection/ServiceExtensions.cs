@@ -6,7 +6,6 @@
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-using System.Linq;
 using Humanizer;
 using ITunes.Editor;
 using Neleus.DependencyInjection.Extensions;
@@ -16,7 +15,7 @@ using Neleus.DependencyInjection.Extensions;
 /// </summary>
 public static class ServiceExtensions
 {
-    private static readonly System.Collections.IList ServiceByNameBuilders = new System.Collections.Generic.List<object>();
+    private static readonly System.Collections.IList ServiceByNameBuilders = new List<object>();
 
     /// <summary>
     /// Adds API Seeds.
@@ -170,38 +169,38 @@ public static class ServiceExtensions
         .AddTransient<IComposerProvider, ITunes.Editor.Composers.ApraAmcos.ApraAmcosComposerProvider>("apra_amcos");
 
     /// <summary>
-    /// Get service of type <typeparamref name="T"/> from the <see cref="System.IServiceProvider"/> with the specified key.
+    /// Get service of type <typeparamref name="T"/> from the <see cref="IServiceProvider"/> with the specified key.
     /// </summary>
     /// <typeparam name="T">The type of service object to get.</typeparam>
-    /// <param name="provider">The <see cref="System.IServiceProvider"/> to retrieve the service object from.</param>
+    /// <param name="provider">The <see cref="IServiceProvider"/> to retrieve the service object from.</param>
     /// <param name="key">The key.</param>
     /// <returns>A service object of type <typeparamref name="T"/> or null if there is no such service.</returns>
-    public static T GetService<T>(this System.IServiceProvider provider, string key) => provider.GetByName<T>(key);
+    public static T GetService<T>(this IServiceProvider provider, string key) => provider.GetByName<T>(key);
 
     /// <summary>
-    /// Get service of type <typeparamref name="T"/> from the <see cref="System.IServiceProvider"/> with the specified key.
+    /// Get service of type <typeparamref name="T"/> from the <see cref="IServiceProvider"/> with the specified key.
     /// </summary>
     /// <typeparam name="T">The type of service object to get.</typeparam>
-    /// <param name="provider">The <see cref="System.IServiceProvider"/> to retrieve the service object from.</param>
+    /// <param name="provider">The <see cref="IServiceProvider"/> to retrieve the service object from.</param>
     /// <param name="key">The key.</param>
     /// <returns>A service object of type <typeparamref name="T"/>.</returns>
-    /// <exception cref="System.InvalidOperationException">There is no service of type <typeparamref name="T"/>.</exception>
-    public static T GetRequiredService<T>(this System.IServiceProvider provider, string key) => provider.GetByName<T>(key) ?? throw new System.InvalidOperationException();
+    /// <exception cref="InvalidOperationException">There is no service of type <typeparamref name="T"/>.</exception>
+    public static T GetRequiredService<T>(this IServiceProvider provider, string key) => provider.GetByName<T>(key) ?? throw new InvalidOperationException();
 
     /// <summary>
-    /// Gets the service object of the specified type from the <see cref="System.IServiceProvider"/> with the specified key.
+    /// Gets the service object of the specified type from the <see cref="IServiceProvider"/> with the specified key.
     /// </summary>
-    /// <param name="provider">The <see cref="System.IServiceProvider"/> to retrieve the service object from.</param>
+    /// <param name="provider">The <see cref="IServiceProvider"/> to retrieve the service object from.</param>
     /// <param name="serviceType">The service type.</param>
     /// <param name="key">The key.</param>
     /// <returns>A service object of type <paramref name="serviceType"/> --or-- <see langword="null"/> if there is no service object of type <paramref name="serviceType"/>.</returns>
-    public static object GetRequiredService(this System.IServiceProvider provider, System.Type serviceType, string key)
+    public static object GetRequiredService(this IServiceProvider provider, Type serviceType, string key)
     {
         var type = typeof(ServiceExtensions);
-        var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(System.IServiceProvider), typeof(string) });
+        var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(IServiceProvider), typeof(string) });
         if (method is null)
         {
-            throw new System.ArgumentException("Could not get method", nameof(provider));
+            throw new ArgumentException("Could not get method", nameof(provider));
         }
 
         var genericMethod = method.MakeGenericMethod(serviceType);
@@ -210,7 +209,7 @@ public static class ServiceExtensions
             return obj;
         }
 
-        throw new System.Collections.Generic.KeyNotFoundException();
+        throw new KeyNotFoundException();
     }
 
     private static string GetLyricsProviderName(string name) => GetProviderName(name, nameof(ITunes.Editor.Lyrics));

@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor.PList;
 
-using System;
-using System.Collections.Generic;
-
 /// <summary>
 /// Extension methods.
 /// </summary>
@@ -117,9 +114,9 @@ internal static class ExtensionMethods
     /// </summary>
     /// <param name="stream">The stream to read from.</param>
     /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter.</param>
-    /// <param name="origin">A value of type <see cref="System.IO.SeekOrigin"/>  indicating the reference point used to obtain the new position.</param>
+    /// <param name="origin">A value of type <see cref="SeekOrigin"/>  indicating the reference point used to obtain the new position.</param>
     /// <returns>The unsigned byte.</returns>
-    public static byte ReadByte(this System.IO.Stream stream, long offset, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
+    public static byte ReadByte(this Stream stream, long offset, SeekOrigin origin = System.IO.SeekOrigin.Begin)
     {
         stream.Seek(offset, origin);
         return (byte)stream.ReadByte();
@@ -131,7 +128,7 @@ internal static class ExtensionMethods
     /// <param name="stream">The stream to read from.</param>
     /// <param name="length">A number of bytes to read.</param>
     /// <returns>The unsigned byte array.</returns>
-    public static byte[] Read(this System.IO.Stream stream, int length) => stream.Read(0L, length, System.IO.SeekOrigin.Current);
+    public static byte[] Read(this Stream stream, int length) => stream.Read(0L, length, System.IO.SeekOrigin.Current);
 
     /// <summary>
     /// Reads a sequence of bytes from the stream at the specified offset and advances the position within the stream by the number of bytes read.
@@ -139,9 +136,9 @@ internal static class ExtensionMethods
     /// <param name="stream">The stream to read from.</param>
     /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter.</param>
     /// <param name="length">A number of bytes to read.</param>
-    /// <param name="origin">A value of type <see cref="System.IO.SeekOrigin"/>  indicating the reference point used to obtain the new position.</param>
+    /// <param name="origin">A value of type <see cref="SeekOrigin"/>  indicating the reference point used to obtain the new position.</param>
     /// <returns>The unsigned byte array.</returns>
-    public static byte[] Read(this System.IO.Stream stream, long offset, int length, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
+    public static byte[] Read(this Stream stream, long offset, int length, SeekOrigin origin = System.IO.SeekOrigin.Begin)
     {
         var bytes = new byte[length];
         stream.Seek(offset, origin);
@@ -154,7 +151,7 @@ internal static class ExtensionMethods
     /// </summary>
     /// <param name="stream">The stream to write to.</param>
     /// <param name="buffer">The bytes to write.</param>
-    public static void Write(this System.IO.Stream stream, byte[] buffer) => stream.Write(buffer, 0, buffer.Length);
+    public static void Write(this Stream stream, byte[] buffer) => stream.Write(buffer, 0, buffer.Length);
 
     /// <summary>
     /// Reverses the array.

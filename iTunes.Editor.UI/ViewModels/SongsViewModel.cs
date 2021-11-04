@@ -6,10 +6,8 @@
 
 namespace ITunes.Editor.ViewModels;
 
-using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
@@ -18,9 +16,9 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 /// </summary>
 public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ISongs, IRecipient<Models.SongsLoadedEvent>
 {
-    private readonly System.Collections.Generic.ICollection<SongInformation> songs = new System.Collections.Generic.List<SongInformation>();
+    private readonly ICollection<SongInformation> songs = new List<SongInformation>();
 
-    private readonly System.Collections.Generic.ICollection<Models.IArtist> artists = Collections.ObservableHelper.CreateObservableCollection<Models.IArtist>();
+    private readonly ICollection<Models.IArtist> artists = Collections.ObservableHelper.CreateObservableCollection<Models.IArtist>();
 
     private SongInformation? selectedSong;
 
@@ -43,7 +41,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
         : base(messenger) => this.Messenger.RegisterAll(this);
 
     /// <inheritdoc/>
-    public System.Collections.Generic.IEnumerable<SongInformation> Songs => this.songs;
+    public IEnumerable<SongInformation> Songs => this.songs;
 
     /// <inheritdoc/>
     public SongInformation? SelectedSong
@@ -75,7 +73,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
     /// <summary>
     /// Gets the artists.
     /// </summary>
-    public System.Collections.Generic.IEnumerable<Models.IArtist> Artists => this.artists;
+    public IEnumerable<Models.IArtist> Artists => this.artists;
 
     /// <summary>
     /// Gets or sets a value indicating whether to force the lyrics search.
@@ -122,18 +120,18 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
             recipient.artists.Add(artist);
         }
 
-        static System.Collections.Generic.IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
+        static IEnumerable<(string Performer, SongInformation Song)> SelectPerfomers(SongInformation song)
         {
             return song.AlbumPerformer is not null
                 ? SelectPerfomerImpl(song.AlbumPerformer, song)
                 : SelectPerfomersImpl(song.Performers, song);
 
-            static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomersImpl(System.Collections.Generic.IEnumerable<string> performers, SongInformation song)
+            static IEnumerable<(string, SongInformation)> SelectPerfomersImpl(IEnumerable<string> performers, SongInformation song)
             {
                 return performers.Select(performer => (performer, song));
             }
 
-            static System.Collections.Generic.IEnumerable<(string, SongInformation)> SelectPerfomerImpl(string performer, SongInformation song)
+            static IEnumerable<(string, SongInformation)> SelectPerfomerImpl(string performer, SongInformation song)
             {
                 yield return (performer, song);
             }
@@ -178,7 +176,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
         this.Progress = default;
     }
 
-    private System.Collections.Generic.IEnumerable<SongInformation> GetSelectedSongs()
+    private IEnumerable<SongInformation> GetSelectedSongs()
     {
         var selected = this.Artists
             .Cast<Models.ISelectable>()
@@ -188,19 +186,19 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
             ? selected
             : All();
 
-        System.Collections.Generic.IEnumerable<SongInformation> All()
+        IEnumerable<SongInformation> All()
         {
             return this.artists
                 .Cast<Models.ISelectable>()
                 .SelectMany(selectable => SelectChildren(selectable, forceSelected: true));
         }
 
-        static System.Collections.Generic.IEnumerable<SongInformation> SelectBase(Models.ISelectable selectable)
+        static IEnumerable<SongInformation> SelectBase(Models.ISelectable selectable)
         {
             return SelectChildren(selectable, forceSelected: false);
         }
 
-        static System.Collections.Generic.IEnumerable<SongInformation> SelectChildren(Models.ISelectable selectable, bool forceSelected)
+        static IEnumerable<SongInformation> SelectChildren(Models.ISelectable selectable, bool forceSelected)
         {
             if (!selectable.IsSelected && !forceSelected)
             {
@@ -241,7 +239,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
 
         protected SelectableViewModel(Models.ISelectable? parent) => this.Parent = parent;
 
-        public System.Collections.Generic.IEnumerable<Models.ISelectable> Children { get; protected internal set; } = Enumerable.Empty<Models.ISelectable>();
+        public IEnumerable<Models.ISelectable> Children { get; protected internal set; } = Enumerable.Empty<Models.ISelectable>();
 
         public Models.ISelectable? Parent { get; }
     }
@@ -250,7 +248,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
     {
         private readonly Models.ISongs parent;
 
-        public ArtistViewModel(Models.ISongs parent, string name, System.Collections.Generic.IEnumerable<SongInformation> songs)
+        public ArtistViewModel(Models.ISongs parent, string name, IEnumerable<SongInformation> songs)
             : base(default)
         {
             this.parent = parent;
@@ -265,14 +263,14 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
 
         public string? Name { get; }
 
-        public System.Collections.Generic.IEnumerable<Models.IAlbum> Albums { get; }
+        public IEnumerable<Models.IAlbum> Albums { get; }
 
         internal void SelectSong(SongInformation songInformation) => this.parent.SelectedSong = songInformation;
     }
 
     private sealed class AlbumViewModel : SelectableViewModel, Models.IAlbum
     {
-        public AlbumViewModel(ArtistViewModel artist, string? name, System.Collections.Generic.IEnumerable<SongInformation> songs)
+        public AlbumViewModel(ArtistViewModel artist, string? name, IEnumerable<SongInformation> songs)
             : base(artist)
         {
             this.Name = name;
@@ -288,7 +286,7 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
 
         public Models.IArtist Artist { get; }
 
-        public System.Collections.Generic.IEnumerable<Models.ISong> Songs { get; }
+        public IEnumerable<Models.ISong> Songs { get; }
 
         internal void SelectSong(SongInformation songInformation)
         {

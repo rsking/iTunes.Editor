@@ -6,8 +6,6 @@
 
 namespace ITunes.Editor.Services;
 
-using System.Linq;
-
 /// <summary>
 /// Dialog extension methods.
 /// </summary>

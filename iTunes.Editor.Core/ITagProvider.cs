@@ -16,5 +16,5 @@ public interface ITagProvider
     /// </summary>
     /// <returns>The tag.</returns>
     /// <param name="cancellationToken">The cancellation token.</param>
-    System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
+    ValueTask<TagLib.Tag?> GetTagAsync(CancellationToken cancellationToken);
 }

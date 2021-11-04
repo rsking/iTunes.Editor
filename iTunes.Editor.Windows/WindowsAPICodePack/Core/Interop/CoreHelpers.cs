@@ -4,8 +4,6 @@
 
 namespace MS.WindowsAPICodePack.Internal;
 
-using System;
-
 /// <summary>Common Helper methods.</summary>
 public static class CoreHelpers
 {

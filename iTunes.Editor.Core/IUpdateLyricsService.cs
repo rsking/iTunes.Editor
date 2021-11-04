@@ -19,5 +19,5 @@ public interface IUpdateLyricsService : IUpdateService
     /// <param name="forceExplicit">Set to <see langword="true"/> to force the explicit validation.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The updated <see cref="SongInformation"/>.</returns>
-    System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool forceSearch = false, bool forceExplicit = false, System.Threading.CancellationToken cancellationToken = default);
+    ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool forceSearch = false, bool forceExplicit = false, CancellationToken cancellationToken = default);
 }

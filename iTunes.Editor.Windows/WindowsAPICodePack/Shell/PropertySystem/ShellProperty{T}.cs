@@ -4,7 +4,6 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MS.WindowsAPICodePack.Internal;
@@ -67,7 +66,7 @@ public class ShellProperty<T> : IShellProperty
     /// <summary>
     /// Gets the strongly-typed value of this property. The value of the property is cleared if the value is set to null.
     /// </summary>
-    /// <exception cref="System.Runtime.InteropServices.COMException">
+    /// <exception cref="COMException">
     /// If the property value cannot be retrieved or updated in the Property System.
     /// </exception>
     /// <exception cref="NotSupportedException">If the type of this property is not supported; e.g. writing a binary object.</exception>
@@ -128,7 +127,7 @@ public class ShellProperty<T> : IShellProperty
                 this.NativePropertyStore.GetValue(ref this.propertyKey, propVar);
             }
 
-            return propVar is not null ? propVar.Value : null;
+            return propVar?.Value;
         }
     }
 

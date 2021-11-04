@@ -4,9 +4,6 @@
 
 namespace ITunes.Editor.Lyrics.Genius;
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Humanizer;
 
 /// <summary>
@@ -14,13 +11,13 @@ using Humanizer;
 /// </summary>
 public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
 {
-    private readonly System.Net.Http.HttpClient client = new();
+    private readonly HttpClient client = new();
 
     /// <inheritdoc/>
     public void Dispose() => this.client.Dispose();
 
     /// <inheritdoc/>
-    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
     {
         if (tagInformation is null)
         {
@@ -81,14 +78,14 @@ public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
         }
     }
 
-    private async Task<string?> ScrapeLyricsAsync(string address, System.Threading.CancellationToken cancellationToken)
+    private async Task<string?> ScrapeLyricsAsync(string address, CancellationToken cancellationToken)
     {
         string pageText;
         try
         {
             pageText = await this.client.GetStringAsync(address).ConfigureAwait(false);
         }
-        catch (System.Net.Http.HttpRequestException)
+        catch (HttpRequestException)
         {
             return null;
         }

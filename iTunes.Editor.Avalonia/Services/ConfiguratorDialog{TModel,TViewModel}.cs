@@ -21,11 +21,11 @@ public class ConfiguratorDialog<TModel, TViewModel> : Configurator<TModel, TView
     /// <param name="viewModelCreator">The view model creator.</param>
     public ConfiguratorDialog(
         Movere.Services.IContentDialogService<TViewModel> contentDialogService,
-        System.Func<TModel, TViewModel> viewModelCreator)
+        Func<TModel, TViewModel> viewModelCreator)
         : base(viewModelCreator) => this.contentDialogService = contentDialogService;
 
     /// <inheritdoc/>
-    protected override async System.Threading.Tasks.ValueTask<bool> ConfigureViewModelAsync(TViewModel source)
+    protected override async ValueTask<bool> ConfigureViewModelAsync(TViewModel source)
     {
         var options = Movere.Models.ContentDialogOptions.Create(
             this.Title,

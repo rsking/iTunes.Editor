@@ -6,9 +6,6 @@
 
 namespace ITunes.Editor;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -36,18 +33,18 @@ public class UpdateLyricsService : IUpdateLyricsService
         IEnumerable<ILyricsProvider> providers) => (this.logger, this.explicitLyrics, this.providers) = (logger, explicitLyricsProvider, providers.ToArray());
 
     /// <inheritdoc />
-    public System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(
+    public ValueTask<SongInformation> UpdateAsync(
         SongInformation songInformation,
         bool force = false,
-        System.Threading.CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
         => this.UpdateAsync(songInformation, force, force, cancellationToken);
 
     /// <inheritdoc />
-    public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(
+    public async ValueTask<SongInformation> UpdateAsync(
         SongInformation songInformation,
         bool forceSearch = false,
         bool forceExplicit = false,
-        System.Threading.CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
     {
         if (songInformation is null)
         {
@@ -111,7 +108,7 @@ public class UpdateLyricsService : IUpdateLyricsService
 
         public bool CanUpdateExplicit() => this.appleTag is not null && !string.IsNullOrEmpty(this.appleTag.Lyrics) && this.appleTag.Lyrics.Trim().Length > 0;
 
-        public async System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, System.Threading.CancellationToken cancellationToken = default)
+        public async ValueTask<SongInformation> UpdateAsync(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics = null, CancellationToken cancellationToken = default)
         {
             if (this.file is null || this.appleTag is null)
             {
@@ -201,6 +198,6 @@ public class UpdateLyricsService : IUpdateLyricsService
         {
         }
 
-        public System.Threading.Tasks.ValueTask<bool?> IsExplicitAsync(string lyrics, System.Threading.CancellationToken cancellationToken) => new(result: false);
+        public ValueTask<bool?> IsExplicitAsync(string lyrics, CancellationToken cancellationToken) => new(result: false);
     }
 }

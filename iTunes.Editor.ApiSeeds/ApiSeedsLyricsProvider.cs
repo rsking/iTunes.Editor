@@ -15,7 +15,7 @@ using RestSharp.Serializers.SystemTextJson;
 /// </summary>
 public class ApiSeedsLyricsProvider : ILyricsProvider
 {
-    private static readonly System.Uri Uri = new("https://orion.apiseeds.com/api/music/lyric");
+    private static readonly Uri Uri = new("https://orion.apiseeds.com/api/music/lyric");
 
     private readonly ILogger logger;
 
@@ -42,12 +42,12 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
     /// <param name="logger">The logger.</param>
     /// <param name="options">The options.</param>
     public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeedsOptions> options)
-        : this(logger, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
+        : this(logger, options is null ? throw new ArgumentNullException(nameof(options)) : options.Value.ApiKey)
     {
     }
 
     /// <inheritdoc />
-    public async System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
     {
         if (tagInformation is null)
         {

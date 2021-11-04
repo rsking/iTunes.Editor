@@ -4,8 +4,6 @@
 
 namespace ITunes.Editor.Views;
 
-using System;
-
 /// <summary>
 /// Interaction logic for <c>LoadView.xaml</c>.
 /// </summary>

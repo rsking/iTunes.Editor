@@ -22,7 +22,7 @@ public interface ISelectable
     /// <summary>
     /// Gets the children.
     /// </summary>
-    System.Collections.Generic.IEnumerable<ISelectable> Children { get; }
+    IEnumerable<ISelectable> Children { get; }
 
     /// <summary>
     /// Gets the parent.

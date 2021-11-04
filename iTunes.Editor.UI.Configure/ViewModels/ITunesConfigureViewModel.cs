@@ -19,7 +19,7 @@ public class ITunesConfigureViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Ob
     public ITunesConfigureViewModel(ITunesLib.ITunesSongsProvider provider) => this.provider = provider;
 
     /// <inheritdoc cref="ITunesLib.ITunesSongsProvider.Playlists" />
-    public System.Collections.Generic.IEnumerable<string> Playlists => this.provider.Playlists;
+    public IEnumerable<string> Playlists => this.provider.Playlists;
 
     /// <inheritdoc cref="ITunesLib.ITunesSongsProvider.SelectedPlaylist" />
     public string? SelectedPlaylist
