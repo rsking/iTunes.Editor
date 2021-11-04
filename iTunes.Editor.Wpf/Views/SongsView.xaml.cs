@@ -2,21 +2,20 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Views
+namespace ITunes.Editor.Views;
+
+/// <summary>
+/// The songs view.
+/// </summary>
+public partial class SongsView
 {
     /// <summary>
-    /// The songs view.
+    /// Initializes a new instance of the <see cref="SongsView"/> class.
     /// </summary>
-    public partial class SongsView
+    /// <param name="songs">The songs.</param>
+    public SongsView(Models.ISongs songs)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SongsView"/> class.
-        /// </summary>
-        /// <param name="songs">The songs.</param>
-        public SongsView(Models.ISongs songs)
-        {
-            this.InitializeComponent();
-            this.DataContext = songs;
-        }
+        this.InitializeComponent();
+        this.DataContext = songs;
     }
 }

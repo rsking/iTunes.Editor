@@ -2,21 +2,20 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Collections
+namespace ITunes.Editor.Collections;
+
+/// <summary>
+/// The lock type.
+/// </summary>
+public enum LockType
 {
     /// <summary>
-    /// The lock type.
+    /// Spin/Wait lock type.
     /// </summary>
-    public enum LockType
-    {
-        /// <summary>
-        /// Spin/Wait lock type.
-        /// </summary>
-        SpinWait,
+    SpinWait,
 
-        /// <summary>
-        /// Lock lock type.
-        /// </summary>
-        Lock,
-    }
+    /// <summary>
+    /// Lock lock type.
+    /// </summary>
+    Lock,
 }

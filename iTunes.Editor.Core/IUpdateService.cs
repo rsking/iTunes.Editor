@@ -4,20 +4,19 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// The updater service.
+/// </summary>
+public interface IUpdateService
 {
     /// <summary>
-    /// The updater service.
+    /// Updates the song.
     /// </summary>
-    public interface IUpdateService
-    {
-        /// <summary>
-        /// Updates the song.
-        /// </summary>
-        /// <param name="songInformation">The song information.</param>
-        /// <param name="force">Set to <see langword="true"/> to force the update.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The updated <see cref="SongInformation"/>.</returns>
-        System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default);
-    }
+    /// <param name="songInformation">The song information.</param>
+    /// <param name="force">Set to <see langword="true"/> to force the update.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The updated <see cref="SongInformation"/>.</returns>
+    System.Threading.Tasks.ValueTask<SongInformation> UpdateAsync(SongInformation songInformation, bool force = false, System.Threading.CancellationToken cancellationToken = default);
 }

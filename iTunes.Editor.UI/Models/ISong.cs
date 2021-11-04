@@ -2,16 +2,15 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Models
+namespace ITunes.Editor.Models;
+
+/// <summary>
+/// Represents a song.
+/// </summary>
+public interface ISong : INamed
 {
     /// <summary>
-    /// Represents a song.
+    /// Gets the album.
     /// </summary>
-    public interface ISong : INamed
-    {
-        /// <summary>
-        /// Gets the album.
-        /// </summary>
-        IAlbum Album { get; }
-    }
+    IAlbum Album { get; }
 }

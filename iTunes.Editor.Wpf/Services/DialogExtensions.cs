@@ -4,32 +4,31 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.Services
+namespace ITunes.Editor.Services;
+
+using System.Linq;
+
+/// <summary>
+/// Dialog extension methods.
+/// </summary>
+internal static class DialogExtensions
 {
-    using System.Linq;
-
     /// <summary>
-    /// Dialog extension methods.
+    /// Gets the active window.
     /// </summary>
-    internal static class DialogExtensions
+    /// <param name="application">The application object.</param>
+    /// <returns>The active window.</returns>
+    internal static System.Windows.Window? GetActiveWindow(this System.Windows.Application application)
     {
-        /// <summary>
-        /// Gets the active window.
-        /// </summary>
-        /// <param name="application">The application object.</param>
-        /// <returns>The active window.</returns>
-        internal static System.Windows.Window? GetActiveWindow(this System.Windows.Application application)
+        var windows = application.Windows.OfType<System.Windows.Window>().ToList();
+        var window = windows.SingleOrDefault(x => x.IsActive);
+
+        if (window is null)
         {
-            var windows = application.Windows.OfType<System.Windows.Window>().ToList();
-            var window = windows.SingleOrDefault(x => x.IsActive);
-
-            if (window is null)
-            {
-                return null;
-            }
-
-            // see if any of the other has this as a parent
-            return windows.Find(x => window.Equals(x.Owner)) ?? window;
+            return null;
         }
+
+        // see if any of the other has this as a parent
+        return windows.Find(x => window.Equals(x.Owner)) ?? window;
     }
 }

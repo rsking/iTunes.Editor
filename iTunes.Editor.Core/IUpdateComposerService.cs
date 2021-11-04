@@ -4,12 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// The composer update service.
+/// </summary>
+public interface IUpdateComposerService : IUpdateService
 {
-    /// <summary>
-    /// The composer update service.
-    /// </summary>
-    public interface IUpdateComposerService : IUpdateService
-    {
-    }
 }

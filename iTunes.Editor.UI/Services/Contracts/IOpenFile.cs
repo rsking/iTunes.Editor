@@ -4,23 +4,22 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.Services.Contracts
+namespace ITunes.Editor.Services.Contracts;
+
+/// <summary>
+/// Service contract for selecting a file to open.
+/// </summary>
+public interface IOpenFile : ISelectFile
 {
     /// <summary>
-    /// Service contract for selecting a file to open.
+    /// Gets multiple file names.
     /// </summary>
-    public interface IOpenFile : ISelectFile
-    {
-        /// <summary>
-        /// Gets multiple file names.
-        /// </summary>
-        /// <returns>The list of file names.</returns>
-        System.Collections.Generic.IEnumerable<string> GetFileNames();
+    /// <returns>The list of file names.</returns>
+    System.Collections.Generic.IEnumerable<string> GetFileNames();
 
-        /// <summary>
-        /// Gets multiple file names asynchronously.
-        /// </summary>
-        /// <returns>The list of file names.</returns>
-        System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync();
-    }
+    /// <summary>
+    /// Gets multiple file names asynchronously.
+    /// </summary>
+    /// <returns>The list of file names.</returns>
+    System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync();
 }

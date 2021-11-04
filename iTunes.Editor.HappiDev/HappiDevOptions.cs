@@ -4,16 +4,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.HappiDev
+namespace ITunes.Editor.HappiDev;
+
+/// <summary>
+/// The happi.dev API key.
+/// </summary>
+public class HappiDevOptions
 {
     /// <summary>
-    /// The happi.dev API key.
+    /// Gets or sets the API key.
     /// </summary>
-    public class HappiDevOptions
-    {
-        /// <summary>
-        /// Gets or sets the API key.
-        /// </summary>
-        public string? ApiKey { get; set; }
-    }
+    public string? ApiKey { get; set; }
 }

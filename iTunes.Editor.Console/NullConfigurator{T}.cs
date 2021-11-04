@@ -2,20 +2,19 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+using System.Threading.Tasks;
+
+/// <summary>
+/// A null configurator.
+/// </summary>
+/// <typeparam name="T">The type to configure.</typeparam>
+internal class NullConfigurator<T> : IConfigurator<T>
 {
-    using System.Threading.Tasks;
+    /// <inheritdoc/>
+    public bool Configure(T source) => true;
 
-    /// <summary>
-    /// A null configurator.
-    /// </summary>
-    /// <typeparam name="T">The type to configure.</typeparam>
-    internal class NullConfigurator<T> : IConfigurator<T>
-    {
-        /// <inheritdoc/>
-        public bool Configure(T source) => true;
-
-        /// <inheritdoc/>
-        public ValueTask<bool> ConfigureAsync(T source) => new(result: true);
-    }
+    /// <inheritdoc/>
+    public ValueTask<bool> ConfigureAsync(T source) => new(result: true);
 }

@@ -2,25 +2,24 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Views
+namespace ITunes.Editor.Views;
+
+using global::Avalonia.Markup.Xaml;
+using ReactiveUI;
+
+/// <summary>
+/// The songs view.
+/// </summary>
+public class SongsView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.SongsRoutableViewModel>
 {
-    using global::Avalonia.Markup.Xaml;
-    using ReactiveUI;
-
     /// <summary>
-    /// The songs view.
+    /// Initializes a new instance of the <see cref="SongsView"/> class.
     /// </summary>
-    public class SongsView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.SongsRoutableViewModel>
+    public SongsView()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SongsView"/> class.
-        /// </summary>
-        public SongsView()
-        {
-            this.WhenActivated(disposables => { });
-            this.InitializeComponent();
-        }
-
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+        this.WhenActivated(disposables => { });
+        this.InitializeComponent();
     }
+
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 }

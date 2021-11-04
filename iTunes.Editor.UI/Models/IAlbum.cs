@@ -2,21 +2,20 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Models
+namespace ITunes.Editor.Models;
+
+/// <summary>
+/// Represents an album.
+/// </summary>
+public interface IAlbum : INamed
 {
     /// <summary>
-    /// Represents an album.
+    /// Gets the artist.
     /// </summary>
-    public interface IAlbum : INamed
-    {
-        /// <summary>
-        /// Gets the artist.
-        /// </summary>
-        IArtist Artist { get; }
+    IArtist Artist { get; }
 
-        /// <summary>
-        /// Gets the songs.
-        /// </summary>
-        System.Collections.Generic.IEnumerable<ISong> Songs { get; }
-    }
+    /// <summary>
+    /// Gets the songs.
+    /// </summary>
+    System.Collections.Generic.IEnumerable<ISong> Songs { get; }
 }

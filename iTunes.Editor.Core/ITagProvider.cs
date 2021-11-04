@@ -4,18 +4,17 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// Interface for getting tags.
+/// </summary>
+public interface ITagProvider
 {
     /// <summary>
-    /// Interface for getting tags.
+    /// Gets the tag asynchronously.
     /// </summary>
-    public interface ITagProvider
-    {
-        /// <summary>
-        /// Gets the tag asynchronously.
-        /// </summary>
-        /// <returns>The tag.</returns>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
-    }
+    /// <returns>The tag.</returns>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    System.Threading.Tasks.ValueTask<TagLib.Tag?> GetTagAsync(System.Threading.CancellationToken cancellationToken);
 }

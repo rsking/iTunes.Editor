@@ -4,198 +4,197 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.HappiDev
+namespace ITunes.Editor.HappiDev;
+
+using System.Net.Http.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using RestSharp;
+using RestSharp.Serializers.SystemTextJson;
+
+/// <summary>
+/// Represents an <see cref="ILyricsProvider"/> using the happi.dev Lyrics service.
+/// </summary>
+public class HappiDevLyricsProvider : ILyricsProvider
 {
-    using System.Net.Http.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using RestSharp;
-    using RestSharp.Serializers.SystemTextJson;
+    private static readonly System.Uri Uri = new("https://api.happi.dev/v1/music/");
+
+    private readonly ILogger logger;
+
+    private readonly System.Net.Http.HttpClient httpClient;
+
+    private readonly IRestClient restClient = new RestClient(Uri)
+        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
     /// <summary>
-    /// Represents an <see cref="ILyricsProvider"/> using the happi.dev Lyrics service.
+    /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
     /// </summary>
-    public class HappiDevLyricsProvider : ILyricsProvider
+    /// <param name="httpClientFactory">The HTTP client factory.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
+    public HappiDevLyricsProvider(
+        System.Net.Http.IHttpClientFactory httpClientFactory,
+        Microsoft.Extensions.Options.IOptions<HappiDevOptions> options,
+        ILogger<HappiDevLyricsProvider> logger)
+        : this(logger, httpClientFactory.CreateClient(nameof(HappiDevLyricsProvider)), options)
     {
-        private static readonly System.Uri Uri = new("https://api.happi.dev/v1/music/");
+    }
 
-        private readonly ILogger logger;
-
-        private readonly System.Net.Http.HttpClient httpClient;
-
-        private readonly IRestClient restClient = new RestClient(Uri)
-            .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
-        /// </summary>
-        /// <param name="httpClientFactory">The HTTP client factory.</param>
-        /// <param name="options">The options.</param>
-        /// <param name="logger">The logger.</param>
-        public HappiDevLyricsProvider(
-            System.Net.Http.IHttpClientFactory httpClientFactory,
-            Microsoft.Extensions.Options.IOptions<HappiDevOptions> options,
-            ILogger<HappiDevLyricsProvider> logger)
-            : this(logger, httpClientFactory.CreateClient(nameof(HappiDevLyricsProvider)), options)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
+    /// </summary>
+    /// <param name="httpClient">The HTTP client.</param>
+    /// <param name="apiKey">The API key.</param>
+    /// <param name="logger">The logger.</param>
+    public HappiDevLyricsProvider(
+        System.Net.Http.HttpClient httpClient,
+        string? apiKey,
+        ILogger<HappiDevLyricsProvider> logger)
+    {
+        this.logger = logger;
+        this.httpClient = httpClient;
+        if (apiKey is not null)
         {
+            _ = this.restClient.AddDefaultHeader("x-happi-key", apiKey);
+            this.httpClient.DefaultRequestHeaders.Add("x-happi-key", apiKey);
+        }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="httpClient">The HTTP client.</param>
+    /// <param name="options">The options.</param>
+    public HappiDevLyricsProvider(
+        ILogger<HappiDevLyricsProvider> logger,
+        System.Net.Http.HttpClient httpClient,
+        Microsoft.Extensions.Options.IOptions<HappiDevOptions> options)
+        : this(httpClient, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey, logger)
+    {
+    }
+
+    /// <inheritdoc/>
+    public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
+    {
+        var lyricsAddress = await GetLyricsAddressAsync(tagInformation, cancellationToken)
+            .ConfigureAwait(false);
+        if (lyricsAddress is null)
+        {
+            return default;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
-        /// </summary>
-        /// <param name="httpClient">The HTTP client.</param>
-        /// <param name="apiKey">The API key.</param>
-        /// <param name="logger">The logger.</param>
-        public HappiDevLyricsProvider(
-            System.Net.Http.HttpClient httpClient,
-            string? apiKey,
-            ILogger<HappiDevLyricsProvider> logger)
+        var result = await this.httpClient
+            .GetFromJsonAsync<Lyrics>(lyricsAddress, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return result switch
         {
-            this.logger = logger;
-            this.httpClient = httpClient;
-            if (apiKey is not null)
+            not null when result.Success && result.Length == 1 => result.Result.Lyrics,
+            _ => default,
+        };
+
+        async Task<string?> GetLyricsAddressAsync(SongInformation tagInformation, CancellationToken cancellationToken)
+        {
+            var title = tagInformation.Title;
+            var artist = tagInformation.Performers.ToJoinedString();
+            var request = new RestRequest()
+                .AddQueryParameter("q", $"{artist} {title}")
+                .AddQueryParameter("lyrics", "1")
+                .AddQueryParameter("type", "track");
+            var response = await this.restClient.ExecuteGetAsync<Track>(request, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessful)
             {
-                _ = this.restClient.AddDefaultHeader("x-happi-key", apiKey);
-                this.httpClient.DefaultRequestHeaders.Add("x-happi-key", apiKey);
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="httpClient">The HTTP client.</param>
-        /// <param name="options">The options.</param>
-        public HappiDevLyricsProvider(
-            ILogger<HappiDevLyricsProvider> logger,
-            System.Net.Http.HttpClient httpClient,
-            Microsoft.Extensions.Options.IOptions<HappiDevOptions> options)
-            : this(httpClient, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey, logger)
-        {
-        }
-
-        /// <inheritdoc/>
-        public async ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, CancellationToken cancellationToken = default)
-        {
-            var lyricsAddress = await GetLyricsAddressAsync(tagInformation, cancellationToken)
-                .ConfigureAwait(false);
-            if (lyricsAddress is null)
-            {
+                this.logger.LogError(response.ErrorMessage);
                 return default;
             }
 
-            var result = await this.httpClient
-                .GetFromJsonAsync<Lyrics>(lyricsAddress, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            return result switch
+            return response.Data switch
             {
-                not null when result.Success && result.Length == 1 => result.Result.Lyrics,
+                not null when response.Data.Success && response.Data.Length != 0 => GetLyricsImpl(this.logger, artist, title, response.Data.Result[0]),
                 _ => default,
             };
 
-            async Task<string?> GetLyricsAddressAsync(SongInformation tagInformation, CancellationToken cancellationToken)
+            static string? GetLyricsImpl(
+                ILogger logger,
+                string artist,
+                string title,
+                TrackResult? result)
             {
-                var title = tagInformation.Title;
-                var artist = tagInformation.Performers.ToJoinedString();
-                var request = new RestRequest()
-                    .AddQueryParameter("q", $"{artist} {title}")
-                    .AddQueryParameter("lyrics", "1")
-                    .AddQueryParameter("type", "track");
-                var response = await this.restClient.ExecuteGetAsync<Track>(request, cancellationToken).ConfigureAwait(false);
-                if (!response.IsSuccessful)
+                if (result is null)
                 {
-                    this.logger.LogError(response.ErrorMessage);
-                    return default;
+                    return null;
                 }
 
-                return response.Data switch
+                if (result.Artist is not null
+                    && CheckName(result.Artist, artist)
+                    && result.Track is not null
+                    && CheckName(result.Track, title))
                 {
-                    not null when response.Data.Success && response.Data.Length != 0 => GetLyricsImpl(this.logger, artist, title, response.Data.Result[0]),
-                    _ => default,
-                };
+                    return result.Api_Lyrics;
+                }
 
-                static string? GetLyricsImpl(
-                    ILogger logger,
-                    string artist,
-                    string title,
-                    TrackResult? result)
+                logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{artist}|{title}", $"{result.Artist}|{result.Track}");
+                return null;
+
+                static bool CheckName(string? first, string? second)
                 {
-                    if (result is null)
+                    return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
+
+                    static string? Sanitise(string? input)
                     {
-                        return null;
-                    }
-
-                    if (result.Artist is not null
-                        && CheckName(result.Artist, artist)
-                        && result.Track is not null
-                        && CheckName(result.Track, title))
-                    {
-                        return result.Api_Lyrics;
-                    }
-
-                    logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{artist}|{title}", $"{result.Artist}|{result.Track}");
-                    return null;
-
-                    static bool CheckName(string? first, string? second)
-                    {
-                        return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
-                            || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
-
-                        static string? Sanitise(string? input)
+                        return input switch
                         {
-                            return input switch
-                            {
-                                null => input,
-                                _ => input.Replace('-', ' '),
-                            };
-                        }
+                            null => input,
+                            _ => input.Replace('-', ' '),
+                        };
                     }
                 }
             }
         }
-
-        private record Return<T>(bool Success, int Length, T Result);
-
-        private sealed record Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
-
-        private sealed record TrackResult(
-            string Track,
-            int Id_Track,
-            string Artist,
-            bool HasLyrics,
-            int Id_Artist,
-            string Album,
-            int Bpm,
-            int Id_Album,
-            string Cover,
-            string Lang,
-            string Api_Artist,
-            string Api_Albums,
-            string Api_Album,
-            string Api_Tracks,
-            string Api_Track,
-            string Api_Lyrics);
-
-        private sealed record Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
-
-        private sealed record LyricsResult(
-            string Artist,
-            int Id_Artist,
-            string Track,
-            int Id_Track,
-            string Album,
-            string Lyrics,
-            string Api_Artist,
-            string Api_Albums,
-            string Api_Album,
-            string Api_Tracks,
-            string Api_Track,
-            string Api_Lyrics,
-            string Lang,
-            string Copyright_Label,
-            string Copyright_Notice,
-            string Copyright_Text);
     }
+
+    private record Return<T>(bool Success, int Length, T Result);
+
+    private sealed record Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
+
+    private sealed record TrackResult(
+        string Track,
+        int Id_Track,
+        string Artist,
+        bool HasLyrics,
+        int Id_Artist,
+        string Album,
+        int Bpm,
+        int Id_Album,
+        string Cover,
+        string Lang,
+        string Api_Artist,
+        string Api_Albums,
+        string Api_Album,
+        string Api_Tracks,
+        string Api_Track,
+        string Api_Lyrics);
+
+    private sealed record Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
+
+    private sealed record LyricsResult(
+        string Artist,
+        int Id_Artist,
+        string Track,
+        int Id_Track,
+        string Album,
+        string Lyrics,
+        string Api_Artist,
+        string Api_Albums,
+        string Api_Album,
+        string Api_Tracks,
+        string Api_Track,
+        string Api_Lyrics,
+        string Lang,
+        string Copyright_Label,
+        string Copyright_Notice,
+        string Copyright_Text);
 }

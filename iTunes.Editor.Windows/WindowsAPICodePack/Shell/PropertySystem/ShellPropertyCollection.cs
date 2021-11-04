@@ -2,121 +2,120 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 
-namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
+namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+
+using System;
+using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
+using MS.WindowsAPICodePack.Internal;
+
+/// <summary>Creates a readonly collection of IProperty objects.</summary>
+public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisposable
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Runtime.InteropServices;
-    using MS.WindowsAPICodePack.Internal;
-
-    /// <summary>Creates a readonly collection of IProperty objects.</summary>
-    public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisposable
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ShellPropertyCollection"/> class.
+    /// </summary>
+    /// <param name="parent">Parent ShellObject.</param>
+    public ShellPropertyCollection(ShellObject parent)
+        : base(new System.Collections.Generic.List<IShellProperty>())
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShellPropertyCollection"/> class.
-        /// </summary>
-        /// <param name="parent">Parent ShellObject.</param>
-        public ShellPropertyCollection(ShellObject parent)
-            : base(new System.Collections.Generic.List<IShellProperty>())
+        this.ParentShellObject = parent;
+        IPropertyStore? nativePropertyStore = null;
+        try
         {
-            this.ParentShellObject = parent;
-            IPropertyStore? nativePropertyStore = null;
-            try
+            nativePropertyStore = CreateDefaultPropertyStore(this.ParentShellObject);
+            this.AddProperties(nativePropertyStore);
+        }
+        catch
+        {
+            if (parent is not null)
             {
-                nativePropertyStore = CreateDefaultPropertyStore(this.ParentShellObject);
-                this.AddProperties(nativePropertyStore);
+                parent.Dispose();
             }
-            catch
-            {
-                if (parent is not null)
-                {
-                    parent.Dispose();
-                }
 
-                throw;
-            }
-            finally
+            throw;
+        }
+        finally
+        {
+            if (nativePropertyStore is not null)
             {
-                if (nativePropertyStore is not null)
-                {
-                    Marshal.ReleaseComObject(nativePropertyStore);
-                }
+                Marshal.ReleaseComObject(nativePropertyStore);
             }
         }
+    }
 
-        private IPropertyStore? NativePropertyStore { get; set; }
+    private IPropertyStore? NativePropertyStore { get; set; }
 
-        private ShellObject ParentShellObject { get; }
+    private ShellObject ParentShellObject { get; }
 
-        /// <summary>Release the native objects.</summary>
-        public void Dispose()
+    /// <summary>Release the native objects.</summary>
+    public void Dispose()
+    {
+        this.Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Creates the default property store.
+    /// </summary>
+    /// <param name="shellObj">The shell object.</param>
+    /// <returns>The default property store.</returns>
+    internal static IPropertyStore CreateDefaultPropertyStore(ShellObject shellObj)
+    {
+        var guid = new Guid(ShellIIDGuid.IPropertyStore);
+        var hr = shellObj.GetNativeShellItem2().GetPropertyStore(
+               ShellNativeMethods.GetPropertyStoreOptions.BestEffort,
+               ref guid,
+               out var nativePropertyStore);
+
+        // throw on failure
+        if (nativePropertyStore is null || !CoreErrorHelper.Succeeded(hr))
         {
-            this.Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            throw new ShellException(hr);
         }
 
-        /// <summary>
-        /// Creates the default property store.
-        /// </summary>
-        /// <param name="shellObj">The shell object.</param>
-        /// <returns>The default property store.</returns>
-        internal static IPropertyStore CreateDefaultPropertyStore(ShellObject shellObj)
+        return nativePropertyStore;
+    }
+
+    /// <summary>
+    /// Creates the typed property.
+    /// </summary>
+    /// <param name="propKey">The property key.</param>
+    /// <param name="nativePropertyStore">The native property store.</param>
+    /// <returns>The shell property.</returns>
+    internal static IShellProperty CreateTypedProperty(PropertyKey propKey, IPropertyStore nativePropertyStore) => ShellPropertyFactory.CreateShellProperty(propKey, nativePropertyStore);
+
+    /// <summary>Release the native and managed objects.</summary>
+    /// <param name="disposing">Indicates that this is being called from Dispose(), rather than the finalizer.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (this.NativePropertyStore is not null)
         {
-            var guid = new Guid(ShellIIDGuid.IPropertyStore);
-            var hr = shellObj.GetNativeShellItem2().GetPropertyStore(
-                   ShellNativeMethods.GetPropertyStoreOptions.BestEffort,
-                   ref guid,
-                   out var nativePropertyStore);
+            Marshal.ReleaseComObject(this.NativePropertyStore);
+            this.NativePropertyStore = default;
+        }
+    }
 
-            // throw on failure
-            if (nativePropertyStore is null || !CoreErrorHelper.Succeeded(hr))
-            {
-                throw new ShellException(hr);
-            }
-
-            return nativePropertyStore;
+    private void AddProperties(IPropertyStore nativePropertyStore)
+    {
+        if (this.NativePropertyStore is null)
+        {
+            throw new InvalidOperationException();
         }
 
-        /// <summary>
-        /// Creates the typed property.
-        /// </summary>
-        /// <param name="propKey">The property key.</param>
-        /// <param name="nativePropertyStore">The native property store.</param>
-        /// <returns>The shell property.</returns>
-        internal static IShellProperty CreateTypedProperty(PropertyKey propKey, IPropertyStore nativePropertyStore) => ShellPropertyFactory.CreateShellProperty(propKey, nativePropertyStore);
-
-        /// <summary>Release the native and managed objects.</summary>
-        /// <param name="disposing">Indicates that this is being called from Dispose(), rather than the finalizer.</param>
-        protected virtual void Dispose(bool disposing)
+        // Populate the property collection
+        nativePropertyStore.GetCount(out var propertyCount);
+        for (uint i = 0; i < propertyCount; i++)
         {
-            if (this.NativePropertyStore is not null)
+            nativePropertyStore.GetAt(i, out var propKey);
+
+            if (this.ParentShellObject is not null)
             {
-                Marshal.ReleaseComObject(this.NativePropertyStore);
-                this.NativePropertyStore = default;
+                this.Items.Add(this.ParentShellObject.Properties.CreateTypedProperty(propKey));
             }
-        }
-
-        private void AddProperties(IPropertyStore nativePropertyStore)
-        {
-            if (this.NativePropertyStore is null)
+            else
             {
-                throw new InvalidOperationException();
-            }
-
-            // Populate the property collection
-            nativePropertyStore.GetCount(out var propertyCount);
-            for (uint i = 0; i < propertyCount; i++)
-            {
-                nativePropertyStore.GetAt(i, out var propKey);
-
-                if (this.ParentShellObject is not null)
-                {
-                    this.Items.Add(this.ParentShellObject.Properties.CreateTypedProperty(propKey));
-                }
-                else
-                {
-                    this.Items.Add(CreateTypedProperty(propKey, this.NativePropertyStore));
-                }
+                this.Items.Add(CreateTypedProperty(propKey, this.NativePropertyStore));
             }
         }
     }

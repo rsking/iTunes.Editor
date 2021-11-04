@@ -4,16 +4,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// Interface for a named provider.
+/// </summary>
+public interface INamedProvider
 {
     /// <summary>
-    /// Interface for a named provider.
+    /// Gets the name.
     /// </summary>
-    public interface INamedProvider
-    {
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        string Name { get; }
-    }
+    string Name { get; }
 }

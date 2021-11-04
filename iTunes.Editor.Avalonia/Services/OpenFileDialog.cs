@@ -4,94 +4,93 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.Services
+namespace ITunes.Editor.Services;
+
+using System.Linq;
+
+/// <summary>
+/// Represents the service implementation for an open file dialog.
+/// </summary>
+public class OpenFileDialog : SelectFile, Contracts.IOpenFile
 {
-    using System.Linq;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OpenFileDialog"/> class.
+    /// </summary>
+    public OpenFileDialog() => this.Title = Avalonia.Properties.Resources.OpenFileDialogTitle;
 
     /// <summary>
-    /// Represents the service implementation for an open file dialog.
+    /// Gets the file name using the specified <paramref name="path"/> as a starting point.
     /// </summary>
-    public class OpenFileDialog : SelectFile, Contracts.IOpenFile
+    /// <param name="path">The starting file.</param>
+    /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
+    public override string? GetFileName(string? path = null)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenFileDialog"/> class.
-        /// </summary>
-        public OpenFileDialog() => this.Title = Avalonia.Properties.Resources.OpenFileDialogTitle;
-
-        /// <summary>
-        /// Gets the file name using the specified <paramref name="path"/> as a starting point.
-        /// </summary>
-        /// <param name="path">The starting file.</param>
-        /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override string? GetFileName(string? path = null)
+        var task = this.GetFileNameAsync(path);
+        if (task.IsCompletedSuccessfully)
         {
-            var task = this.GetFileNameAsync(path);
-            if (task.IsCompletedSuccessfully)
-            {
-                return task.Result;
-            }
-
-            return task.AsTask().Result;
+            return task.Result;
         }
 
-        /// <summary>
-        /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
-        /// </summary>
-        /// <param name="path">The starting path.</param>
-        /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-        public override async System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default)
-        {
-            var fileNames = await this.GetFileNamesImpl(path, multiselect: false).ConfigureAwait(false);
-            if (fileNames is null)
-            {
-                return default;
-            }
+        return task.AsTask().Result;
+    }
 
-            return fileNames.FirstOrDefault();
+    /// <summary>
+    /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
+    /// </summary>
+    /// <param name="path">The starting path.</param>
+    /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
+    public override async System.Threading.Tasks.ValueTask<string?> GetFileNameAsync(string? path = default)
+    {
+        var fileNames = await this.GetFileNamesImpl(path, multiselect: false).ConfigureAwait(false);
+        if (fileNames is null)
+        {
+            return default;
         }
 
-        /// <summary>
-        /// Gets multiple file names.
-        /// </summary>
-        /// <returns>The list of file names.</returns>
-        public System.Collections.Generic.IEnumerable<string> GetFileNames()
-        {
-            var task = this.GetFileNamesAsync();
-            if (task.IsCompletedSuccessfully)
-            {
-                return task.Result;
-            }
+        return fileNames.FirstOrDefault();
+    }
 
-            return task.AsTask().Result;
+    /// <summary>
+    /// Gets multiple file names.
+    /// </summary>
+    /// <returns>The list of file names.</returns>
+    public System.Collections.Generic.IEnumerable<string> GetFileNames()
+    {
+        var task = this.GetFileNamesAsync();
+        if (task.IsCompletedSuccessfully)
+        {
+            return task.Result;
         }
 
-        /// <summary>
-        /// Gets multiple file names asynchronously.
-        /// </summary>
-        /// <returns>The list of file names.</returns>
-        public System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => this.GetFileNamesImpl(path: null, multiselect: true);
+        return task.AsTask().Result;
+    }
 
-        /// <summary>
-        /// Internal implementation to get the filenames.
-        /// </summary>
-        /// <param name="path">The starting file.</param>
-        /// <param name="multiselect">Whether to select more than one file.</param>
-        /// <returns>The list of file names.</returns>
-        private async System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesImpl(string? path, bool multiselect)
+    /// <summary>
+    /// Gets multiple file names asynchronously.
+    /// </summary>
+    /// <returns>The list of file names.</returns>
+    public System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesAsync() => this.GetFileNamesImpl(path: null, multiselect: true);
+
+    /// <summary>
+    /// Internal implementation to get the filenames.
+    /// </summary>
+    /// <param name="path">The starting file.</param>
+    /// <param name="multiselect">Whether to select more than one file.</param>
+    /// <returns>The list of file names.</returns>
+    private async System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<string>> GetFileNamesImpl(string? path, bool multiselect)
+    {
+        var dialog = new global::Avalonia.Controls.OpenFileDialog
         {
-            var dialog = new global::Avalonia.Controls.OpenFileDialog
-            {
-                InitialFileName = path,
-                Title = this.Title,
-                AllowMultiple = multiselect,
-            };
+            InitialFileName = path,
+            Title = this.Title,
+            AllowMultiple = multiselect,
+        };
 
-            foreach (var filter in this.Filters)
-            {
-                dialog.Filters.Add(filter);
-            }
-
-            return await dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()).ConfigureAwait(false);
+        foreach (var filter in this.Filters)
+        {
+            dialog.Filters.Add(filter);
         }
+
+        return await dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()).ConfigureAwait(false);
     }
 }

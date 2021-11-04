@@ -4,12 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.Services.Contracts
+namespace ITunes.Editor.Services.Contracts;
+
+/// <summary>
+/// Service contract for selecting a file to save to.
+/// </summary>
+public interface ISaveFile : ISelectFile
 {
-    /// <summary>
-    /// Service contract for selecting a file to save to.
-    /// </summary>
-    public interface ISaveFile : ISelectFile
-    {
-    }
 }

@@ -4,114 +4,113 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor.ApiSeeds
+namespace ITunes.Editor.ApiSeeds;
+
+using Microsoft.Extensions.Logging;
+using RestSharp;
+using RestSharp.Serializers.SystemTextJson;
+
+/// <summary>
+/// Represents an <see cref="ILyricsProvider"/> using the API Seeds Lyrics service.
+/// </summary>
+public class ApiSeedsLyricsProvider : ILyricsProvider
 {
-    using Microsoft.Extensions.Logging;
-    using RestSharp;
-    using RestSharp.Serializers.SystemTextJson;
+    private static readonly System.Uri Uri = new("https://orion.apiseeds.com/api/music/lyric");
+
+    private readonly ILogger logger;
+
+    private readonly IRestClient client = new RestClient(Uri)
+        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
     /// <summary>
-    /// Represents an <see cref="ILyricsProvider"/> using the API Seeds Lyrics service.
+    /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
     /// </summary>
-    public class ApiSeedsLyricsProvider : ILyricsProvider
+    /// <param name="logger">The logger.</param>
+    /// <param name="apiKey">The API key.</param>
+    public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, string? apiKey)
     {
-        private static readonly System.Uri Uri = new("https://orion.apiseeds.com/api/music/lyric");
-
-        private readonly ILogger logger;
-
-        private readonly IRestClient client = new RestClient(Uri)
-            .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="apiKey">The API key.</param>
-        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, string? apiKey)
+        this.logger = logger;
+        if (apiKey is not null)
         {
-            this.logger = logger;
-            if (apiKey is not null)
-            {
-                _ = this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
-            }
+            _ = this.client.AddDefaultParameter("apikey", apiKey, ParameterType.QueryString);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="options">The options.</param>
-        public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeedsOptions> options)
-            : this(logger, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
-        {
-        }
-
-        /// <inheritdoc />
-        public async System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
-        {
-            if (tagInformation is null)
-            {
-                return default;
-            }
-
-            this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
-            var request = new RestRequest("{artist}/{track}", Method.GET)
-                .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
-                .AddUrlSegment("track", tagInformation.Title);
-            var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessful)
-            {
-                this.logger.LogError(response.ErrorMessage);
-                return default;
-            }
-
-            return GetLyricsImpl(this.logger, request, response.Data.Result);
-
-            static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? result)
-            {
-                if (result is null)
-                {
-                    return null;
-                }
-
-                if (result.Artist?.Name is not null
-                    && CheckName(result.Artist.Name, (string?)request.Parameters[0].Value)
-                    && result.Track?.Name is not null
-                    && CheckName(result.Track.Name, (string?)request.Parameters[1].Value))
-                {
-                    return result.Track.Text;
-                }
-
-                logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{result.Artist?.Name}|{result.Track?.Name}");
-                return null;
-
-                static bool CheckName(string? first, string? second)
-                {
-                    return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
-
-                    static string? Sanitise(string? input)
-                    {
-                        return input switch
-                        {
-                            null => input,
-                            _ => input.Replace('-', ' '),
-                        };
-                    }
-                }
-            }
-        }
-
-        private sealed record GetLyricsResponse(GetLyricsResult? Result);
-
-        private sealed record GetLyricsResult(Artist? Artist, Track? Track, Copyright? Copyright);
-
-        private sealed record Artist(string? Name);
-
-        private sealed record Track(string? Name, string? Text, Language? Lang);
-
-        private sealed record Language(string? Code, string? Name);
-
-        private sealed record Copyright(string? Notice, string? Artist, string? Text);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="options">The options.</param>
+    public ApiSeedsLyricsProvider(ILogger<ApiSeedsLyricsProvider> logger, Microsoft.Extensions.Options.IOptions<ApiSeedsOptions> options)
+        : this(logger, options is null ? throw new System.ArgumentNullException(nameof(options)) : options.Value.ApiKey)
+    {
+    }
+
+    /// <inheritdoc />
+    public async System.Threading.Tasks.ValueTask<string?> GetLyricsAsync(SongInformation tagInformation, System.Threading.CancellationToken cancellationToken = default)
+    {
+        if (tagInformation is null)
+        {
+            return default;
+        }
+
+        this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
+        var request = new RestRequest("{artist}/{track}", Method.GET)
+            .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
+            .AddUrlSegment("track", tagInformation.Title);
+        var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
+        if (!response.IsSuccessful)
+        {
+            this.logger.LogError(response.ErrorMessage);
+            return default;
+        }
+
+        return GetLyricsImpl(this.logger, request, response.Data.Result);
+
+        static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? result)
+        {
+            if (result is null)
+            {
+                return null;
+            }
+
+            if (result.Artist?.Name is not null
+                && CheckName(result.Artist.Name, (string?)request.Parameters[0].Value)
+                && result.Track?.Name is not null
+                && CheckName(result.Track.Name, (string?)request.Parameters[1].Value))
+            {
+                return result.Track.Text;
+            }
+
+            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{result.Artist?.Name}|{result.Track?.Name}");
+            return null;
+
+            static bool CheckName(string? first, string? second)
+            {
+                return string.Equals(first, second, System.StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(Sanitise(first), Sanitise(second), System.StringComparison.OrdinalIgnoreCase);
+
+                static string? Sanitise(string? input)
+                {
+                    return input switch
+                    {
+                        null => input,
+                        _ => input.Replace('-', ' '),
+                    };
+                }
+            }
+        }
+    }
+
+    private sealed record GetLyricsResponse(GetLyricsResult? Result);
+
+    private sealed record GetLyricsResult(Artist? Artist, Track? Track, Copyright? Copyright);
+
+    private sealed record Artist(string? Name);
+
+    private sealed record Track(string? Name, string? Text, Language? Lang);
+
+    private sealed record Language(string? Code, string? Name);
+
+    private sealed record Copyright(string? Notice, string? Artist, string? Text);
 }

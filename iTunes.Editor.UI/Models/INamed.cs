@@ -2,16 +2,15 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Models
+namespace ITunes.Editor.Models;
+
+/// <summary>
+/// A named item.
+/// </summary>
+public interface INamed
 {
     /// <summary>
-    /// A named item.
+    /// Gets the name.
     /// </summary>
-    public interface INamed
-    {
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        string? Name { get; }
-    }
+    string? Name { get; }
 }

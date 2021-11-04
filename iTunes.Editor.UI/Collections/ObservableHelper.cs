@@ -2,80 +2,79 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Collections
+namespace ITunes.Editor.Collections;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+/// <summary>
+/// Helper class for observable collections.
+/// </summary>
+public static class ObservableHelper
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
+    private static Func<Type, ICollection> observableCollectionFactory = CreateObservableCollectionFactory(typeof(System.Collections.ObjectModel.ObservableCollection<>));
+
+    private static Func<Type, IList> observableListFactory = CreateObservableListFactory(typeof(System.Collections.ObjectModel.ObservableCollection<>));
 
     /// <summary>
-    /// Helper class for observable collections.
+    /// Creates an observable collection.
     /// </summary>
-    public static class ObservableHelper
+    /// <typeparam name="T">The type in the collection.</typeparam>
+    /// <returns>The observable collection.</returns>
+    public static ICollection<T> CreateObservableCollection<T>() => (ICollection<T>)observableCollectionFactory(typeof(T));
+
+    /// <summary>
+    /// Creates an observable list.
+    /// </summary>
+    /// <typeparam name="T">The type in the collection.</typeparam>
+    /// <returns>The observable list.</returns>
+    public static IList<T> CreateObservableList<T>() => (IList<T>)observableListFactory(typeof(T));
+
+    /// <summary>
+    /// Sets the observable collection factory.
+    /// </summary>
+    /// <param name="func">The factory.</param>
+    public static void SetObservableCollectionFactory(Func<Type, ICollection> func) => observableCollectionFactory = func;
+
+    /// <summary>
+    /// Sets the observable collection to the specified type.
+    /// </summary>
+    /// <param name="collectionType">The collection type.</param>
+    public static void SetObservableCollectionType(Type collectionType) => SetObservableCollectionFactory(CreateObservableCollectionFactory(collectionType));
+
+    /// <summary>
+    /// Sets the observable list factory.
+    /// </summary>
+    /// <param name="func">The factory.</param>
+    public static void SetObservableListFactory(Func<Type, IList> func) => observableListFactory = func;
+
+    /// <summary>
+    /// Sets the observable collection to the specified type.
+    /// </summary>
+    /// <param name="listType">The list type.</param>
+    public static void SetObservableListType(Type listType) => SetObservableListFactory(CreateObservableListFactory(listType));
+
+    private static Func<Type, ICollection> CreateObservableCollectionFactory(Type collectionType)
     {
-        private static Func<Type, ICollection> observableCollectionFactory = CreateObservableCollectionFactory(typeof(System.Collections.ObjectModel.ObservableCollection<>));
-
-        private static Func<Type, IList> observableListFactory = CreateObservableListFactory(typeof(System.Collections.ObjectModel.ObservableCollection<>));
-
-        /// <summary>
-        /// Creates an observable collection.
-        /// </summary>
-        /// <typeparam name="T">The type in the collection.</typeparam>
-        /// <returns>The observable collection.</returns>
-        public static ICollection<T> CreateObservableCollection<T>() => (ICollection<T>)observableCollectionFactory(typeof(T));
-
-        /// <summary>
-        /// Creates an observable list.
-        /// </summary>
-        /// <typeparam name="T">The type in the collection.</typeparam>
-        /// <returns>The observable list.</returns>
-        public static IList<T> CreateObservableList<T>() => (IList<T>)observableListFactory(typeof(T));
-
-        /// <summary>
-        /// Sets the observable collection factory.
-        /// </summary>
-        /// <param name="func">The factory.</param>
-        public static void SetObservableCollectionFactory(Func<Type, ICollection> func) => observableCollectionFactory = func;
-
-        /// <summary>
-        /// Sets the observable collection to the specified type.
-        /// </summary>
-        /// <param name="collectionType">The collection type.</param>
-        public static void SetObservableCollectionType(Type collectionType) => SetObservableCollectionFactory(CreateObservableCollectionFactory(collectionType));
-
-        /// <summary>
-        /// Sets the observable list factory.
-        /// </summary>
-        /// <param name="func">The factory.</param>
-        public static void SetObservableListFactory(Func<Type, IList> func) => observableListFactory = func;
-
-        /// <summary>
-        /// Sets the observable collection to the specified type.
-        /// </summary>
-        /// <param name="listType">The list type.</param>
-        public static void SetObservableListType(Type listType) => SetObservableListFactory(CreateObservableListFactory(listType));
-
-        private static Func<Type, ICollection> CreateObservableCollectionFactory(Type collectionType)
+        if (!HasInterface(collectionType, typeof(ICollection<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(collectionType))
         {
-            if (!HasInterface(collectionType, typeof(ICollection<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(collectionType))
-            {
-                throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(collectionType));
-            }
-
-            return type => (ICollection)Activator.CreateInstance(collectionType.MakeGenericType(type));
+            throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(collectionType));
         }
 
-        private static Func<Type, IList> CreateObservableListFactory(Type listType)
-        {
-            if (!HasInterface(listType, typeof(IList<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(listType))
-            {
-                throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(listType));
-            }
-
-            return type => (IList)Activator.CreateInstance(listType.MakeGenericType(type));
-        }
-
-        private static bool HasInterface(Type type, Type interfaceType) => type.GetInterfaces().Any(t => string.Equals(t.Name, interfaceType.Name, StringComparison.Ordinal));
+        return type => (ICollection)Activator.CreateInstance(collectionType.MakeGenericType(type));
     }
+
+    private static Func<Type, IList> CreateObservableListFactory(Type listType)
+    {
+        if (!HasInterface(listType, typeof(IList<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(listType))
+        {
+            throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(listType));
+        }
+
+        return type => (IList)Activator.CreateInstance(listType.MakeGenericType(type));
+    }
+
+    private static bool HasInterface(Type type, Type interfaceType) => type.GetInterfaces().Any(t => string.Equals(t.Name, interfaceType.Name, StringComparison.Ordinal));
 }

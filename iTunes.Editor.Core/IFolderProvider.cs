@@ -4,16 +4,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// The folder song loader.
+/// </summary>
+public interface IFolderProvider
 {
     /// <summary>
-    /// The folder song loader.
+    /// Gets or sets the folder.
     /// </summary>
-    public interface IFolderProvider
-    {
-        /// <summary>
-        /// Gets or sets the folder.
-        /// </summary>
-        string? Folder { get; set; }
-    }
+    string? Folder { get; set; }
 }

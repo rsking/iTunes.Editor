@@ -4,61 +4,60 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Microsoft.Extensions.Hosting
+namespace Microsoft.Extensions.Hosting;
+
+using ITunes.Editor;
+using Microsoft.Extensions.DependencyInjection;
+
+/// <summary>
+/// Extends <see cref="IHostBuilder"/>.
+/// </summary>
+public static class HostBuilderExtensions
 {
-    using ITunes.Editor;
-    using Microsoft.Extensions.DependencyInjection;
-
     /// <summary>
-    /// Extends <see cref="IHostBuilder"/>.
+    /// Uses the default providers.
     /// </summary>
-    public static class HostBuilderExtensions
+    /// <param name="builder">The web host builder to configure.</param>
+    /// <returns>The host builder.</returns>
+    public static IHostBuilder UseDefaultITunes(this IHostBuilder builder)
     {
-        /// <summary>
-        /// Uses the default providers.
-        /// </summary>
-        /// <param name="builder">The web host builder to configure.</param>
-        /// <returns>The host builder.</returns>
-        public static IHostBuilder UseDefaultITunes(this IHostBuilder builder)
+        if (builder is null)
         {
-            if (builder is null)
-            {
-                throw new System.ArgumentNullException(nameof(builder));
-            }
+            throw new System.ArgumentNullException(nameof(builder));
+        }
 
-            return builder.ConfigureServices((hostingContext, serviceCollection) =>
-            {
+        return builder.ConfigureServices((hostingContext, serviceCollection) =>
+        {
                 // Lyrics
                 serviceCollection
-                    .AddAZ()
-                    .AddGenius()
-                    .AddChartLyrics()
-                    .AddHappiDev(hostingContext.Configuration)
-                    .AddOvh()
-                    .AddPurgoMalum();
+                .AddAZ()
+                .AddGenius()
+                .AddChartLyrics()
+                .AddHappiDev(hostingContext.Configuration)
+                .AddOvh()
+                .AddPurgoMalum();
 
                 // Composers
                 serviceCollection
-                    .AddApraAmcos();
+                .AddApraAmcos();
 
                 // song providers
                 serviceCollection
-                    .AddFolder()
-                    .AddIPod()
-                    .AddPList()
-                    .AddITunes()
-                    .AddShell();
+                .AddFolder()
+                .AddIPod()
+                .AddPList()
+                .AddITunes()
+                .AddShell();
 
                 // tag provider
                 serviceCollection
-                    .AddTagLib()
-                    .AddMediaInfo();
+                .AddTagLib()
+                .AddMediaInfo();
 
                 // add services
                 serviceCollection
-                    .AddTransient<IUpdateComposerService, UpdateComposerService>()
-                    .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
-            });
-        }
+                .AddTransient<IUpdateComposerService, UpdateComposerService>()
+                .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+        });
     }
 }

@@ -2,234 +2,233 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Collections
+namespace ITunes.Editor.Collections;
+
+using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Windows.Threading;
+
+/// <summary>
+/// Observable collection object.
+/// </summary>
+public abstract class ObservableCollectionObject : INotifyCollectionChanged, INotifyPropertyChanged
 {
-    using System;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
-    using System.Windows.Threading;
+    private readonly object lockObj = new();
+
+    private bool lockObjWasTaken;
+
+    private int @lock;
 
     /// <summary>
-    /// Observable collection object.
+    /// Initializes a new instance of the <see cref="ObservableCollectionObject"/> class.
     /// </summary>
-    public abstract class ObservableCollectionObject : INotifyCollectionChanged, INotifyPropertyChanged
+    /// <param name="lockType">The lock type.</param>
+    protected ObservableCollectionObject(LockType lockType) => this.LockType = lockType;
+
+    /// <inheritdoc/>
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Gets the lock type.
+    /// </summary>
+    public LockType LockType { get; }
+
+    /// <summary>
+    /// Do events.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void DoEvents()
     {
-        private readonly object lockObj = new();
-
-        private bool lockObjWasTaken;
-
-        private int @lock;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableCollectionObject"/> class.
-        /// </summary>
-        /// <param name="lockType">The lock type.</param>
-        protected ObservableCollectionObject(LockType lockType) => this.LockType = lockType;
-
-        /// <inheritdoc/>
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Gets the lock type.
-        /// </summary>
-        public LockType LockType { get; }
-
-        /// <summary>
-        /// Do events.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DoEvents()
-        {
-            if (GetDispatcher() is Dispatcher dispatcher)
-            {
-                var frame = new DispatcherFrame();
-                dispatcher.BeginInvoke(DispatcherPriority.DataBind, new DispatcherOperationCallback(ExitFrame), frame);
-                Dispatcher.PushFrame(frame);
-            }
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="propertyName">The property name.</param>
-        public void RaisePropertyChanged(string propertyName)
-        {
-            var propertyChangedEventHandler = this.PropertyChanged;
-
-            if (propertyChangedEventHandler is not null)
-            {
-                propertyChangedEventHandler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        /// <summary>
-        /// Pumps until the condition.
-        /// </summary>
-        /// <param name="dispatcher">The dispatcher.</param>
-        /// <param name="condition">The condition.</param>
-        protected static void PumpWaitAndPumpUntil(Dispatcher dispatcher, Func<bool> condition)
+        if (GetDispatcher() is Dispatcher dispatcher)
         {
             var frame = new DispatcherFrame();
-            BeginInvokePump(dispatcher, frame, condition);
+            dispatcher.BeginInvoke(DispatcherPriority.DataBind, new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
+    }
 
-        /// <summary>
-        /// returns a valid dispatcher if this is a UI thread (can be more than one UI thread so different dispatchers are possible); null if not a UI thread.
-        /// </summary>
-        /// <returns>The dispatcher thread.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static Dispatcher GetDispatcher() => Dispatcher.FromThread(Thread.CurrentThread);
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">The property name.</param>
+    public void RaisePropertyChanged(string propertyName)
+    {
+        var propertyChangedEventHandler = this.PropertyChanged;
 
-        /// <summary>
-        /// Waits for the condition.
-        /// </summary>
-        /// <param name="condition">The condition.</param>
-        protected void WaitForCondition(Func<bool> condition)
+        if (propertyChangedEventHandler is not null)
         {
-            if (GetDispatcher() is Dispatcher dispatcher)
-            {
-                this.lockObjWasTaken = true;
-                PumpWaitAndPumpUntil(dispatcher, condition);
-                return;
-            }
+            propertyChangedEventHandler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 
-            switch (this.LockType)
-            {
-                case LockType.SpinWait:
-                    SpinWait.SpinUntil(condition); // spin baby...
-                    break;
-                case LockType.Lock:
-                    var isLockTaken = false;
-                    Monitor.Enter(this.lockObj, ref isLockTaken);
-                    this.lockObjWasTaken = isLockTaken;
-                    break;
-            }
+    /// <summary>
+    /// Pumps until the condition.
+    /// </summary>
+    /// <param name="dispatcher">The dispatcher.</param>
+    /// <param name="condition">The condition.</param>
+    protected static void PumpWaitAndPumpUntil(Dispatcher dispatcher, Func<bool> condition)
+    {
+        var frame = new DispatcherFrame();
+        BeginInvokePump(dispatcher, frame, condition);
+        Dispatcher.PushFrame(frame);
+    }
+
+    /// <summary>
+    /// returns a valid dispatcher if this is a UI thread (can be more than one UI thread so different dispatchers are possible); null if not a UI thread.
+    /// </summary>
+    /// <returns>The dispatcher thread.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected static Dispatcher GetDispatcher() => Dispatcher.FromThread(Thread.CurrentThread);
+
+    /// <summary>
+    /// Waits for the condition.
+    /// </summary>
+    /// <param name="condition">The condition.</param>
+    protected void WaitForCondition(Func<bool> condition)
+    {
+        if (GetDispatcher() is Dispatcher dispatcher)
+        {
+            this.lockObjWasTaken = true;
+            PumpWaitAndPumpUntil(dispatcher, condition);
+            return;
         }
 
-        /// <summary>
-        /// Tries to get a lock.
-        /// </summary>
-        /// <returns><see langword="true"/> if a lock was obtained.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected bool TryLock() => this.LockType switch
+        switch (this.LockType)
         {
-            LockType.SpinWait => Interlocked.CompareExchange(ref this.@lock, 1, 0) == 0,
-            LockType.Lock => Monitor.TryEnter(this.lockObj),
-            _ => false,
+            case LockType.SpinWait:
+                SpinWait.SpinUntil(condition); // spin baby...
+                break;
+            case LockType.Lock:
+                var isLockTaken = false;
+                Monitor.Enter(this.lockObj, ref isLockTaken);
+                this.lockObjWasTaken = isLockTaken;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Tries to get a lock.
+    /// </summary>
+    /// <returns><see langword="true"/> if a lock was obtained.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected bool TryLock() => this.LockType switch
+    {
+        LockType.SpinWait => Interlocked.CompareExchange(ref this.@lock, 1, 0) == 0,
+        LockType.Lock => Monitor.TryEnter(this.lockObj),
+        _ => false,
+    };
+
+    /// <summary>
+    /// Locks this instance.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected void Lock()
+    {
+        Func<bool>? action = this.LockType switch
+        {
+            LockType.SpinWait => () => Interlocked.CompareExchange(ref this.@lock, 1, 0) == 0,
+            LockType.Lock => () => Monitor.TryEnter(this.lockObj),
+            _ => default,
         };
 
-        /// <summary>
-        /// Locks this instance.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void Lock()
+        if (action is not null)
         {
-            Func<bool>? action = this.LockType switch
-            {
-                LockType.SpinWait => () => Interlocked.CompareExchange(ref this.@lock, 1, 0) == 0,
-                LockType.Lock => () => Monitor.TryEnter(this.lockObj),
-                _ => default,
-            };
-
-            if (action is not null)
-            {
-                this.WaitForCondition(action);
-            }
+            this.WaitForCondition(action);
         }
+    }
 
-        /// <summary>
-        /// Unlocks this instance.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void Unlock()
+    /// <summary>
+    /// Unlocks this instance.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected void Unlock()
+    {
+        switch (this.LockType)
         {
-            switch (this.LockType)
-            {
-                case LockType.SpinWait:
-                    this.@lock = 0;
-                    break;
-                case LockType.Lock:
-                    if (this.lockObjWasTaken)
-                    {
-                        Monitor.Exit(this.lockObj);
-                    }
-
-                    this.lockObjWasTaken = false;
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Raises the <see cref="CollectionChanged"/> event.
-        /// </summary>
-        /// <param name="args">The event arguments.</param>
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
-        {
-            var notifyCollectionChangedEventHandler = this.CollectionChanged;
-
-            if (notifyCollectionChangedEventHandler is null)
-            {
-                return;
-            }
-
-            foreach (var handler in notifyCollectionChangedEventHandler
-                .GetInvocationList()
-                .OfType<NotifyCollectionChangedEventHandler>())
-            {
-                if (handler.Target is DispatcherObject dispatcherObject && !dispatcherObject.CheckAccess())
+            case LockType.SpinWait:
+                this.@lock = 0;
+                break;
+            case LockType.Lock:
+                if (this.lockObjWasTaken)
                 {
-                    dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, args);
+                    Monitor.Exit(this.lockObj);
                 }
-                else
-                {
-                    handler(this, args);
-                }
+
+                this.lockObjWasTaken = false;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="CollectionChanged"/> event.
+    /// </summary>
+    /// <param name="args">The event arguments.</param>
+    protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
+    {
+        var notifyCollectionChangedEventHandler = this.CollectionChanged;
+
+        if (notifyCollectionChangedEventHandler is null)
+        {
+            return;
+        }
+
+        foreach (var handler in notifyCollectionChangedEventHandler
+            .GetInvocationList()
+            .OfType<NotifyCollectionChangedEventHandler>())
+        {
+            if (handler.Target is DispatcherObject dispatcherObject && !dispatcherObject.CheckAccess())
+            {
+                dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, args);
+            }
+            else
+            {
+                handler(this, args);
             }
         }
+    }
 
-        /// <summary>
-        /// Raises the <see cref="CollectionChanged"/> event.
-        /// </summary>
-        protected virtual void RaiseNotifyCollectionChanged() => this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    /// <summary>
+    /// Raises the <see cref="CollectionChanged"/> event.
+    /// </summary>
+    protected virtual void RaiseNotifyCollectionChanged() => this.RaiseNotifyCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
-        /// <summary>
-        /// Raises the <see cref="CollectionChanged"/> event.
-        /// </summary>
-        /// <param name="args">The event arguments.</param>
-        protected virtual void RaiseNotifyCollectionChanged(NotifyCollectionChangedEventArgs args)
+    /// <summary>
+    /// Raises the <see cref="CollectionChanged"/> event.
+    /// </summary>
+    /// <param name="args">The event arguments.</param>
+    protected virtual void RaiseNotifyCollectionChanged(NotifyCollectionChangedEventArgs args)
+    {
+        this.RaisePropertyChanged("Count");
+        this.RaisePropertyChanged("Item[]");
+        this.OnCollectionChanged(args);
+    }
+
+    private static void BeginInvokePump(Dispatcher dispatcher, DispatcherFrame frame, Func<bool> condition)
+    {
+        var action = new Action(() =>
         {
-            this.RaisePropertyChanged("Count");
-            this.RaisePropertyChanged("Item[]");
-            this.OnCollectionChanged(args);
-        }
+            frame.Continue = !condition();
 
-        private static void BeginInvokePump(Dispatcher dispatcher, DispatcherFrame frame, Func<bool> condition)
-        {
-            var action = new Action(() =>
+            if (frame.Continue)
             {
-                frame.Continue = !condition();
+                BeginInvokePump(dispatcher, frame, condition);
+            }
+        });
 
-                if (frame.Continue)
-                {
-                    BeginInvokePump(dispatcher, frame, condition);
-                }
-            });
+        dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
+    }
 
-            dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static object? ExitFrame(object frame)
-        {
-            ((DispatcherFrame)frame).Continue = false;
-            return null;
-        }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static object? ExitFrame(object frame)
+    {
+        ((DispatcherFrame)frame).Continue = false;
+        return null;
     }
 }

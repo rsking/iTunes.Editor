@@ -4,16 +4,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor
+namespace ITunes.Editor;
+
+/// <summary>
+/// The file song loader.
+/// </summary>
+public interface IFileProvider
 {
     /// <summary>
-    /// The file song loader.
+    /// Gets or sets the file.
     /// </summary>
-    public interface IFileProvider
-    {
-        /// <summary>
-        /// Gets or sets the file.
-        /// </summary>
-        string? File { get; set; }
-    }
+    string? File { get; set; }
 }

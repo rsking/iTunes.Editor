@@ -2,12 +2,11 @@
 // Copyright (c) RossKing. All rights reserved.
 // </copyright>
 
-namespace ITunes.Editor.Models
+namespace ITunes.Editor.Models;
+
+/// <summary>
+/// The models for configuring.
+/// </summary>
+public interface IConfigure
 {
-    /// <summary>
-    /// The models for configuring.
-    /// </summary>
-    public interface IConfigure
-    {
-    }
 }
