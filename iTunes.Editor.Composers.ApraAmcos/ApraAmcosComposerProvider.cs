@@ -38,9 +38,9 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
 
             var request = new RestRequest("/works");
             request.AddQueryParameter("works", bool.TrueString);
-            request.AddQueryParameter(nameof(title), title);
-            request.AddQueryParameter(nameof(writer), writer);
-            request.AddQueryParameter(nameof(performer), performer);
+            request.AddQueryParameter(nameof(title), Sanitize(title));
+            request.AddQueryParameter(nameof(writer), Sanitize(writer));
+            request.AddQueryParameter(nameof(performer), Sanitize(performer));
 
             var response = await this.client.ExecuteGetAsync<SearchResult>(request, cancellationToken).ConfigureAwait(false);
 
@@ -64,6 +64,17 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
                         yield return Name.FromInversedName(name);
                     }
                 }
+            }
+
+            static string Sanitize(string input)
+            {
+                return string.IsNullOrWhiteSpace(input)
+                    ? input
+#if NETSTANDARD2_1_OR_GREATER
+                    : input.Replace("&", "and", StringComparison.Ordinal);
+#else
+                    : input.Replace("&", "and");
+#endif
             }
         }
     }
