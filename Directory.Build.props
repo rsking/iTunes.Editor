@@ -17,11 +17,11 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Versions">
-    <DotnetCoreVersion>5.0.0</DotnetCoreVersion>
+    <DotnetCoreVersion>6.0.0</DotnetCoreVersion>
     <RestSharpBaseVersion>106.11.2</RestSharpBaseVersion>
-    <RestSharpVersion>106.13.0</RestSharpVersion>
+    <RestSharpVersion>106.15.0</RestSharpVersion>
     <HtmlAgilityPackBaseVersion>1.11.0</HtmlAgilityPackBaseVersion>
-    <HtmlAgilityPackVersion>1.11.37</HtmlAgilityPackVersion>
+    <HtmlAgilityPackVersion>1.11.39</HtmlAgilityPackVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,19 +29,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Meziantou.Analyzer" Version="1.0.675">
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.687">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Roslynator.Analyzers" Version="3.2.2">
+    <PackageReference Include="Roslynator.Analyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.30.0.37606">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.354">
+    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.376">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
