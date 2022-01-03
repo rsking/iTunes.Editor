@@ -17,7 +17,7 @@ public class LoadRoutableViewModel : LoadViewModel, ReactiveUI.IRoutableViewMode
         IEnumerable<ISongsProvider> loaders,
         Services.Contracts.IOpenFile openFile,
         Services.Contracts.ISelectFolder selectFolder,
-        Microsoft.Toolkit.Mvvm.Messaging.IMessenger messenger)
+        CommunityToolkit.Mvvm.Messaging.IMessenger messenger)
         : base(loaders, openFile, selectFolder, messenger) => this.HostScreen = screen;
 
     /// <inheritdoc/>

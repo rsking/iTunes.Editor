@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 /// <summary>
 /// The application.
@@ -27,7 +27,7 @@ public partial class App : Application
             .ConfigureServices((_, services) =>
             {
                 // services
-                services.AddSingleton<Microsoft.Toolkit.Mvvm.Messaging.IMessenger>(Microsoft.Toolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
+                services.AddSingleton<CommunityToolkit.Mvvm.Messaging.IMessenger>(CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
                 services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
                 services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
                 services

@@ -12,7 +12,7 @@ using System.ComponentModel;
 public class SongsRoutableViewModel : SongsViewModel, ReactiveUI.IRoutableViewModel
 {
     /// <inheritdoc cref="SongsViewModel"/>
-    public SongsRoutableViewModel(ReactiveUI.IScreen screen, Microsoft.Toolkit.Mvvm.Messaging.IMessenger messenger)
+    public SongsRoutableViewModel(ReactiveUI.IScreen screen, CommunityToolkit.Mvvm.Messaging.IMessenger messenger)
         : base(messenger) => this.HostScreen = screen;
 
     /// <inheritdoc/>

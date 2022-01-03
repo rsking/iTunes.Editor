@@ -6,12 +6,12 @@
 
 namespace ITunes.Editor.ViewModels;
 
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 /// <summary>
 /// The load view model.
 /// </summary>
-public class LoadViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ILoad
+public class LoadViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ILoad
 {
     private readonly Services.Contracts.IOpenFile openFile;
 

@@ -14,12 +14,12 @@ public interface ISongs
     /// <summary>
     /// Gets a command to update the lyrics.
     /// </summary>
-    Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand UpdateLyricsCommand { get; }
+    CommunityToolkit.Mvvm.Input.IAsyncRelayCommand UpdateLyricsCommand { get; }
 
     /// <summary>
     /// Gets a command to update the composers.
     /// </summary>
-    Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand UpdateComposersCommand { get; }
+    CommunityToolkit.Mvvm.Input.IAsyncRelayCommand UpdateComposersCommand { get; }
 
     /// <summary>
     /// Gets the songs.

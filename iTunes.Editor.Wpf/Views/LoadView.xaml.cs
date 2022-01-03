@@ -26,7 +26,7 @@ public partial class LoadView
 
         if (this.DataContext is Models.ILoad load)
         {
-            _ = this.NavigationService.Navigate(Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<SongsView>());
+            _ = this.NavigationService.Navigate(CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<SongsView>());
             await load.LoadAsync(provider).ConfigureAwait(true);
         }
     }

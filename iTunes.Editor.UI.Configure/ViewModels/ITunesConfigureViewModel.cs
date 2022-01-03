@@ -8,7 +8,7 @@ namespace ITunes.Editor.ViewModels;
 /// The configure view model for <see cref="ITunesLib.ITunesSongsProvider"/>.
 /// </summary>
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "This is for iTunes")]
-public class ITunesConfigureViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.IConfigure
+public class ITunesConfigureViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, Models.IConfigure
 {
     private readonly ITunesLib.ITunesSongsProvider provider;
 

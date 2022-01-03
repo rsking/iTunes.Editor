@@ -32,11 +32,11 @@ public class ViewLocator : IDataTemplate
 
         return name switch
         {
-            not null when Type.GetType(name) is Type type && Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService(type) is Control control => control,
+            not null when Type.GetType(name) is Type type && CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService(type) is Control control => control,
             _ => new TextBlock { Text = $"Not Found: {name}" },
         };
     }
 
     /// <inheritdoc/>
-    public bool Match(object data) => data is Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
+    public bool Match(object data) => data is CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 }

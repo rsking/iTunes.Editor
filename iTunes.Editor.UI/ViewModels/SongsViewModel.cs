@@ -8,13 +8,13 @@ namespace ITunes.Editor.ViewModels;
 
 using System.ComponentModel;
 
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 /// <summary>
 /// The songs view model.
 /// </summary>
-public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ISongs, IRecipient<Models.SongsLoadedEvent>
+public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableRecipient, Models.ISongs, IRecipient<Models.SongsLoadedEvent>
 {
     private readonly ICollection<SongInformation> songs = new List<SongInformation>();
 
@@ -24,13 +24,13 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
 
     private TagLib.File? selectedFile;
 
-    [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
     private string? progress;
 
-    [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
     private int percentage;
 
-    [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
     private bool isLoading;
 
     /// <summary>
@@ -141,14 +141,14 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
     [ICommand]
     private Task UpdateLyricsAsync()
     {
-        var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
+        var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
         return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceLyricsSearch, this.ForceLyricsUpdate));
     }
 
     [ICommand]
     private Task UpdateComposersAsync()
     {
-        var service = Microsoft.Toolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
+        var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
         return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
     }
 
@@ -229,12 +229,12 @@ public partial class SongsViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.Obse
         }
     }
 
-    private abstract partial class SelectableViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject, Models.ISelectable
+    private abstract partial class SelectableViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, Models.ISelectable
     {
-        [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
+        [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
         private bool isSelected;
 
-        [Microsoft.Toolkit.Mvvm.ComponentModel.ObservableProperty]
+        [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
         private bool isExpanded;
 
         protected SelectableViewModel(Models.ISelectable? parent) => this.Parent = parent;
