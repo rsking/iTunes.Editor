@@ -6,6 +6,8 @@
 
 namespace ITunes.Editor.PList;
 
+using Formatters.PList;
+
 /// <summary>
 /// The track.
 /// </summary>
@@ -210,9 +212,9 @@ internal class Track
         {
             path =
 #if NETSTANDARD2_1_OR_GREATER
-                    path.Replace(LocalHostString, string.Empty, StringComparison.Ordinal);
+                path.Replace(LocalHostString, string.Empty, StringComparison.Ordinal);
 #else
-                    path.Replace(LocalHostString, string.Empty);
+                path.Replace(LocalHostString, string.Empty);
 #endif
             var uri = new Uri(path);
             path = Path.GetFullPath(uri.LocalPath);

@@ -20,21 +20,15 @@ public class PListSongsProvider : ISongsProvider, IFileProvider
     /// <inheritdoc />
     public async IAsyncEnumerable<SongInformation> GetTagInformationAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        PList plist;
+        Formatters.PList.PList plist;
         var stream = System.IO.File.OpenRead(this.File);
 #if NETSTANDARD2_1_OR_GREATER
         await
 #endif
         using (stream)
         {
-            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PList));
-            using var reader = System.Xml.XmlReader.Create(stream, new System.Xml.XmlReaderSettings
-            {
-                DtdProcessing = System.Xml.DtdProcessing.Parse,
-                IgnoreWhitespace = true,
-            });
-
-            plist = await Task.Run(() => (PList)serializer.Deserialize(reader), cancellationToken).ConfigureAwait(false);
+            var formatter = new Formatters.PList.PListAsciiFormatter();
+            plist = await Task.Run(() => (Formatters.PList.PList)formatter.Deserialize(stream), cancellationToken).ConfigureAwait(false);
         }
 
         if (plist["Tracks"] is IDictionary<string, object?> dictionary)
