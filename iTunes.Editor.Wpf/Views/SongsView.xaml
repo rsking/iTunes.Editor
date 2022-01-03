@@ -53,6 +53,7 @@
             <CheckBox Content="Force Lyrics Update" IsChecked="{Binding ForceLyricsUpdate}" />
             <Button Command="{Binding UpdateComposersCommand}" Content="Update Composers" />
             <CheckBox Content="Force Composers Search" IsChecked="{Binding ForceComposersSearch}" />
+            <Button Command="{Binding UpdateTempoCommand}" Content="Update Tempo" />
         </StackPanel>
         <xctk:PropertyGrid Grid.Row="1"
                            Grid.Column="1"
@@ -65,7 +66,8 @@
         <Grid Grid.RowSpan="3"
               Grid.ColumnSpan="2"
               Background="#44CCCCCC"
-              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+              d:Visibility="Hidden">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">

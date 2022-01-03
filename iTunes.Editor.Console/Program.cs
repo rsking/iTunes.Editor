@@ -43,6 +43,7 @@ internal sealed class Program
         const string fileCommand = "file";
         const string allCommand = "all";
         const string composerCommand = "composer";
+        const string tempoCommand = "tempo";
         const string checkCommand = "check";
 
         var inputArgument = new Argument<FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
@@ -86,6 +87,10 @@ internal sealed class Program
             .AddArgument(fileArgument)
             .AddOption(forceOption);
 
+        var updateTempoFileCommandBuilder = new CommandBuilder(new Command(tempoCommand, "Updates the tempo in the specific file") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateTempoFile) })
+            .AddArgument(fileArgument)
+            .AddOption(forceOption);
+
         var updateAllFileCommandBuilder = new CommandBuilder(new Command(allCommand, "Updates the specific file using all the updaters") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateAllFile) })
             .AddArgument(fileArgument)
             .AddOption(forceOption);
@@ -93,6 +98,7 @@ internal sealed class Program
         var updateFileCommandBuilder = new CommandBuilder(new Command(fileCommand, "Updates a specific file"))
             .AddCommand(updateComposerFileCommandBuilder.Command)
             .AddCommand(updateLyricsFileCommandBuilder.Command)
+            .AddCommand(updateTempoFileCommandBuilder.Command)
             .AddCommand(updateAllFileCommandBuilder.Command);
 
         var updateComposerListCommandBuilder = new CommandBuilder(new Command(composerCommand, "Updates the composer in the specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateComposerList) })
@@ -105,6 +111,11 @@ internal sealed class Program
             .AddOption(typeOption)
             .AddOption(forceOption);
 
+        var updateTempoListCommandBuilder = new CommandBuilder(new Command(tempoCommand, "Updates the tempo in the specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateTempoList) })
+            .AddArgument(inputArgument)
+            .AddOption(typeOption)
+            .AddOption(forceOption);
+
         var updateAllListCommandBuilder = new CommandBuilder(new Command(allCommand, "Updates the specific list using all the updaters") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateAllList) })
             .AddArgument(inputArgument)
             .AddOption(typeOption)
@@ -113,6 +124,7 @@ internal sealed class Program
         var updateListCommandBuilder = new CommandBuilder(new Command(listCommand, "Updates a specific list"))
             .AddCommand(updateComposerListCommandBuilder.Command)
             .AddCommand(updateLyricsListCommandBuilder.Command)
+            .AddCommand(updateTempoListCommandBuilder.Command)
             .AddCommand(updateAllListCommandBuilder.Command);
 
         var updateCommandBuilder = new CommandBuilder(new Command(updateCommand, "Updates a specific file or list"))
@@ -218,25 +230,28 @@ internal sealed class Program
         host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
     }
 
-    private static async Task UpdateComposerFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default)
-    {
-        var service = host.Services.GetRequiredService<IUpdateComposerService>();
-        var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
-        await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
-    }
+    private static Task UpdateComposerFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default) =>
+        UpdateFile<IUpdateComposerService>(host, file, force, cancellationToken);
 
-    private static async Task UpdateLyricsFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default)
-    {
-        var service = host.Services.GetRequiredService<IUpdateLyricsService>();
-        var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
-        await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
-    }
+    private static Task UpdateLyricsFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default) =>
+        UpdateFile<IUpdateLyricsService>(host, file, force, cancellationToken);
+
+    private static Task UpdateTempoFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default) =>
+        UpdateFile<IUpdateTempoService>(host, file, force, cancellationToken);
 
     private static async Task UpdateAllFile(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default)
     {
         var songInformation = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
         await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
         await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task UpdateFile<T>(IHost host, FileInfo file, bool force = DefaultForce, CancellationToken cancellationToken = default)
+        where T : IUpdateService
+    {
+        var service = host.Services.GetRequiredService<T>();
+        var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
+        await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
     }
 
     private static async Task UpdateList(IHost host, FileSystemInfo input, string type, bool force, Func<SongInformation, bool, CancellationToken, ValueTask<SongInformation>> updateFunction, CancellationToken cancellationToken)
@@ -271,6 +286,8 @@ internal sealed class Program
     private static Task UpdateComposerList(IHost host, FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, CancellationToken cancellationToken = default) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync, cancellationToken);
 
     private static Task UpdateLyricsList(IHost host, FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, CancellationToken cancellationToken = default) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync, cancellationToken);
+
+    private static Task UpdateTempoList(IHost host, FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, CancellationToken cancellationToken = default) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateTempoService>().UpdateAsync, cancellationToken);
 
     private static Task UpdateAllList(IHost host, FileSystemInfo input, string type = DefaultType, bool force = DefaultForce, CancellationToken cancellationToken = default)
     {

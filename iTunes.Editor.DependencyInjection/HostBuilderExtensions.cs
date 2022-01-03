@@ -28,8 +28,8 @@ public static class HostBuilderExtensions
 
         return builder.ConfigureServices((hostingContext, serviceCollection) =>
         {
-                // Lyrics
-                serviceCollection
+            // Lyrics
+            serviceCollection
                 .AddAZ()
                 .AddGenius()
                 .AddChartLyrics()
@@ -37,27 +37,28 @@ public static class HostBuilderExtensions
                 .AddOvh()
                 .AddPurgoMalum();
 
-                // Composers
-                serviceCollection
+            // Composers
+            serviceCollection
                 .AddApraAmcos();
 
-                // song providers
-                serviceCollection
+            // song providers
+            serviceCollection
                 .AddFolder()
                 .AddIPod()
                 .AddPList()
                 .AddITunes()
                 .AddShell();
 
-                // tag provider
-                serviceCollection
+            // tag provider
+            serviceCollection
                 .AddTagLib()
                 .AddMediaInfo();
 
-                // add services
-                serviceCollection
+            // add services
+            serviceCollection
                 .AddTransient<IUpdateComposerService, UpdateComposerService>()
-                .AddTransient<IUpdateLyricsService, UpdateLyricsService>();
+                .AddTransient<IUpdateLyricsService, UpdateLyricsService>()
+                .AddTransient<IUpdateTempoService, UpdateTempoService>();
         });
     }
 }

@@ -102,11 +102,11 @@ public static class ExtensionMethods
     /// <returns><see langword="true"/> if the tags contain the "no lyrics" tag; otherwise, <see langword="false"/>.</returns>
     public static bool HasNoLyrics(this string? tags) => tags
 #if NETSTANDARD2_1_OR_GREATER
-            ?.Contains(NoLyrics, StringComparison.Ordinal)
+        ?.Contains(NoLyrics, StringComparison.Ordinal)
 #else
-            ?.Contains(NoLyrics)
+        ?.Contains(NoLyrics)
 #endif
-            == true;
+        == true;
 
     /// <summary>
     /// Cleans the lyrics.

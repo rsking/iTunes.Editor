@@ -152,6 +152,13 @@ public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.Obser
         return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
     }
 
+    [ICommand]
+    private Task UpdateTempoAsync()
+    {
+        var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateTempoService>();
+        return this.UpdateSongsAsync(song => service.UpdateAsync(song, false));
+    }
+
     private async Task UpdateSongsAsync(Func<SongInformation, ValueTask<SongInformation>> processor)
     {
         var selectedSongs = this.GetSelectedSongs().ToArray();

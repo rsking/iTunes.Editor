@@ -1463,4 +1463,7 @@ Ringtones|World|Zydeco</value>
   <data name="UpdatedRating" xml:space="preserve">
     <value>Updated Rating for {Song}</value>
   </data>
+  <data name="UpdatingBeatsPerMinute" xml:space="preserve">
+    <value>Updated BPM in {Song} to {Bpm}</value>
+  </data>
 </root>
