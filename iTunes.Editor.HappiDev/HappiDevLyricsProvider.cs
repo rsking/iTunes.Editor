@@ -155,11 +155,11 @@ public class HappiDevLyricsProvider : ILyricsProvider
         }
     }
 
-    private record Return<T>(bool Success, int Length, T Result);
+    private record class Return<T>(bool Success, int Length, T Result);
 
-    private sealed record Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
+    private sealed record class Track(bool Success, int Length, TrackResult[] Result) : Return<TrackResult[]>(Success, Length, Result);
 
-    private sealed record TrackResult(
+    private sealed record class TrackResult(
         string Track,
         int Id_Track,
         string Artist,
@@ -177,9 +177,9 @@ public class HappiDevLyricsProvider : ILyricsProvider
         string Api_Track,
         string Api_Lyrics);
 
-    private sealed record Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
+    private sealed record class Lyrics(bool Success, int Length, LyricsResult Result) : Return<LyricsResult>(Success, Length, Result);
 
-    private sealed record LyricsResult(
+    private sealed record class LyricsResult(
         string Artist,
         int Id_Artist,
         string Track,
