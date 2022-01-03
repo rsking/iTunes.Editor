@@ -35,6 +35,6 @@ public class SelectFolderDialog : Contracts.ISelectFolder
     public ValueTask<string?> GetSelectedPathAsync(string? path = default)
     {
         var dialog = new global::Avalonia.Controls.OpenFolderDialog { Directory = path };
-        return new(dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()));
+        return new(dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()!));
     }
 }

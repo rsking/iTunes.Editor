@@ -89,6 +89,10 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
             dialog.Filters.Add(filter);
         }
 
-        return await dialog.ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()).ConfigureAwait(false);
+        var values = await dialog
+            .ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()!)
+            .ConfigureAwait(false);
+
+        return values ?? Enumerable.Empty<string>();
     }
 }
