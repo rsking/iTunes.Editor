@@ -78,7 +78,10 @@ internal static class DialogExtensions
         // get the extensions
         if (split.Length > 1)
         {
-            foreach (var extension in split[1].Split(';').Select(value => Path.GetExtension(value)?.TrimStart('.')))
+            foreach (var extension in split[1]
+                .Split(';')
+                .Select(value => Path.GetExtension(value)?.TrimStart('.'))
+                .WhereNotNull())
             {
                 dialogFilter.Extensions.Add(extension);
             }

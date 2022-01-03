@@ -25,6 +25,23 @@ public static class ExtensionMethods
     private static readonly TagLib.ByteVector UnratedRatingData = new(new byte[] { 0x00 });
 
     /// <summary>
+    /// Only returns values that are not null.
+    /// </summary>
+    /// <typeparam name="T">The type of value.</typeparam>
+    /// <param name="source">The values.</param>
+    /// <returns>The not null values.</returns>
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
+    {
+        foreach (var item in source)
+        {
+            if (item is not null)
+            {
+                yield return item;
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets the media type.
     /// </summary>
     /// <param name="songInformation">The song information.</param>
