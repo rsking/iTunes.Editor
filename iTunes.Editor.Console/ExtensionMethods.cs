@@ -25,7 +25,10 @@ internal static class ExtensionMethods
             return subject;
         }
 
-        foreach (var prop in string.Join(';', properties).Split(';'))
+        foreach (var prop in string
+            .Join(';', properties)
+            .Split(';')
+            .Where(p => !string.IsNullOrEmpty(p)))
         {
             var split = prop.Split('=');
             var name = split[0];

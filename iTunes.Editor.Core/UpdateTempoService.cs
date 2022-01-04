@@ -91,15 +91,15 @@ public class UpdateTempoService : IUpdateTempoService
             return this.songInformation;
         }
 
-        private (string? Tempo, string? Name) GetTempo() => this.appleTag is not null
-            ? Names.Select(name => (this.appleTag.GetDashBox("com.apple.iTunes", name), name)).FirstOrDefault(v => !string.IsNullOrEmpty(v.Item1))
-            : default;
-
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             this.file?.Dispose();
             this.file = null;
         }
+
+        private (string? Tempo, string? Name) GetTempo() => this.appleTag is not null
+            ? Names.Select(name => (this.appleTag.GetDashBox("com.apple.iTunes", name), name)).FirstOrDefault(v => !string.IsNullOrEmpty(v.Item1))
+            : default;
     }
 }

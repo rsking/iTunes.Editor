@@ -48,101 +48,20 @@ internal sealed class Program
 
         var inputArgument = new Argument<FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.ExistingOnly();
         var typeOption = new Option<string>(new[] { "-t", "--type" }, "The type of input");
-        var propertiesOptions = new Option<string>("--property", "A property to set on the input provider", ArgumentArity.ZeroOrMore);
-        propertiesOptions.AddAlias("-");
         var artistArgument = new Argument<string>("artist") { Description = "The artist" };
         var songArgument = new Argument<string>("song") { Description = "The song" };
 
-        static Option CreateProviderOption(string defaultValue)
+        var rootCommand = new RootCommand
         {
-            return new Option<string>(new[] { "-p", "--provider" }, () => defaultValue, "The type of provider");
-        }
+            CreateListCommand(inputArgument, typeOption),
+            CreateComposerCommand(artistArgument, songArgument),
+            CreateLyricsCommand(artistArgument, songArgument),
+            CreateMediaInfoCommand(),
+            CreateUpdateCommand(inputArgument, typeOption),
+            CreateCheckCommand(inputArgument, typeOption),
+        };
 
-        var listCommandBuilder = new CommandBuilder(new Command(listCommand, "Lists the files from the specified input") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, CancellationToken, string[]>(List) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption)
-            .AddOption(propertiesOptions);
-
-        var composerCommandBuilder = new CommandBuilder(new Command(composerCommand, "Gets the composers for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string, CancellationToken>(Composer) })
-            .AddArgument(artistArgument)
-            .AddArgument(songArgument)
-            .AddOption(CreateProviderOption(DefaultComposerProvider));
-
-        var lyricsCommandBuilder = new CommandBuilder(new Command(lyricsCommand, "Gets the lyrics for a specific song/artist") { Handler = CommandHandler.Create<IHost, string, string, string, CancellationToken>(Lyrics) })
-            .AddArgument(artistArgument)
-            .AddArgument(songArgument)
-            .AddOption(CreateProviderOption(DefaultLyricProvider));
-
-        var mediaInfoCommandBuilder = new CommandBuilder(new Command(nameof(Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture), "Gets the media info for a specific file") { Handler = CommandHandler.Create<IHost, string, CancellationToken>(MediaInfo) })
-            .AddArgument(new Argument<string>("file") { Description = "The file to get information for" });
-
-        var forceOption = new Option<bool>(new[] { "-f", "--force" }, "Whether to force the update");
-        var fileArgument = new Argument<FileInfo>("file") { Description = "The file" };
-
-        var updateComposerFileCommandBuilder = new CommandBuilder(new Command(composerCommand, "Updates the composer in the specific file") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateComposerFile) })
-            .AddArgument(fileArgument)
-            .AddOption(forceOption);
-
-        var updateLyricsFileCommandBuilder = new CommandBuilder(new Command(lyricsCommand, "Updates the lyrics in the specific file") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateLyricsFile) })
-            .AddArgument(fileArgument)
-            .AddOption(forceOption);
-
-        var updateTempoFileCommandBuilder = new CommandBuilder(new Command(tempoCommand, "Updates the tempo in the specific file") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateTempoFile) })
-            .AddArgument(fileArgument)
-            .AddOption(forceOption);
-
-        var updateAllFileCommandBuilder = new CommandBuilder(new Command(allCommand, "Updates the specific file using all the updaters") { Handler = CommandHandler.Create<IHost, FileInfo, bool, CancellationToken>(UpdateAllFile) })
-            .AddArgument(fileArgument)
-            .AddOption(forceOption);
-
-        var updateFileCommandBuilder = new CommandBuilder(new Command(fileCommand, "Updates a specific file"))
-            .AddCommand(updateComposerFileCommandBuilder.Command)
-            .AddCommand(updateLyricsFileCommandBuilder.Command)
-            .AddCommand(updateTempoFileCommandBuilder.Command)
-            .AddCommand(updateAllFileCommandBuilder.Command);
-
-        var updateComposerListCommandBuilder = new CommandBuilder(new Command(composerCommand, "Updates the composer in the specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateComposerList) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption)
-            .AddOption(forceOption);
-
-        var updateLyricsListCommandBuilder = new CommandBuilder(new Command(lyricsCommand, "Updates the lyrics in the specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateLyricsList) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption)
-            .AddOption(forceOption);
-
-        var updateTempoListCommandBuilder = new CommandBuilder(new Command(tempoCommand, "Updates the tempo in the specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateTempoList) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption)
-            .AddOption(forceOption);
-
-        var updateAllListCommandBuilder = new CommandBuilder(new Command(allCommand, "Updates the specific list using all the updaters") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateAllList) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption)
-            .AddOption(forceOption);
-
-        var updateListCommandBuilder = new CommandBuilder(new Command(listCommand, "Updates a specific list"))
-            .AddCommand(updateComposerListCommandBuilder.Command)
-            .AddCommand(updateLyricsListCommandBuilder.Command)
-            .AddCommand(updateTempoListCommandBuilder.Command)
-            .AddCommand(updateAllListCommandBuilder.Command);
-
-        var updateCommandBuilder = new CommandBuilder(new Command(updateCommand, "Updates a specific file or list"))
-            .AddCommand(updateFileCommandBuilder.Command)
-            .AddCommand(updateListCommandBuilder.Command);
-
-        var checkListCommandBuilder = new CommandBuilder(new Command(listCommand, "Checks a specific list") { Handler = CommandHandler.Create<IHost, FileSystemInfo, string, CancellationToken>(CheckList) })
-            .AddArgument(inputArgument)
-            .AddOption(typeOption);
-
-        var checkFileCommandBuilder = new CommandBuilder(new Command(fileCommand, "Checks a specific file") { Handler = CommandHandler.Create<IHost, FileInfo, CancellationToken>(CheckFile) })
-            .AddArgument(inputArgument);
-
-        var checkCommandBuilder = new CommandBuilder(new Command(checkCommand, "Checks a specific file or list"))
-            .AddCommand(checkFileCommandBuilder.Command)
-            .AddCommand(checkListCommandBuilder.Command);
-
-        var builder = new CommandLineBuilder()
+        var builder = new CommandLineBuilder(rootCommand)
             .UseDefaults()
             .UseAnsiTerminalWhenAvailable()
             .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
@@ -151,17 +70,239 @@ internal sealed class Program
                 {
                     services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
                     services.AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, NullConfigurator<ITunesLib.ITunesSongsProvider>>();
-                }))
-            .AddCommand(listCommandBuilder.Command)
-            .AddCommand(composerCommandBuilder.Command)
-            .AddCommand(lyricsCommandBuilder.Command)
-            .AddCommand(mediaInfoCommandBuilder.Command)
-            .AddCommand(updateCommandBuilder.Command)
-            .AddCommand(checkCommandBuilder.Command);
+                }));
 
         return builder
             .Build()
             .InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
+
+        static Option CreateProviderOption(string defaultValue)
+        {
+            return new Option<string>(new[] { "-p", "--provider" }, () => defaultValue, "The type of provider");
+        }
+
+        static Command CreateListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption)
+        {
+            var propertiesOptions = new Option<string[]>("--property", "A property to set on the input provider")
+            {
+                Arity = ArgumentArity.ZeroOrMore,
+            };
+            propertiesOptions.AddAlias("-");
+            var command = new Command(listCommand, "Lists the files from the specified input")
+            {
+                inputArgument,
+                typeOption,
+                propertiesOptions,
+            };
+
+            command.SetHandler<IHost, FileSystemInfo, string, CancellationToken, string[]>(List, inputArgument, typeOption, propertiesOptions);
+            return command;
+        }
+
+        static Command CreateComposerCommand(Argument<string> artistArgument, Argument<string> songArgument)
+        {
+            var providerOption = CreateProviderOption(DefaultComposerProvider);
+            var command = new Command(composerCommand, "Gets the composers for a specific song/artist")
+            {
+                artistArgument,
+                songArgument,
+                providerOption,
+            };
+
+            command.SetHandler<IHost, string, string, string, CancellationToken>(Composer, artistArgument, songArgument, providerOption);
+            return command;
+        }
+
+        static Command CreateLyricsCommand(Argument<string> artistArgument, Argument<string> songArgument)
+        {
+            var lyricProviderOption = CreateProviderOption(DefaultLyricProvider);
+            var command = new Command(lyricsCommand, "Gets the lyrics for a specific song/artist")
+            {
+                artistArgument,
+                songArgument,
+                lyricProviderOption,
+            };
+
+            command.SetHandler<IHost, string, string, string, CancellationToken>(Lyrics, artistArgument, songArgument, lyricProviderOption);
+            return command;
+        }
+
+        static Command CreateMediaInfoCommand()
+        {
+            var fileArgument = new Argument<string>("file") { Description = "The file to get information for" };
+            var command = new Command(nameof(Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture), "Gets the media info for a specific file")
+            {
+                fileArgument,
+            };
+
+            command.SetHandler<IHost, string, CancellationToken>(MediaInfo, fileArgument);
+            return command;
+        }
+
+        static Command CreateCheckCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption)
+        {
+            return new Command(checkCommand, "Checks a specific file or list")
+            {
+                CreateCheckFileCommand(inputArgument),
+                CreateCheckListCommand(inputArgument, typeOption),
+            };
+
+            static Command CreateCheckListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption)
+            {
+                var command = new Command(listCommand, "Checks a specific list")
+            {
+                inputArgument,
+                typeOption,
+            };
+
+                command.SetHandler<IHost, FileSystemInfo, string, CancellationToken>(CheckList, inputArgument, typeOption);
+                return command;
+            }
+
+            static Command CreateCheckFileCommand(Argument<FileSystemInfo> inputArgument)
+            {
+                var command = new Command(fileCommand, "Checks a specific file")
+            {
+                inputArgument,
+            };
+
+                command.SetHandler<IHost, FileInfo, CancellationToken>(CheckFile, inputArgument);
+                return command;
+            }
+        }
+
+        static Command CreateUpdateCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption)
+        {
+            var forceOption = new Option<bool>(new[] { "-f", "--force" }, "Whether to force the update");
+            return new Command(updateCommand, "Updates a specific file or list")
+            {
+                CreateUpdateFileCommand(forceOption),
+                CreateUpdateListCommand(inputArgument, typeOption, forceOption),
+            };
+
+            static Command CreateUpdateFileCommand(Option<bool> forceOption)
+            {
+                var fileArgument = new Argument<FileInfo>("file") { Description = "The file" };
+                return new Command(fileCommand, "Updates a specific file")
+                {
+                    CreateUpdateComposerFileCommand(fileArgument, forceOption),
+                    CreateUpdateLyricsFileCommand(fileArgument, forceOption),
+                    CreateUpdateTempoFileCommand(fileArgument, forceOption),
+                    CreateUpdateAllFileCommand(fileArgument, forceOption),
+                };
+
+                static Command CreateUpdateComposerFileCommand(Argument<FileInfo> fileArgument, Option<bool> forceOption)
+                {
+                    var command = new Command(composerCommand, "Updates the composer in the specific file")
+                    {
+                        fileArgument,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileInfo, bool, CancellationToken>(UpdateComposerFile, fileArgument, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateLyricsFileCommand(Argument<FileInfo> fileArgument, Option<bool> forceOption)
+                {
+                    var command = new Command(lyricsCommand, "Updates the lyrics in the specific file")
+                    {
+                        fileArgument,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileInfo, bool, CancellationToken>(UpdateLyricsFile, fileArgument, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateTempoFileCommand(Argument<FileInfo> fileArgument, Option<bool> forceOption)
+                {
+                    var command = new Command(tempoCommand, "Updates the tempo in the specific file")
+                    {
+                        fileArgument,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileInfo, bool, CancellationToken>(UpdateTempoFile, fileArgument, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateAllFileCommand(Argument<FileInfo> fileArgument, Option<bool> forceOption)
+                {
+                    var command = new Command(allCommand, "Updates the specific file using all the updaters")
+                    {
+                        fileArgument,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileInfo, bool, CancellationToken>(UpdateAllFile, fileArgument, forceOption);
+                    return command;
+                }
+            }
+
+            static Command CreateUpdateListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption, Option<bool> forceOption)
+            {
+                return new Command(listCommand, "Updates a specific list")
+                {
+                    CreateUpdateComposerListCommand(inputArgument, typeOption, forceOption),
+                    CreateUpdateLyricsListCommand(inputArgument, typeOption, forceOption),
+                    CreateUpdateTempoListCommand(inputArgument, typeOption, forceOption),
+                    CreateUpdateAllListCommand(inputArgument, typeOption, forceOption),
+                };
+
+                static Command CreateUpdateComposerListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption, Option<bool> forceOption)
+                {
+                    var command = new Command(composerCommand, "Updates the composer in the specific list")
+                    {
+                        inputArgument,
+                        typeOption,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateComposerList, inputArgument, typeOption, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateLyricsListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption, Option<bool> forceOption)
+                {
+                    var command = new Command(lyricsCommand, "Updates the lyrics in the specific list")
+                    {
+                        inputArgument,
+                        typeOption,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateLyricsList, inputArgument, typeOption, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateTempoListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption, Option<bool> forceOption)
+                {
+                    var command = new Command(tempoCommand, "Updates the tempo in the specific list")
+                    {
+                        inputArgument,
+                        typeOption,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateTempoList, inputArgument, typeOption, forceOption);
+                    return command;
+                }
+
+                static Command CreateUpdateAllListCommand(Argument<FileSystemInfo> inputArgument, Option<string> typeOption, Option<bool> forceOption)
+                {
+                    var command = new Command(allCommand, "Updates the specific list using all the updaters")
+                    {
+                        inputArgument,
+                        typeOption,
+                        forceOption,
+                    };
+
+                    command.SetHandler<IHost, FileSystemInfo, string, bool, CancellationToken>(UpdateAllList, inputArgument, typeOption, forceOption);
+                    return command;
+                }
+            }
+        }
     }
 
     private static async Task List(IHost host, FileSystemInfo input, string type = DefaultType, CancellationToken cancellationToken = default, params string[] property)
