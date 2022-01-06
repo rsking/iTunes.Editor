@@ -17,7 +17,7 @@ public class SongsView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMod
     /// </summary>
     public SongsView()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(_ => { });
         this.InitializeComponent();
     }
 

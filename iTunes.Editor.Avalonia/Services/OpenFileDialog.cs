@@ -89,8 +89,11 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
             dialog.Filters.Add(filter);
         }
 
+        var activeWindow = global::Avalonia.Application.Current?.GetActiveWindow()
+            ?? throw new InvalidOperationException("Failed to find active window");
+
         var values = await dialog
-            .ShowAsync(global::Avalonia.Application.Current.GetActiveWindow()!)
+            .ShowAsync(activeWindow)
             .ConfigureAwait(false);
 
         return values ?? Enumerable.Empty<string>();

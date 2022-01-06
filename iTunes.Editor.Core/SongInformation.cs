@@ -76,6 +76,7 @@ public record SongInformation
     /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
     /// </summary>
     /// <param name="file">The file to convert.</param>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0015:Specify the parameter name in ArgumentException", Justification = "This is the parameter name.")]
     public static explicit operator SongInformation(TagLib.File file) => file is null
         ? throw new ArgumentNullException(nameof(file))
         : new SongInformation(file.Tag.Title)

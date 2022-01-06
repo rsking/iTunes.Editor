@@ -143,34 +143,41 @@ public class UpdateLyricsService : IUpdateLyricsService
             }
             else
             {
-                if (!string.Equals(this.appleTag.Lyrics, lyrics, StringComparison.Ordinal))
-                {
-                    updated = true;
-                    this.appleTag.Lyrics = lyrics;
-                    this.logger.LogDebug(Properties.Resources.UpdatedLyrics, this.songInformation);
-                }
-
-                if (this.appleTag.CleanLyrics(NewLine))
-                {
-                    updated = true;
-                    this.logger.LogDebug(Properties.Resources.UpdatedCleanedLyrics, this.songInformation);
-                }
-
-                if (this.appleTag.RemoveNoLyrics())
-                {
-                    updated = true;
-                    this.logger.LogDebug(Properties.Resources.RemovedNoLyricsTag, this.songInformation);
-                }
-
-                if (await this.appleTag.UpdateRatingAsync(explicitLyricsProvider, cancellationToken).ConfigureAwait(false))
-                {
-                    updated = true;
-                    this.logger.LogDebug(Properties.Resources.UpdatedRating, this.songInformation);
-                }
+                updated = await Update(explicitLyricsProvider, lyrics, updated, cancellationToken).ConfigureAwait(false);
 
                 if (updated)
                 {
                     this.file.Save();
+                }
+
+                async Task<bool> Update(IExplicitLyricsProvider explicitLyricsProvider, string? lyrics, bool updated, CancellationToken cancellationToken)
+                {
+                    if (!string.Equals(this.appleTag.Lyrics, lyrics, StringComparison.Ordinal))
+                    {
+                        updated = true;
+                        this.appleTag.Lyrics = lyrics;
+                        this.logger.LogDebug(Properties.Resources.UpdatedLyrics, this.songInformation);
+                    }
+
+                    if (this.appleTag.CleanLyrics(NewLine))
+                    {
+                        updated = true;
+                        this.logger.LogDebug(Properties.Resources.UpdatedCleanedLyrics, this.songInformation);
+                    }
+
+                    if (this.appleTag.RemoveNoLyrics())
+                    {
+                        updated = true;
+                        this.logger.LogDebug(Properties.Resources.RemovedNoLyricsTag, this.songInformation);
+                    }
+
+                    if (await this.appleTag.UpdateRatingAsync(explicitLyricsProvider, cancellationToken).ConfigureAwait(false))
+                    {
+                        updated = true;
+                        this.logger.LogDebug(Properties.Resources.UpdatedRating, this.songInformation);
+                    }
+
+                    return updated;
                 }
             }
 

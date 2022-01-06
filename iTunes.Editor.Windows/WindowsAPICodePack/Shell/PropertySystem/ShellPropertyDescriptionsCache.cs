@@ -7,7 +7,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 /// <summary>
 /// The shell property description cache.
 /// </summary>
-internal class ShellPropertyDescriptionsCache
+internal sealed class ShellPropertyDescriptionsCache
 {
     private static ShellPropertyDescriptionsCache? cacheInstance;
 

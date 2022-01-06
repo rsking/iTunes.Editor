@@ -7,7 +7,7 @@ namespace ITunes.Editor.Services;
 /// <summary>
 /// The cusom content view resolver.
 /// </summary>
-internal class CustomContentViewResolver : global::Avalonia.Controls.Templates.IDataTemplate
+internal sealed class CustomContentViewResolver : global::Avalonia.Controls.Templates.IDataTemplate
 {
     /// <inheritdoc/>
     public bool Match(object data) => data is Models.IConfigure;

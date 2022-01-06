@@ -521,34 +521,4 @@ internal sealed class Program
             }
         }
     }
-
-    private static async Task Check(IHost host, IConsole console, FileSystemInfo input, string type, DirectoryInfo folder, CancellationToken cancellationToken = default)
-    {
-        var songsProvider = host.Services
-            .GetRequiredService<ISongsProvider>(type)
-            .SetPath(input);
-
-        var songs = await songsProvider
-            .GetTagInformationAsync(cancellationToken)
-            .ToArrayAsync(cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-
-        var options = new EnumerationOptions { AttributesToSkip = FileAttributes.Hidden, RecurseSubdirectories = true };
-        var files = folder
-            .EnumerateFiles("*", options)
-            .ToArray();
-
-        var onlyInInput = songs.ExceptBy(files.Select(file => file.FullName), song => song.Name);
-        var onlyInFolder = files.ExceptBy(songs.Select(song => song.Name), file => file.FullName);
-
-        foreach (var item in onlyInInput)
-        {
-            console.Out.WriteLine($"{type,12}: {item.Name}");
-        }
-
-        foreach (var item in onlyInFolder)
-        {
-            console.Out.WriteLine($"folder      : {item.FullName}");
-        }
-    }
 }

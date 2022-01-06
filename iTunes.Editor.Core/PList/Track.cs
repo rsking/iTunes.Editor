@@ -11,7 +11,7 @@ using Formatters.PList;
 /// <summary>
 /// The track.
 /// </summary>
-internal class Track
+internal sealed class Track
 {
     private const string LocalHostString = "localhost/";
 

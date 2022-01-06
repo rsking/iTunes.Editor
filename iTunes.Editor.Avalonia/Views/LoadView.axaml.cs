@@ -18,13 +18,16 @@ public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMode
     /// </summary>
     public LoadView()
     {
-        this.WhenActivated(disposables => { });
+        this.WhenActivated(_ => { });
         this.InitializeComponent();
     }
 
-    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
-
-    private async void OnProviderButton(object sender, global::Avalonia.Interactivity.RoutedEventArgs e)
+    /// <summary>
+    /// Handles the click event for the provider button.
+    /// </summary>
+    /// <param name="sender">The button.</param>
+    /// <param name="e">The arguments.</param>
+    internal async void OnProviderButton(object sender, global::Avalonia.Interactivity.RoutedEventArgs e)
     {
         var dataContextProvider = sender as IDataContextProvider ?? throw new ArgumentException($"{nameof(sender)} must be a {nameof(IDataContextProvider)}", nameof(sender));
         var provider = dataContextProvider.DataContext as ISongsProvider ?? throw new ArgumentException($"{nameof(sender)} must have a data context of {nameof(ISongsProvider)}", nameof(sender));
@@ -41,4 +44,6 @@ public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMode
             routableDataContext.HostScreen.Router.Navigate.Execute(routable);
         }
     }
+
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 }
