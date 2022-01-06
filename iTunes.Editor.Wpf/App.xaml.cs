@@ -63,7 +63,7 @@ public partial class App : Application
         {
             if (navigationWindow.Content is null)
             {
-                navigationWindow.NavigationFailed += this.OnNavigationFailed;
+                navigationWindow.NavigationFailed += OnNavigationFailed;
                 _ = navigationWindow.Navigate(Ioc.Default.GetRequiredService<Views.LoadView>());
             }
 
@@ -84,7 +84,7 @@ public partial class App : Application
                 NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden,
             };
 
-            rootFrame.NavigationFailed += this.OnNavigationFailed;
+            rootFrame.NavigationFailed += OnNavigationFailed;
 
             // Place the frame in the current Window
             this.MainWindow.Content = rootFrame;
@@ -100,6 +100,11 @@ public partial class App : Application
 
         // Ensure the current window is active
         this.MainWindow.Activate();
+
+        static void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e)
+        {
+            throw new InvalidOperationException("Failed to load Page " + e.Exception);
+        }
     }
 
     /// <inheritdoc/>
@@ -122,11 +127,4 @@ public partial class App : Application
 
         base.OnExit(e);
     }
-
-    /// <summary>
-    /// Invoked when Navigation to a certain page fails.
-    /// </summary>
-    /// <param name="sender">The Frame which failed navigation.</param>
-    /// <param name="e">Details about the navigation failure.</param>
-    private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) => throw new InvalidOperationException("Failed to load Page " + e.Exception);
 }
