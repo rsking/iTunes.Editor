@@ -6,9 +6,9 @@ namespace ITunes.Editor;
 
 using System.Windows;
 using System.Windows.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 /// <summary>
 /// The application.

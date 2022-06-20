@@ -4,12 +4,12 @@
 
 namespace ITunes.Editor;
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using global::Avalonia;
 using global::Avalonia.Controls.ApplicationLifetimes;
 using global::Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 /// <summary>
 /// The application.
