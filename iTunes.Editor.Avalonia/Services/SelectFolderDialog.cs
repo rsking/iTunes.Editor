@@ -19,12 +19,7 @@ public class SelectFolderDialog : Contracts.ISelectFolder
     public string? GetSelectedPath(string? path = default)
     {
         var task = this.GetSelectedPathAsync(path);
-        if (task.IsCompletedSuccessfully)
-        {
-            return task.Result;
-        }
-
-        return task.AsTask().Result;
+        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
     }
 
     /// <summary>

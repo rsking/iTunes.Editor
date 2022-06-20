@@ -24,12 +24,7 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     public override string? GetFileName(string? path = null)
     {
         var task = this.GetFileNameAsync(path);
-        if (task.IsCompletedSuccessfully)
-        {
-            return task.Result;
-        }
-
-        return task.AsTask().Result;
+        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
     }
 
     /// <summary>
@@ -40,12 +35,7 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     public override async ValueTask<string?> GetFileNameAsync(string? path = default)
     {
         var fileNames = await this.GetFileNamesImpl(path, multiselect: false).ConfigureAwait(false);
-        if (fileNames is null)
-        {
-            return default;
-        }
-
-        return fileNames.FirstOrDefault();
+        return fileNames is null ? default : fileNames.FirstOrDefault();
     }
 
     /// <summary>
@@ -55,12 +45,7 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     public IEnumerable<string> GetFileNames()
     {
         var task = this.GetFileNamesAsync();
-        if (task.IsCompletedSuccessfully)
-        {
-            return task.Result;
-        }
-
-        return task.AsTask().Result;
+        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
     }
 
     /// <summary>
@@ -82,12 +67,8 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
             InitialFileName = path,
             Title = this.Title,
             AllowMultiple = multiselect,
+            Filters = this.Filters.Select(DialogExtensions.ToFileDialogFilter).ToList(),
         };
-
-        foreach (var filter in this.Filters)
-        {
-            dialog.Filters.Add(filter);
-        }
 
         var activeWindow = global::Avalonia.Application.Current?.GetActiveWindow()
             ?? throw new InvalidOperationException("Failed to find active window");

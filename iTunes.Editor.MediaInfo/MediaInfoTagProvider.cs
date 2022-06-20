@@ -22,13 +22,13 @@ public class MediaInfoTagProvider : ITagProvider, IFileProvider
             MediaInfoTag? mediaTag = null;
             if (NativeMethods.MediaInfo_Open(handle, this.File))
             {
-                NativeMethods.MediaInfo_Option(handle, "Complete", "0");
+                _ = NativeMethods.MediaInfo_Option(handle, "Complete", "0");
                 mediaTag = new MediaInfoTag(System.Runtime.InteropServices.Marshal.PtrToStringAuto(NativeMethods.MediaInfo_Inform(handle)));
                 NativeMethods.MediaInfo_Close(handle);
             }
             else if (NativeMethods.MediaInfoA_Open(handle, this.File))
             {
-                NativeMethods.MediaInfoA_Option(handle, "Complete", "0");
+                _ = NativeMethods.MediaInfoA_Option(handle, "Complete", "0");
                 mediaTag = new MediaInfoTag(System.Runtime.InteropServices.Marshal.PtrToStringAnsi(NativeMethods.MediaInfoA_Inform(handle)));
                 NativeMethods.MediaInfo_Close(handle);
             }

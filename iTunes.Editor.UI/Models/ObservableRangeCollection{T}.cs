@@ -143,8 +143,8 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
             if (countable.Count == 1)
             {
                 using var enumerator = countable.GetEnumerator();
-                enumerator.MoveNext();
-                this.Remove(enumerator.Current);
+                _ = enumerator.MoveNext();
+                _ = this.Remove(enumerator.Current);
                 return;
             }
         }

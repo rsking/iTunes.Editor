@@ -138,21 +138,21 @@ public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.Obser
         }
     }
 
-    [ICommand]
+    [RelayCommand]
     private Task UpdateLyricsAsync()
     {
         var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateLyricsService>();
         return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceLyricsSearch, this.ForceLyricsUpdate));
     }
 
-    [ICommand]
+    [RelayCommand]
     private Task UpdateComposersAsync()
     {
         var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateComposerService>();
         return this.UpdateSongsAsync(song => service.UpdateAsync(song, this.ForceComposersSearch));
     }
 
-    [ICommand]
+    [RelayCommand]
     private Task UpdateTempoAsync()
     {
         var service = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IUpdateTempoService>();

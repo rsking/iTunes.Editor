@@ -18,7 +18,7 @@ public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMode
     /// </summary>
     public LoadView()
     {
-        this.WhenActivated(_ => { });
+        _ = this.WhenActivated(_ => { });
         this.InitializeComponent();
     }
 
@@ -41,7 +41,7 @@ public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewMode
         if (this.DataContext is IRoutableViewModel routableDataContext
             && songs is IRoutableViewModel routable)
         {
-            routableDataContext.HostScreen.Router.Navigate.Execute(routable);
+            _ = routableDataContext.HostScreen.Router.Navigate.Execute(routable);
         }
     }
 

@@ -121,10 +121,10 @@ public class ProgressRing : global::Avalonia.Controls.Primitives.TemplatedContro
 
     private void UpdateVisualStates()
     {
-        this.PseudoClasses.Remove(ActiveState);
-        this.PseudoClasses.Remove(InactiveState);
-        this.PseudoClasses.Remove(SmallState);
-        this.PseudoClasses.Remove(LargeState);
+        _ = this.PseudoClasses.Remove(ActiveState);
+        _ = this.PseudoClasses.Remove(InactiveState);
+        _ = this.PseudoClasses.Remove(SmallState);
+        _ = this.PseudoClasses.Remove(LargeState);
         this.PseudoClasses.Add(this.IsActive ? ActiveState : InactiveState);
         this.PseudoClasses.Add(this.maxSideLength < 60 ? SmallState : LargeState);
     }

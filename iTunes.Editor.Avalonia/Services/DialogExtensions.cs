@@ -39,17 +39,12 @@ internal static class DialogExtensions
 
         static global::Avalonia.Controls.Window? GetWindowFromControl(global::Avalonia.Controls.IControl control)
         {
-            if (control is global::Avalonia.Controls.Window window)
+            return control switch
             {
-                return window;
-            }
-
-            if (control.Parent is null)
-            {
-                return default;
-            }
-
-            return GetWindowFromControl(control.Parent);
+                global::Avalonia.Controls.Window window => window,
+                not null when control.Parent is not null => GetWindowFromControl(control.Parent),
+                _ => default,
+            };
         }
     }
 
@@ -58,7 +53,14 @@ internal static class DialogExtensions
     /// </summary>
     /// <param name="filterCollection">The filter collection.</param>
     /// <param name="filter">The filter to add.</param>
-    internal static void Add(this IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter)
+    internal static void Add(this IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter) => filterCollection.Add(ToFileDialogFilter(filter));
+
+    /// <summary>
+    /// Converts the specified string filter to a <see cref="global::Avalonia.Controls.FileDialogFilter"/>.
+    /// </summary>
+    /// <param name="filter">The filter.</param>
+    /// <returns>The <see cref="global::Avalonia.Controls.FileDialogFilter"/> instance.</returns>
+    internal static global::Avalonia.Controls.FileDialogFilter ToFileDialogFilter(string filter)
     {
         var split = filter.Split('|');
         var displayName = split[0];
@@ -78,15 +80,12 @@ internal static class DialogExtensions
         // get the extensions
         if (split.Length > 1)
         {
-            foreach (var extension in split[1]
+            dialogFilter.Extensions.AddRange(split[1]
                 .Split(';')
                 .Select(value => Path.GetExtension(value)?.TrimStart('.'))
-                .WhereNotNull())
-            {
-                dialogFilter.Extensions.Add(extension);
-            }
+                .WhereNotNull());
         }
 
-        filterCollection.Add(dialogFilter);
+        return dialogFilter;
     }
 }

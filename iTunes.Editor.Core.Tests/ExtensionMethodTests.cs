@@ -21,8 +21,8 @@ public class ExtensionMethodTests
     internal void TestUnchangedLyrics(string lyrics)
     {
         var mockTag = new Moq.Mock<TagLib.Tag>();
-        mockTag.SetupGet(_ => _.Lyrics).Returns(lyrics);
-        mockTag.Object.CleanLyrics().Should().BeFalse();
+        _ = mockTag.SetupGet(_ => _.Lyrics).Returns(lyrics);
+        _ = mockTag.Object.CleanLyrics().Should().BeFalse();
         mockTag.VerifyGet(_ => _.Lyrics);
         mockTag.VerifySet(_ => _.Lyrics = Moq.It.IsAny<string>(), Moq.Times.Never);
     }
@@ -37,8 +37,8 @@ public class ExtensionMethodTests
     internal void TestChangedLyrics(string input, string expected)
     {
         var mockTag = new Moq.Mock<TagLib.Tag>();
-        mockTag.SetupGet(_ => _.Lyrics).Returns(input);
-        mockTag.Object.CleanLyrics().Should().BeTrue();
+        _ = mockTag.SetupGet(_ => _.Lyrics).Returns(input);
+        _ = mockTag.Object.CleanLyrics().Should().BeTrue();
         mockTag.VerifyGet(_ => _.Lyrics);
         mockTag.VerifySet(_ => _.Lyrics = expected, Moq.Times.Once);
     }

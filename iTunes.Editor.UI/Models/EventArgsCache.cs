@@ -12,7 +12,7 @@ internal static class EventArgsCache
     /// <summary>
     /// The <see cref="ICollection.Count"/> <see cref="ComponentModel.PropertyChangedEventArgs"/>.
     /// </summary>
-    internal static readonly ComponentModel.PropertyChangedEventArgs CountPropertyChanged = new("Count");
+    internal static readonly ComponentModel.PropertyChangedEventArgs CountPropertyChanged = new(nameof(ICollection.Count));
 
     /// <summary>
     /// The index <see cref="ComponentModel.PropertyChangedEventArgs"/>.

@@ -52,12 +52,7 @@ public class OvhLyricsProvider : ILyricsProvider
             return default;
         }
 
-        if (response.Data.Error is not null)
-        {
-            return default;
-        }
-
-        return response.Data.Lyrics;
+        return response.Data.Error is not null ? default : response.Data.Lyrics;
     }
 
     private sealed record GetLyricsResponse(string? Lyrics, string? Error);

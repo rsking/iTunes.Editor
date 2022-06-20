@@ -53,25 +53,13 @@ public static class ObservableHelper
     /// <param name="listType">The list type.</param>
     public static void SetObservableListType(Type listType) => SetObservableListFactory(CreateObservableListFactory(listType));
 
-    private static Func<Type, ICollection> CreateObservableCollectionFactory(Type collectionType)
-    {
-        if (!HasInterface(collectionType, typeof(ICollection<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(collectionType))
-        {
-            throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(collectionType));
-        }
+    private static Func<Type, ICollection> CreateObservableCollectionFactory(Type collectionType) => !HasInterface(collectionType, typeof(ICollection<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(collectionType)
+        ? throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(collectionType))
+        : (type => (ICollection)Activator.CreateInstance(collectionType.MakeGenericType(type)));
 
-        return type => (ICollection)Activator.CreateInstance(collectionType.MakeGenericType(type));
-    }
-
-    private static Func<Type, IList> CreateObservableListFactory(Type listType)
-    {
-        if (!HasInterface(listType, typeof(IList<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(listType))
-        {
-            throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(listType));
-        }
-
-        return type => (IList)Activator.CreateInstance(listType.MakeGenericType(type));
-    }
+    private static Func<Type, IList> CreateObservableListFactory(Type listType) => !HasInterface(listType, typeof(IList<>)) || !typeof(System.Collections.Specialized.INotifyCollectionChanged).IsAssignableFrom(listType)
+        ? throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(listType))
+        : (type => (IList)Activator.CreateInstance(listType.MakeGenericType(type)));
 
     private static bool HasInterface(Type type, Type interfaceType) => type.GetInterfaces().Any(t => string.Equals(t.Name, interfaceType.Name, StringComparison.Ordinal));
 }

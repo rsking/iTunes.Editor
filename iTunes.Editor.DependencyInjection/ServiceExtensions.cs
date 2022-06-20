@@ -67,7 +67,7 @@ public static class ServiceExtensions
     /// <returns>The return service collection.</returns>
     public static IServiceCollection AddHappiDev(this IServiceCollection serviceCollection, Configuration.IConfiguration configuration)
     {
-        serviceCollection
+        _ = serviceCollection
             .AddHttpClient<ITunes.Editor.HappiDev.HappiDevLyricsProvider>();
         return serviceCollection
             .Configure<ITunes.Editor.HappiDev.HappiDevOptions>(configuration?.GetSection(nameof(ITunes.Editor.HappiDev)))
@@ -115,7 +115,7 @@ public static class ServiceExtensions
     {
         if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
         {
-            serviceCollection.AddTransient<ISongsProvider, ITunes.Editor.ITunesLib.ITunesSongsProvider>(nameof(ITunes).ToLower(System.Globalization.CultureInfo.CurrentCulture));
+            _ = serviceCollection.AddTransient<ISongsProvider, ITunes.Editor.ITunesLib.ITunesSongsProvider>(nameof(ITunes).ToLower(System.Globalization.CultureInfo.CurrentCulture));
         }
 
         return serviceCollection;
@@ -130,7 +130,7 @@ public static class ServiceExtensions
     {
         if (MS.WindowsAPICodePack.Internal.CoreHelpers.RunningOnVista)
         {
-            serviceDescriptors.AddTransient<ISongsProvider, ITunes.Editor.Windows.ShellSongsProvider>("shell");
+            _ = serviceDescriptors.AddTransient<ISongsProvider, ITunes.Editor.Windows.ShellSongsProvider>("shell");
         }
 
         return serviceDescriptors;
@@ -204,12 +204,7 @@ public static class ServiceExtensions
         }
 
         var genericMethod = method.MakeGenericMethod(serviceType);
-        if (genericMethod.Invoke(null, new object[] { provider, key }) is object obj)
-        {
-            return obj;
-        }
-
-        throw new KeyNotFoundException();
+        return genericMethod.Invoke(null, new object[] { provider, key }) ?? throw new KeyNotFoundException();
     }
 
     private static string GetLyricsProviderName(string name) => GetProviderName(name, nameof(ITunes.Editor.Lyrics));
@@ -245,11 +240,11 @@ public static class ServiceExtensions
             }
 
             var serviceByNameBuilder = serviceCollection.AddByName<TService>();
-            ServiceByNameBuilders.Add(serviceByNameBuilder);
+            _ = ServiceByNameBuilders.Add(serviceByNameBuilder);
             return serviceByNameBuilder;
         }
 
-        serviceCollection
+        _ = serviceCollection
             .AddTransient<TService, TImplementation>()
             .AddTransient<TImplementation>();
 
@@ -259,7 +254,7 @@ public static class ServiceExtensions
         var service = serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(IServiceByNameFactory<TService>));
         if (service is not null)
         {
-            serviceCollection.Remove(service);
+            _ = serviceCollection.Remove(service);
         }
 
         builder.Build();

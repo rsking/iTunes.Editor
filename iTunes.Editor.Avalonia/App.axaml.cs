@@ -23,26 +23,26 @@ public class App : Application
     {
         var host = Host.CreateDefaultBuilder()
             .UseDefaultITunes()
-            .ConfigureServices((_, services) =>
+            .ConfigureServices(services =>
             {
                 // services
-                services.AddSingleton<CommunityToolkit.Mvvm.Messaging.IMessenger>(CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
-                services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
-                services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
-                services
+                _ = services.AddSingleton<CommunityToolkit.Mvvm.Messaging.IMessenger>(CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default);
+                _ = services.AddTransient<Services.Contracts.IOpenFile, Services.OpenFileDialog>();
+                _ = services.AddTransient<Services.Contracts.ISelectFolder, Services.SelectFolderDialog>();
+                _ = services
                     .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
                     .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model))
                     .AddTransient(Create<ViewModels.ITunesConfigureViewModel>);
 
                 // view models
-                services.AddSingleton<ReactiveUI.IScreen, ViewModels.ShellViewModel>();
-                services.AddSingleton<Models.ILoad, ViewModels.LoadRoutableViewModel>();
-                services.AddSingleton<Models.ISongs, ViewModels.SongsRoutableViewModel>();
+                _ = services.AddSingleton<ReactiveUI.IScreen, ViewModels.ShellViewModel>();
+                _ = services.AddSingleton<Models.ILoad, ViewModels.LoadRoutableViewModel>();
+                _ = services.AddSingleton<Models.ISongs, ViewModels.SongsRoutableViewModel>();
 
                 // views
-                services.AddSingleton<Views.ShellView>();
-                services.AddTransient<Views.LoadView>();
-                services.AddTransient<Views.SongsView>();
+                _ = services.AddSingleton<Views.ShellView>();
+                _ = services.AddTransient<Views.LoadView>();
+                _ = services.AddTransient<Views.SongsView>();
 
                 [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is required for the signature")]
                 Movere.Services.IContentDialogService<T> Create<T>(IServiceProvider services)
@@ -75,7 +75,7 @@ public class App : Application
             if (desktop.MainWindow.DataContext is ReactiveUI.IScreen screen
                 && Ioc.Default.GetRequiredService<Models.ILoad>() is ReactiveUI.IRoutableViewModel routable)
             {
-                screen.Router.Navigate.Execute(routable);
+                _ = screen.Router.Navigate.Execute(routable);
             }
         }
 

@@ -61,15 +61,15 @@ public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
                     case "b":
                     case "a":
                     case "span":
-                        ScrapeNodeBuilder(childNode, builder);
+                        _ = ScrapeNodeBuilder(childNode, builder);
                         break;
                     case "#text":
                         // scrape this
                         var text = HtmlAgilityPack.HtmlEntity.DeEntitize(childNode.InnerText.Trim('\n'));
-                        builder.Append(text);
+                        _ = builder.Append(text);
                         break;
                     case "br":
-                        builder.AppendLine();
+                        _ = builder.AppendLine();
                         break;
                 }
             }
@@ -111,12 +111,7 @@ public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
             }
 
             var node = nodes.FirstOrDefault();
-            if (node is null)
-            {
-                return default;
-            }
-
-            return node.SelectSingleNode("p");
+            return node is null ? default : node.SelectSingleNode("p");
         }
 
         static HtmlAgilityPack.HtmlNode? SearchNodes(HtmlAgilityPack.HtmlNode documentNode, string prefix)

@@ -54,14 +54,14 @@ public sealed class AZLyricsProvider : ILyricsProvider, IDisposable
             {
                 case "i":
                 case "b":
-                    lyrics.Append(ScrapeNode(childNode));
+                    _ = lyrics.Append(ScrapeNode(childNode));
                     break;
                 case "#text":
                     // scrape this
-                    lyrics.Append(childNode.InnerText.Trim('\r', '\n'));
+                    _ = lyrics.Append(childNode.InnerText.Trim('\r', '\n'));
                     break;
                 case "br":
-                    lyrics.AppendLine();
+                    _ = lyrics.AppendLine();
                     break;
             }
         }

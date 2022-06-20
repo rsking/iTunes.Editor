@@ -19,17 +19,12 @@ public static class HostBuilderExtensions
     /// </summary>
     /// <param name="builder">The web host builder to configure.</param>
     /// <returns>The host builder.</returns>
-    public static IHostBuilder UseDefaultITunes(this IHostBuilder builder)
-    {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
-
-        return builder.ConfigureServices((hostingContext, serviceCollection) =>
+    public static IHostBuilder UseDefaultITunes(this IHostBuilder builder) => builder is null
+        ? throw new ArgumentNullException(nameof(builder))
+        : builder.ConfigureServices((hostingContext, serviceCollection) =>
         {
             // Lyrics
-            serviceCollection
+            _ = serviceCollection
                 .AddAZ()
                 .AddGenius()
                 .AddChartLyrics()
@@ -38,11 +33,11 @@ public static class HostBuilderExtensions
                 .AddPurgoMalum();
 
             // Composers
-            serviceCollection
+            _ = serviceCollection
                 .AddApraAmcos();
 
             // song providers
-            serviceCollection
+            _ = serviceCollection
                 .AddFolder()
                 .AddIPod()
                 .AddPList()
@@ -50,15 +45,14 @@ public static class HostBuilderExtensions
                 .AddShell();
 
             // tag provider
-            serviceCollection
+            _ = serviceCollection
                 .AddTagLib()
                 .AddMediaInfo();
 
             // add services
-            serviceCollection
+            _ = serviceCollection
                 .AddTransient<IUpdateComposerService, UpdateComposerService>()
                 .AddTransient<IUpdateLyricsService, UpdateLyricsService>()
                 .AddTransient<IUpdateTempoService, UpdateTempoService>();
         });
-    }
 }

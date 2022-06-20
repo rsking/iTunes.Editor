@@ -87,7 +87,7 @@ public partial class ConfigureDialog : BaseMetroDialog
     /// <returns>The result.</returns>
     internal Task<bool> WaitForButtonPressAsync()
     {
-        this.Dispatcher.BeginInvoke(new Action(() => this.Focus()));
+        _ = this.Dispatcher.BeginInvoke(new Action(() => this.Focus()));
 
         var tcs = new TaskCompletionSource<bool>();
 
@@ -109,7 +109,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             .Register(() => this.BeginInvoke(() =>
             {
                 CleanUpHandlers();
-                tcs.TrySetResult(false);
+                _ = tcs.TrySetResult(false);
             }));
 
         this.escapeKeyHandler = (_, e) =>
@@ -118,7 +118,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             {
                 CleanUpHandlers();
 
-                tcs.TrySetResult(false);
+                _ = tcs.TrySetResult(false);
             }
         };
 
@@ -128,7 +128,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             {
                 CleanUpHandlers();
 
-                tcs.TrySetResult(false);
+                _ = tcs.TrySetResult(false);
             }
         };
 
@@ -138,7 +138,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             {
                 CleanUpHandlers();
 
-                tcs.TrySetResult(true);
+                _ = tcs.TrySetResult(true);
             }
         };
 
@@ -146,7 +146,7 @@ public partial class ConfigureDialog : BaseMetroDialog
         {
             CleanUpHandlers();
 
-            tcs.TrySetResult(false);
+            _ = tcs.TrySetResult(false);
 
             e.Handled = true;
         };
@@ -155,7 +155,7 @@ public partial class ConfigureDialog : BaseMetroDialog
         {
             CleanUpHandlers();
 
-            tcs.TrySetResult(true);
+            _ = tcs.TrySetResult(true);
 
             e.Handled = true;
         };

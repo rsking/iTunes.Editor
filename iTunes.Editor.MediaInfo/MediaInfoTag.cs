@@ -157,7 +157,7 @@ public class MediaInfoTag : Tag
     {
         if (value is null)
         {
-            this.lookup[category].Remove(key);
+            _ = this.lookup[category].Remove(key);
             return;
         }
 

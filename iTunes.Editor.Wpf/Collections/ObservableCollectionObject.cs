@@ -48,7 +48,7 @@ public abstract class ObservableCollectionObject : INotifyCollectionChanged, INo
         if (GetDispatcher() is Dispatcher dispatcher)
         {
             var frame = new DispatcherFrame();
-            dispatcher.BeginInvoke(DispatcherPriority.DataBind, new DispatcherOperationCallback(ExitFrame), frame);
+            _ = dispatcher.BeginInvoke(DispatcherPriority.DataBind, new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
     }
@@ -184,7 +184,7 @@ public abstract class ObservableCollectionObject : INotifyCollectionChanged, INo
         {
             if (handler.Target is DispatcherObject dispatcherObject && !dispatcherObject.CheckAccess())
             {
-                dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, args);
+                _ = dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, args);
             }
             else
             {
@@ -221,7 +221,7 @@ public abstract class ObservableCollectionObject : INotifyCollectionChanged, INo
             }
         });
 
-        dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
+        _ = dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
