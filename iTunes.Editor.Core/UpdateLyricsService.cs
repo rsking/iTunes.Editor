@@ -64,15 +64,11 @@ public class UpdateLyricsService : IUpdateLyricsService
             }
         }
 
-        if (forceExplicit && updater.CanUpdateExplicit())
-        {
-            return await updater
-                .UpdateAsync(this.explicitLyrics, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-        }
-
+        var instance = forceExplicit && updater.CanUpdateExplicit()
+            ? this.explicitLyrics
+            : NullExplicitLyricsProvider.Instance;
         return await updater
-            .UpdateAsync(NullExplicitLyricsProvider.Instance, cancellationToken: cancellationToken)
+            .UpdateAsync(instance, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
     }
 

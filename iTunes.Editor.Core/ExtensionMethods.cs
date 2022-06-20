@@ -394,25 +394,13 @@ public static class ExtensionMethods
     /// <exception cref="ArgumentNullException"><paramref name="first"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="second"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
-    public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+    public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer) => (first, second, keySelector) switch
     {
-        if (first is null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-
-        if (second is null)
-        {
-            throw new ArgumentNullException(nameof(second));
-        }
-
-        if (keySelector is null)
-        {
-            throw new ArgumentNullException(nameof(keySelector));
-        }
-
-        return ExceptByIterator(first, second, keySelector, comparer);
-    }
+        (null, _, _) => throw new ArgumentNullException(nameof(first)),
+        (_, null, _) => throw new ArgumentNullException(nameof(second)),
+        (_, _, null) => throw new ArgumentNullException(nameof(keySelector)),
+        _ => ExceptByIterator(first, second, keySelector, comparer),
+    };
 
     /// <summary>
     /// Returns a value indicating whether a specified substring occurs within this string.
@@ -420,20 +408,12 @@ public static class ExtensionMethods
     /// <param name="input">The input.</param>
     /// <param name="value">The string to seek.</param>
     /// <returns><see langword="true"/> if <paramref name="input"/> is not <see langword="null"/> and the value parameter occurs within this string, or if value is the empty string (""); otherwise, <see langword="false"/>.</returns>
-    public static bool IsNotNullAndContains([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] this string? input, string value)
-    {
-        if (input is null)
-        {
-            return false;
-        }
-
-        return
+    public static bool IsNotNullAndContains([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] this string? input, string value) =>
 #if NETSTANDARD2_1_OR_GREATER
-                    input.Contains(value, StringComparison.Ordinal);
+        input?.Contains(value, StringComparison.Ordinal) == true;
 #else
-                    input.Contains(value);
+        input?.Contains(value) == true;
 #endif
-    }
 
     /// <summary>
     /// Returns a new string in which all occurrences of a specified string in the input are replaced with another specified string.
@@ -442,20 +422,13 @@ public static class ExtensionMethods
     /// <param name="oldValue">The string to be replaced.</param>
     /// <param name="newValue">The string to replace all occurrences of <paramref name="oldValue"/>.</param>
     /// <returns>A string that is equivalent to <paramref name="input"/> except that all instances of <paramref name="oldValue"/> are replaced with <paramref name="newValue"/>. If oldValue is not found in the current instance, the method returns the current instance unchanged.</returns>
-    public static string? SafeReplace(this string? input, string oldValue, string? newValue)
-    {
-        if (input is null)
-        {
-            return default;
-        }
-
-        return input
+    [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNull("input")]
+    public static string? SafeReplace(this string? input, string oldValue, string? newValue) =>
 #if NETSTANDARD2_1_OR_GREATER
-                .Replace(oldValue, newValue, StringComparison.Ordinal);
+        input?.Replace(oldValue, newValue, StringComparison.Ordinal);
 #else
-                .Replace(oldValue, newValue);
+        input?.Replace(oldValue, newValue);
 #endif
-    }
 
     private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
     {
@@ -472,9 +445,9 @@ public static class ExtensionMethods
 
         if (tags
 #if NETSTANDARD2_1_OR_GREATER
-                .Contains(tag, StringComparison.Ordinal))
+            .Contains(tag, StringComparison.Ordinal))
 #else
-                .Contains(tag))
+            .Contains(tag))
 #endif
         {
             return tags;

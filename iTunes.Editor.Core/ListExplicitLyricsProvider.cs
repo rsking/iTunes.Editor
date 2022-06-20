@@ -13,25 +13,25 @@ public class ListExplicitLyricsProvider : IExplicitLyricsProvider
 {
     private static readonly IEnumerable<string> ExplicitWords = new string[]
     {
-            "fuck",
-            "f***",
-            "f**k",
-            "cunt",
-            "c***",
-            "c**t",
-            "shit",
-            "s***",
-            "s**t",
-            "dick",
-            "d***",
-            "d**k",
+        "fuck",
+        "f***",
+        "f**k",
+        "cunt",
+        "c***",
+        "c**t",
+        "shit",
+        "s***",
+        "s**t",
+        "dick",
+        "d***",
+        "d**k",
     };
 
     /// <inheritdoc/>
     public ValueTask<bool?> IsExplicitAsync(string lyrics, CancellationToken cancellationToken) => new(ExplicitWords.Any(explicitWord =>
 #if NETSTANDARD2_1_OR_GREATER
-            lyrics.Contains(explicitWord, StringComparison.OrdinalIgnoreCase)));
+        lyrics.Contains(explicitWord, StringComparison.OrdinalIgnoreCase)));
 #else
-            lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0));
+        lyrics.IndexOf(explicitWord, StringComparison.OrdinalIgnoreCase) >= 0));
 #endif
 }

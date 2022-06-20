@@ -23,9 +23,10 @@ public class PListSongsProvider : ISongsProvider, IFileProvider
         Formatters.PList.PList plist;
         var stream = System.IO.File.OpenRead(this.File);
 #if NETSTANDARD2_1_OR_GREATER
-        await
-#endif
+        await using (stream.ConfigureAwait(false))
+#else
         using (stream)
+#endif
         {
             var formatter = new Formatters.PList.PListAsciiFormatter();
             plist = await Task.Run(() => (Formatters.PList.PList)formatter.Deserialize(stream), cancellationToken).ConfigureAwait(false);

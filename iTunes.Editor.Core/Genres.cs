@@ -9,6 +9,7 @@ namespace ITunes.Editor;
 /// </summary>
 public static class Genres
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3963:\"static\" fields should be initialized inline", Justification = "This would require reading the genres multiple times.")]
     static Genres()
     {
         var genres = GetInternalGenres()
