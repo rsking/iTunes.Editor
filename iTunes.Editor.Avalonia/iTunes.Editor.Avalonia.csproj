@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Versions">
-    <AvaloniaVersion>0.10.15</AvaloniaVersion>
+    <AvaloniaVersion>0.10.18</AvaloniaVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,11 +23,11 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Movere" Version="0.2.0-build.337" />
+    <PackageReference Include="Movere" Version="0.2.0-build.346" />
     <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
   </ItemGroup>
 
