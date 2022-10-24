@@ -20,6 +20,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
+    <PackageReference Include="Humanizer.Core" Version="$(HumanizerVersion)" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
@@ -29,6 +30,7 @@
     </PackageReference>
     <PackageReference Include="Movere" Version="0.2.0-build.346" />
     <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
+    <PackageReference Include="TagLibSharp" Version="$(TagLibSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
