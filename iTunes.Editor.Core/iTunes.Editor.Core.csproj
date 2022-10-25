@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Compile Update="**\*.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx" />
-    <Compile Update="PList\PListBinaryFormatter.*.cs" DependentUpon="PListBinaryFormatter.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Formatters.PList" Version="1.0.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.8.2" />
+    <PackageReference Include="Humanizer.Core" Version="2.10.1" />
     <PackageReference Include="IsExternalInit" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
