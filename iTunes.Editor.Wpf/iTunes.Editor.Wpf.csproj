@@ -23,6 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 

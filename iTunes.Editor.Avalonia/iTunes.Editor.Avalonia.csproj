@@ -26,6 +26,7 @@
     </PackageReference>
     <PackageReference Include="Movere" />
     <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 
