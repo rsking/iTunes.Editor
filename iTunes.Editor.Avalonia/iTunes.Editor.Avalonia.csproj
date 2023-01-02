@@ -5,32 +5,28 @@
     <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;net462</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup Label="Versions">
-    <AvaloniaVersion>0.10.18</AvaloniaVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <AvaloniaResource Include="Styles\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerVersion)" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Diagnostics" />
+    <PackageReference Include="Avalonia.ReactiveUI" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Movere" Version="0.2.0-build.346" />
-    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
-    <PackageReference Include="TagLibSharp" Version="$(TagLibSharpVersion)" />
+    <PackageReference Include="Movere" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 
   <ItemGroup>

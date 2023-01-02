@@ -11,19 +11,15 @@
     <None Update="appsettings.*.json" DependentUpon="appsettings.json" />
   </ItemGroup>
 
-  <PropertyGroup Label="Versions">
-    <CommandLineVersion>0.4.0-alpha.22272.1</CommandLineVersion>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotnetCoreVersion)" />
-    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="$(RestSharpVersion)" />
-    <PackageReference Include="System.CommandLine.Hosting" Version="$(CommandLineVersion)" />
-    <PackageReference Include="System.CommandLine.Rendering" Version="$(CommandLineVersion)" />
-    <PackageReference Include="TagLibSharp" Version="$(TagLibSharpVersion)" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="System.CommandLine.Hosting" />
+    <PackageReference Include="System.CommandLine.Rendering" />
+    <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 
   <ItemGroup>

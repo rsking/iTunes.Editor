@@ -13,19 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Formatters.PList" Version="1.0.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.10.1" />
-    <PackageReference Include="IsExternalInit" Version="1.0.3">
+    <PackageReference Include="Formatters.PList" />
+    <PackageReference Include="Humanizer.Core" VersionOverride="2.10.1" />
+    <PackageReference Include="IsExternalInit">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.0.0" />
-    <PackageReference Include="Nullable" Version="1.3.1">
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Nullable">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Linq.Async" Version="4.0.0" />
-    <PackageReference Include="TagLibSharp" Version="2.2.0" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="TagLibSharp" VersionOverride="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +37,7 @@
   <Choose>
     <When Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
       <ItemGroup>
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" VersionOverride="1.0.0" />
       </ItemGroup>
     </When>
   </Choose>
