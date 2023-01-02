@@ -487,7 +487,7 @@ internal sealed class Program
                 return;
         }
 
-        (var genre, var level) = GetGenre(song.Genre);
+        (var genre, _) = GetGenre(song.Genre);
         if (genre is null)
         {
             logger.LogWarning("Failed to match {genre} to an approvied genre", song.Genre);

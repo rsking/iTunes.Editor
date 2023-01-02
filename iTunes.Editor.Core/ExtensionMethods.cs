@@ -32,12 +32,9 @@ public static class ExtensionMethods
     /// <returns>The not null values.</returns>
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
     {
-        foreach (var item in source)
+        foreach (var item in source.Where(x => x is not null))
         {
-            if (item is not null)
-            {
-                yield return item;
-            }
+            yield return item!;
         }
     }
 
