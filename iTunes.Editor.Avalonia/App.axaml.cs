@@ -44,15 +44,14 @@ public class App : Application
                 _ = services.AddTransient<Views.LoadView>();
                 _ = services.AddTransient<Views.SongsView>();
 
-                [System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "This is required for the signature")]
-                Movere.Services.IContentDialogService<T> Create<T>(IServiceProvider services)
+                Movere.Services.IContentDialogService<T, Movere.Models.DialogResult> Create<T>(IServiceProvider services)
                     where T : Models.IConfigure
                 {
                     var owner = this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
                         ? desktop.MainWindow
-                        : Ioc.Default.GetRequiredService<Views.ShellView>();
+                        : services.GetRequiredService<Views.ShellView>();
 
-                    return new Movere.Services.ContentDialogService<T>(owner, new Services.CustomContentViewResolver());
+                    return new Movere.Services.ContentDialogService<T, Movere.Models.DialogResult>(owner, new Services.CustomContentViewResolver());
                 }
             })
             .Build();
