@@ -107,7 +107,7 @@ public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.Obser
         var query = recipient.songs
             .SelectMany(SelectPerfomers)
             .GroupBy(p => p.Performer, p => p.Song, StringComparer.Ordinal)
-            .OrderBy(g => g.Key)
+            .OrderBy(g => g.Key, StringComparer.Ordinal)
             .Select(group => new ArtistViewModel(
                 recipient,
                 group.Key,
@@ -169,7 +169,7 @@ public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.Obser
             // update the UI
             this.Progress = $"Processing {song.Performers.ToJoinedString()}|{song.Title}";
             var currentPercentage = 100 * current / count;
-            if (this.percentage != currentPercentage)
+            if (this.Percentage != currentPercentage)
             {
                 this.Percentage = currentPercentage;
             }

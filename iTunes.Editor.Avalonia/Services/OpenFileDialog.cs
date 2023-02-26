@@ -21,11 +21,11 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     /// </summary>
     /// <param name="path">The starting file.</param>
     /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
-    public override string? GetFileName(string? path = null)
+    public override string? GetFileName(string? path = null) => this.GetFileNameAsync(path) switch
     {
-        var task = this.GetFileNameAsync(path);
-        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
-    }
+        { IsCompletedSuccessfully: true } t => t.Result,
+        var t => t.AsTask().Result,
+    };
 
     /// <summary>
     /// Gets the file name using the specified <paramref name="path"/> as a starting point asynchronously.
@@ -35,7 +35,7 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     public override async ValueTask<string?> GetFileNameAsync(string? path = default)
     {
         var fileNames = await this.GetFileNamesImpl(path, multiselect: false).ConfigureAwait(false);
-        return fileNames is null ? default : fileNames.FirstOrDefault();
+        return fileNames?.FirstOrDefault();
     }
 
     /// <summary>

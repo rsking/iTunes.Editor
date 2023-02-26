@@ -117,8 +117,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             if (e.Key == Key.Escape || (e.Key == Key.System && e.SystemKey == Key.F4))
             {
                 CleanUpHandlers();
-
-                _ = tcs.TrySetResult(false);
+                tcs.TrySetResult(false);
             }
         };
 
@@ -127,8 +126,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             if (e.Key == Key.Enter)
             {
                 CleanUpHandlers();
-
-                _ = tcs.TrySetResult(false);
+                tcs.TrySetResult(false);
             }
         };
 
@@ -137,8 +135,7 @@ public partial class ConfigureDialog : BaseMetroDialog
             if (e.Key == Key.Enter)
             {
                 CleanUpHandlers();
-
-                _ = tcs.TrySetResult(true);
+                tcs.TrySetResult(true);
             }
         };
 
@@ -146,18 +143,14 @@ public partial class ConfigureDialog : BaseMetroDialog
         {
             CleanUpHandlers();
 
-            _ = tcs.TrySetResult(false);
-
+            tcs.TrySetResult(false);
             e.Handled = true;
         };
 
         this.affirmativeHandler = (_, e) =>
         {
             CleanUpHandlers();
-
-            _ = tcs.TrySetResult(true);
-
-            e.Handled = true;
+            e.Handled = tcs.TrySetResult(true);
         };
 
         this.PART_NegativeButton.KeyDown += this.negativeKeyHandler;
