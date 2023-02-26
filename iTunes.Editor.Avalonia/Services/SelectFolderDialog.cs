@@ -16,11 +16,11 @@ public class SelectFolderDialog : Contracts.ISelectFolder
     /// </summary>
     /// <param name="path">The initial path.</param>
     /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-    public string? GetSelectedPath(string? path = default)
+    public string? GetSelectedPath(string? path = default) => this.GetSelectedPathAsync(path) switch
     {
-        var task = this.GetSelectedPathAsync(path);
-        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
-    }
+        { IsCompletedSuccessfully: true } task => task.Result,
+        var task => task.AsTask().Result,
+    };
 
     /// <summary>
     /// Gets the path using the specified <paramref name="path"/> as a starting point.

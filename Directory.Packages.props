@@ -43,17 +43,17 @@
   </ItemGroup>
 
   <ItemGroup Label="Testing">
-    <PackageVersion Include="FluentAssertions" Version="6.9.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageVersion Include="FluentAssertions" Version="6.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageVersion Include="Moq" Version="4.18.4" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.14" />
+    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.19" />
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.2.0" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.52.0.60960" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.53.0.62665" />
     <GlobalPackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435" />
   </ItemGroup>
 

@@ -23,8 +23,8 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     /// <returns>The file name if successful; otherwise <see langword="null"/>.</returns>
     public override string? GetFileName(string? path = null) => this.GetFileNameAsync(path) switch
     {
-        { IsCompletedSuccessfully: true } t => t.Result,
-        var t => t.AsTask().Result,
+        { IsCompletedSuccessfully: true } task => task.Result,
+        var task => task.AsTask().Result,
     };
 
     /// <summary>
@@ -42,11 +42,11 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     /// Gets multiple file names.
     /// </summary>
     /// <returns>The list of file names.</returns>
-    public IEnumerable<string> GetFileNames()
+    public IEnumerable<string> GetFileNames() => this.GetFileNamesAsync() switch
     {
-        var task = this.GetFileNamesAsync();
-        return task.IsCompletedSuccessfully ? task.Result : task.AsTask().Result;
-    }
+        { IsCompletedSuccessfully: true } task => task.Result,
+        var task => task.AsTask().Result,
+    };
 
     /// <summary>
     /// Gets multiple file names asynchronously.
