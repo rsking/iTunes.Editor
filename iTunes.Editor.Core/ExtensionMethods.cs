@@ -19,10 +19,10 @@ public static class ExtensionMethods
 
     private const string HasLyrics = "Has Lyrics";
 
-    private static readonly TagLib.ByteVector Rating = new(new byte[] { 114, 116, 110, 103 });
-    private static readonly TagLib.ByteVector ExplicitRatingData = new(new byte[] { 0x04 });
-    private static readonly TagLib.ByteVector CleanRatingData = new(new byte[] { 0x02 });
-    private static readonly TagLib.ByteVector UnratedRatingData = new(new byte[] { 0x00 });
+    private static readonly TagLib.ByteVector Rating = new(0x72, 0x74, 0x6E, 0x67);
+    private static readonly TagLib.ByteVector ExplicitRatingData = new((byte)0x04);
+    private static readonly TagLib.ByteVector CleanRatingData = new((byte)0x02);
+    private static readonly TagLib.ByteVector UnratedRatingData = new((byte)0x00);
 
     /// <summary>
     /// Only returns values that are not null.
@@ -419,7 +419,7 @@ public static class ExtensionMethods
     /// <param name="oldValue">The string to be replaced.</param>
     /// <param name="newValue">The string to replace all occurrences of <paramref name="oldValue"/>.</param>
     /// <returns>A string that is equivalent to <paramref name="input"/> except that all instances of <paramref name="oldValue"/> are replaced with <paramref name="newValue"/>. If oldValue is not found in the current instance, the method returns the current instance unchanged.</returns>
-    [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNull("input")]
+    [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNull(nameof(input))]
     public static string? SafeReplace(this string? input, string oldValue, string? newValue) =>
 #if NETSTANDARD2_1_OR_GREATER
         input?.Replace(oldValue, newValue, StringComparison.Ordinal);

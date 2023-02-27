@@ -197,12 +197,7 @@ public static class ServiceExtensions
     public static object GetRequiredService(this IServiceProvider provider, Type serviceType, string key)
     {
         var type = typeof(ServiceExtensions);
-        var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(IServiceProvider), typeof(string) });
-        if (method is null)
-        {
-            throw new ArgumentException("Could not get method", nameof(provider));
-        }
-
+        var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(IServiceProvider), typeof(string) }) ?? throw new ArgumentException("Could not get method", nameof(provider));
         var genericMethod = method.MakeGenericMethod(serviceType);
         return genericMethod.Invoke(null, new object[] { provider, key }) ?? throw new KeyNotFoundException();
     }
@@ -216,9 +211,9 @@ public static class ServiceExtensions
         {
             providerName = providerName
 #if NETSTANDARD2_0
-                    .Replace(suffix, string.Empty);
+                .Replace(suffix, string.Empty);
 #else
-                    .Replace(suffix, string.Empty, StringComparison.OrdinalIgnoreCase);
+                .Replace(suffix, string.Empty, StringComparison.OrdinalIgnoreCase);
 #endif
         }
 

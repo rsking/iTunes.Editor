@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 
 using Microsoft.Extensions.Logging;
 using RestSharp;
-using RestSharp.Serializers.SystemTextJson;
+using RestSharp.Serializers.Json;
 
 /// <summary>
 /// Represents an <see cref="ILyricsProvider"/> using the happi.dev Lyrics service.
@@ -23,7 +23,7 @@ public class HappiDevLyricsProvider : ILyricsProvider
 
     private readonly HttpClient httpClient;
 
-    private readonly IRestClient restClient = new RestClient(Uri)
+    private readonly RestClient restClient = new RestClient(Uri)
         .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
     /// <summary>
@@ -102,18 +102,18 @@ public class HappiDevLyricsProvider : ILyricsProvider
                 .AddQueryParameter("q", $"{artist} {title}")
                 .AddQueryParameter("lyrics", "1")
                 .AddQueryParameter("type", "track");
-            var response = await this.restClient.ExecuteGetAsync<Track>(request, cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessful)
+            return await this.restClient.ExecuteGetAsync<Track>(request, cancellationToken).ConfigureAwait(false) switch
             {
-                this.logger.LogError(response.ErrorMessage);
-                return default;
-            }
-
-            return response.Data switch
-            {
-                not null when response.Data.Success && response.Data.Length != 0 => GetLyricsImpl(this.logger, artist, title, response.Data.Result[0]),
+                { IsSuccessful: false } response => LogError(response.ErrorMessage),
+                { Data: { Success: true, Length: not 0 } } response => GetLyricsImpl(this.logger, artist, title, response.Data.Result[0]),
                 _ => default,
             };
+
+            string? LogError(string? errorMessage)
+            {
+                this.logger.LogError(errorMessage);
+                return default;
+            }
 
             static string? GetLyricsImpl(
                 ILogger logger,

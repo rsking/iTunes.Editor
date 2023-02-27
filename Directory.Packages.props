@@ -27,7 +27,7 @@
     <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
     <PackageVersion Include="Movere" Version="0.2.0-build.346" />
     <PackageVersion Include="Neleus.DependencyInjection.Extensions" Version="1.0.6" />
-    <PackageVersion Include="RestSharp.Serializers.SystemTextJson" Version="106.15.0" />
+    <PackageVersion Include="RestSharp" Version="108.0.3" />
     <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />
     <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
     <PackageVersion Include="System.CommandLine.Rendering" Version="0.4.0-alpha.22272.1" />

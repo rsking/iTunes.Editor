@@ -8,7 +8,7 @@ namespace ITunes.Editor.ApiSeeds;
 
 using Microsoft.Extensions.Logging;
 using RestSharp;
-using RestSharp.Serializers.SystemTextJson;
+using RestSharp.Serializers.Json;
 
 /// <summary>
 /// Represents an <see cref="ILyricsProvider"/> using the API Seeds Lyrics service.
@@ -19,7 +19,7 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
 
     private readonly ILogger logger;
 
-    private readonly IRestClient client = new RestClient(Uri)
+    private readonly RestClient client = new RestClient(Uri)
         .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
     /// <summary>
@@ -55,7 +55,7 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
         }
 
         this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
-        var request = new RestRequest("{artist}/{track}", Method.GET)
+        var request = new RestRequest("{artist}/{track}", Method.Get)
             .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
             .AddUrlSegment("track", tagInformation.Title);
         var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
@@ -65,25 +65,38 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
             return default;
         }
 
-        return GetLyricsImpl(this.logger, request, response.Data.Result);
+        return GetLyricsImpl(this.logger, request, response.Data?.Result);
 
-        static string? GetLyricsImpl(ILogger logger, IRestRequest request, GetLyricsResult? result)
+        static string? GetLyricsImpl(ILogger logger, RestRequest request, GetLyricsResult? result)
         {
             if (result is null)
             {
                 return null;
             }
 
+            var (artist, track) = GetArtistAndTrackFromRequest(request.Parameters);
+
             if (result.Artist?.Name is not null
-                && CheckName(result.Artist.Name, (string?)request.Parameters[0].Value)
+                && CheckName(result.Artist.Name, artist)
                 && result.Track?.Name is not null
-                && CheckName(result.Track.Name, (string?)request.Parameters[1].Value))
+                && CheckName(result.Track.Name, track))
             {
                 return result.Track.Text;
             }
 
-            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{request.Parameters[0].Value}|{request.Parameters[1].Value}", $"{result.Artist?.Name}|{result.Track?.Name}");
+            logger.LogWarning(Properties.Resources.IncorrectLyricsFound, $"{artist}|{track}", $"{result.Artist?.Name}|{result.Track?.Name}");
             return null;
+
+            static (string? Artist, string? Track) GetArtistAndTrackFromRequest(ParametersCollection parameters)
+            {
+                var enumerator = parameters.GetEnumerator();
+                enumerator.MoveNext();
+                var artist = enumerator.Current.Value as string;
+                enumerator.MoveNext();
+                var track = enumerator.Current.Value as string;
+
+                return (artist, track);
+            }
 
             static bool CheckName(string? first, string? second)
             {

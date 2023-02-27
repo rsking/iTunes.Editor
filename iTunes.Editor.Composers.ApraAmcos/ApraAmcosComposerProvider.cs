@@ -5,14 +5,14 @@
 namespace ITunes.Editor.Composers.ApraAmcos;
 
 using RestSharp;
-using RestSharp.Serializers.SystemTextJson;
+using RestSharp.Serializers.Json;
 
 /// <summary>
 /// The <see cref="IComposerProvider"/> for APRA AMCOS.
 /// </summary>
 public sealed class ApraAmcosComposerProvider : IComposerProvider
 {
-    private readonly IRestClient client = new RestClient("https://www.apraamcos.com.au/api/")
+    private readonly RestClient client = new RestClient("https://www.apraamcos.com.au/api/")
         .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
         .UseQueryEncoder((value, encoding) => System.Web.HttpUtility.UrlEncode(value.ToLowerInvariant(), encoding));
 
@@ -42,9 +42,7 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
             request.AddQueryParameter(nameof(writer), Sanitize(writer));
             request.AddQueryParameter(nameof(performer), Sanitize(performer));
 
-            var response = await this.client.ExecuteGetAsync<SearchResult>(request, cancellationToken).ConfigureAwait(false);
-
-            if (response.IsSuccessful && response.Data.Success)
+            if (await this.client.ExecuteGetAsync<SearchResult>(request, cancellationToken).ConfigureAwait(false) is { IsSuccessful: true, Data.Success: true } response)
             {
                 var work = response.Data.Result.First();
 
@@ -57,9 +55,7 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
                 }
                 else if (work.Writers is not null)
                 {
-                    var writers = work.Writers.Split('/');
-
-                    foreach (var name in writers)
+                    foreach (var name in work.Writers.Split('/'))
                     {
                         yield return Name.FromInversedName(name);
                     }

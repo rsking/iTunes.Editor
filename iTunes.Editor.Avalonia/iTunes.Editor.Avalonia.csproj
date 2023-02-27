@@ -25,7 +25,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Movere" />
-    <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="RestSharp" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>

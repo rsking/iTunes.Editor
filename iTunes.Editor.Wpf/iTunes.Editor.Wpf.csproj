@@ -18,7 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RestSharp.Serializers.SystemTextJson" />
+    <PackageReference Include="RestSharp" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 
