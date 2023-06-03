@@ -33,10 +33,12 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>, IEqual
     {
         get
         {
+            const ShellNativeMethods.ShellFileGetAttributesOptions None = default;
+
             try
             {
                 this.NativeShellItem.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem, out var sfgao);
-                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != 0;
+                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != None;
             }
             catch (FileNotFoundException)
             {
@@ -55,10 +57,12 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>, IEqual
     {
         get
         {
+            const ShellNativeMethods.ShellFileGetAttributesOptions None = default;
+
             try
             {
                 this.NativeShellItem.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.Link, out var sfgao);
-                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Link) != 0;
+                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Link) != None;
             }
             catch (FileNotFoundException)
             {

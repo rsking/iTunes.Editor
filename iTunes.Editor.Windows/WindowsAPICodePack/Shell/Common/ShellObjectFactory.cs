@@ -42,11 +42,13 @@ internal static class ShellObjectFactory
         // Get some IShellItem attributes
         nativeShellItem2.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem | ShellNativeMethods.ShellFileGetAttributesOptions.Folder, out var sfgao);
 
+        const ShellNativeMethods.ShellFileGetAttributesOptions None = default;
+
         // Is this item a FileSystem item?
-        var isFileSystem = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != 0;
+        var isFileSystem = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != None;
 
         // Is this item a Folder?
-        var isFolder = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Folder) != 0;
+        var isFolder = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Folder) != None;
 
         // Create the right type of ShellObject based on the above information
 

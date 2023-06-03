@@ -36,9 +36,11 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
                 throw new DirectoryNotFoundException($"Failed to find {this.Folder}");
             }
 
+            const FileAttributes None = default;
+
             // get all the files
             foreach (var fullName in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-                .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == 0 || (fileInfo.Attributes & FileAttributes.System) == 0)
+                .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == None || (fileInfo.Attributes & FileAttributes.System) == None)
                 .Select(fileInfo => fileInfo.FullName))
             {
                 using var shellObject = ShellObject.FromParsingName(fullName);
