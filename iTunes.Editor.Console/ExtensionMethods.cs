@@ -18,7 +18,7 @@ internal static class ExtensionMethods
     /// <param name="subject">The subject.</param>
     /// <param name="properties">The properties.</param>
     /// <returns>The return subject.</returns>
-    public static T SetProperties<T>(this T subject, params string[] properties)
+    public static T SetProperties<T>(this T subject, params string[]? properties)
     {
         if (subject is null || properties is null)
         {

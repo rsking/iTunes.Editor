@@ -29,8 +29,8 @@
     <PackageVersion Include="Neleus.DependencyInjection.Extensions" Version="1.0.6" />
     <PackageVersion Include="RestSharp" Version="108.0.3" />
     <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />
-    <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
-    <PackageVersion Include="System.CommandLine.Rendering" Version="0.4.0-alpha.22272.1" />
+    <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.23302.1" />
+    <PackageVersion Include="System.CommandLine.Rendering" Version="0.4.0-alpha.23302.1" />
     <PackageVersion Include="System.Linq.Async" Version="4.0.0" />
     <PackageVersion Include="System.Net.Http.Json" Version="3.2.0" />
     <PackageVersion Include="System.Reactive" Version="4.3.2" />
@@ -39,21 +39,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <GlobalPackageReference Include="PolySharp" Version="1.12.1" />
+    <GlobalPackageReference Include="PolySharp" Version="1.13.2" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
-    <PackageVersion Include="FluentAssertions" Version="6.10.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageVersion Include="FluentAssertions" Version="6.11.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.1" />
     <PackageVersion Include="Moq" Version="4.18.4" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.19" />
-    <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.2.0" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.53.0.62665" />
+    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.56" />
+    <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.3.0" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.2.0.71021" />
     <GlobalPackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435" />
   </ItemGroup>
 
