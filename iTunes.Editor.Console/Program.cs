@@ -4,21 +4,356 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ITunes.Editor;
-
 using System.CommandLine;
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 using System.CommandLine.Rendering;
-
+using ITunes.Editor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+const string lyricsCommand = "lyrics";
+const string updateCommand = "update";
+const string listCommand = "list";
+const string fileCommand = "file";
+const string allCommand = "all";
+const string composerCommand = "composer";
+const string tempoCommand = "tempo";
+const string checkCommand = "check";
+
+var inputArgument = new CliArgument<FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.AcceptExistingOnly();
+var typeOption = new CliOption<string>("-t", "--type") { DefaultValueFactory = _ => DefaultType, Description = "The type of input" };
+var artistArgument = new CliArgument<string>("artist") { Description = "The artist" };
+var songArgument = new CliArgument<string>("song") { Description = "The song" };
+
+var rootCommand = new CliRootCommand
+{
+    CreateListCommand(inputArgument, typeOption),
+    CreateComposerCommand(artistArgument, songArgument),
+    CreateLyricsCommand(artistArgument, songArgument),
+    CreateMediaInfoCommand(),
+    CreateUpdateCommand(inputArgument, typeOption),
+    CreateCheckCommand(inputArgument, typeOption),
+};
+
+var configuration = new CliConfiguration(rootCommand)
+    .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
+        .UseDefaultITunes()
+        .ConfigureServices(services =>
+        {
+            _ = services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
+            _ = services.AddTransient<IConfigurator<ITunes.Editor.ITunesLib.ITunesSongsProvider>, NullConfigurator<ITunes.Editor.ITunesLib.ITunesSongsProvider>>();
+        }));
+
+return await configuration
+    .InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray())
+    .ConfigureAwait(false);
+
+static CliOption<string> CreateProviderOption(string defaultValue)
+{
+    return new("-p", "--provider") { DefaultValueFactory = _ => defaultValue, Description = "The type of provider" };
+}
+
+static CliCommand CreateListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
+{
+    var propertiesOptions = new CliOption<string[]>("--property", "-") { Description = "A property to set on the input provider", Arity = ArgumentArity.ZeroOrMore };
+    var command = new CliCommand(listCommand, "Lists the files from the specified input")
+    {
+        inputArgument,
+        typeOption,
+        propertiesOptions,
+    };
+
+    command.SetAction((parseResult, cancellationToken) =>
+    {
+        var host = parseResult.GetHost();
+        var input = parseResult.GetValue(inputArgument)!;
+        var type = parseResult.GetValue(typeOption)!;
+        var properties = parseResult.GetValue(propertiesOptions);
+        return List(host, input, type, cancellationToken, properties);
+    });
+    return command;
+}
+
+static CliCommand CreateComposerCommand(CliArgument<string> artistArgument, CliArgument<string> songArgument)
+{
+    var providerOption = CreateProviderOption(DefaultComposerProvider);
+    var command = new CliCommand(composerCommand, "Gets the composers for a specific song/artist")
+    {
+        artistArgument,
+        songArgument,
+        providerOption,
+    };
+
+    command.SetAction((parseResult, cancellationToken) => Composer(
+        parseResult.GetHost(),
+        parseResult.GetValue(artistArgument)!,
+        parseResult.GetValue(songArgument)!,
+        parseResult.GetValue(providerOption)!,
+        cancellationToken));
+
+    return command;
+}
+
+static CliCommand CreateLyricsCommand(CliArgument<string> artistArgument, CliArgument<string> songArgument)
+{
+    var providerOption = CreateProviderOption(DefaultLyricProvider);
+    var command = new CliCommand(lyricsCommand, "Gets the lyrics for a specific song/artist")
+    {
+        artistArgument,
+        songArgument,
+        providerOption,
+    };
+
+    command.SetAction((parseResult, cancellationToken) => Lyrics(
+        parseResult.GetHost(),
+        parseResult.GetValue(artistArgument)!,
+        parseResult.GetValue(songArgument)!,
+        parseResult.GetValue(providerOption)!,
+        cancellationToken));
+
+    return command;
+}
+
+static CliCommand CreateMediaInfoCommand()
+{
+    var fileArgument = new CliArgument<string>("file") { Description = "The file to get information for" };
+    var command = new CliCommand(nameof(ITunes.Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture), "Gets the media info for a specific file")
+    {
+        fileArgument,
+    };
+
+    command.SetAction((parseResult, cancellationToken) => MediaInfo(
+        parseResult.GetHost(),
+        parseResult.GetValue(fileArgument)!,
+        cancellationToken));
+
+    return command;
+}
+
+static CliCommand CreateCheckCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
+{
+    return new CliCommand(checkCommand, "Checks a specific file or list")
+    {
+        CreateCheckFileCommand(inputArgument),
+        CreateCheckListCommand(inputArgument, typeOption),
+    };
+
+    static CliCommand CreateCheckListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
+    {
+        var command = new CliCommand(listCommand, "Checks a specific list")
+        {
+            inputArgument,
+            typeOption,
+        };
+
+        command.SetAction((parseResult, cancellationToken) => CheckList(
+            parseResult.GetHost(),
+            parseResult.GetValue(inputArgument)!,
+            parseResult.GetValue(typeOption)!,
+            cancellationToken));
+
+        return command;
+    }
+
+    static CliCommand CreateCheckFileCommand(CliArgument<FileSystemInfo> inputArgument)
+    {
+        var command = new CliCommand(fileCommand, "Checks a specific file")
+        {
+            inputArgument,
+        };
+
+        command.SetAction((parseResult, cancellationToken) => CheckFile(
+            parseResult.GetHost(),
+            parseResult.GetValue(inputArgument)!,
+            cancellationToken));
+
+        return command;
+    }
+}
+
+static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
+{
+    var forceOption = new CliOption<bool>("-f", "--force") { DefaultValueFactory = _ => DefaultForce, Description = "Whether to force the update" };
+    return new CliCommand(updateCommand, "Updates a specific file or list")
+    {
+        CreateUpdateFileCommand(forceOption),
+        CreateUpdateListCommand(inputArgument, typeOption, forceOption),
+    };
+
+    static CliCommand CreateUpdateFileCommand(CliOption<bool> forceOption)
+    {
+        var fileArgument = new CliArgument<FileInfo>("file") { Description = "The file" };
+        return new CliCommand(fileCommand, "Updates a specific file")
+        {
+            CreateUpdateComposerFileCommand(fileArgument, forceOption),
+            CreateUpdateLyricsFileCommand(fileArgument, forceOption),
+            CreateUpdateTempoFileCommand(fileArgument, forceOption),
+            CreateUpdateAllFileCommand(fileArgument, forceOption),
+        };
+
+        static CliCommand CreateUpdateComposerFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(composerCommand, "Updates the composer in the specific file")
+            {
+                fileArgument,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateComposerFile(
+                parseResult.GetHost(),
+                parseResult.GetValue(fileArgument)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateLyricsFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(lyricsCommand, "Updates the lyrics in the specific file")
+            {
+                fileArgument,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateLyricsFile(
+                parseResult.GetHost(),
+                parseResult.GetValue(fileArgument)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateTempoFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(tempoCommand, "Updates the tempo in the specific file")
+            {
+                fileArgument,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateTempoFile(
+                parseResult.GetHost(),
+                parseResult.GetValue(fileArgument)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateAllFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(allCommand, "Updates the specific file using all the updaters")
+            {
+                fileArgument,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateAllFile(
+                parseResult.GetHost(),
+                parseResult.GetValue(fileArgument)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+    }
+
+    static CliCommand CreateUpdateListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
+    {
+        return new CliCommand(listCommand, "Updates a specific list")
+        {
+            CreateUpdateComposerListCommand(inputArgument, typeOption, forceOption),
+            CreateUpdateLyricsListCommand(inputArgument, typeOption, forceOption),
+            CreateUpdateTempoListCommand(inputArgument, typeOption, forceOption),
+            CreateUpdateAllListCommand(inputArgument, typeOption, forceOption),
+        };
+
+        static CliCommand CreateUpdateComposerListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(composerCommand, "Updates the composer in the specific list")
+            {
+                inputArgument,
+                typeOption,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateComposerList(
+                parseResult.GetHost(),
+                parseResult.GetValue(inputArgument)!,
+                parseResult.GetValue(typeOption)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateLyricsListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(lyricsCommand, "Updates the lyrics in the specific list")
+            {
+                inputArgument,
+                typeOption,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateLyricsList(
+                parseResult.GetHost(),
+                parseResult.GetValue(inputArgument)!,
+                parseResult.GetValue(typeOption)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateTempoListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(tempoCommand, "Updates the tempo in the specific list")
+            {
+                inputArgument,
+                typeOption,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateTempoList(
+                parseResult.GetHost(),
+                parseResult.GetValue(inputArgument)!,
+                parseResult.GetValue(typeOption)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+
+        static CliCommand CreateUpdateAllListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
+        {
+            var command = new CliCommand(allCommand, "Updates the specific list using all the updaters")
+            {
+                inputArgument,
+                typeOption,
+                forceOption,
+            };
+
+            command.SetAction((parseResult, cancellationToken) => UpdateAllList(
+                parseResult.GetHost(),
+                parseResult.GetValue(inputArgument)!,
+                parseResult.GetValue(typeOption)!,
+                parseResult.GetValue(forceOption),
+                cancellationToken));
+
+            return command;
+        }
+    }
+}
+
 /// <summary>
 /// The program class.
 /// </summary>
-internal sealed class Program
+internal sealed partial class Program
 {
     private const bool DefaultForce = false;
 
@@ -30,345 +365,6 @@ internal sealed class Program
 
     private Program()
     {
-    }
-
-    private static Task<int> Main(string[] args)
-    {
-        const string lyricsCommand = "lyrics";
-        const string updateCommand = "update";
-        const string listCommand = "list";
-        const string fileCommand = "file";
-        const string allCommand = "all";
-        const string composerCommand = "composer";
-        const string tempoCommand = "tempo";
-        const string checkCommand = "check";
-
-        var inputArgument = new CliArgument<FileSystemInfo>("input") { Description = "The input", Arity = ArgumentArity.ZeroOrOne }.AcceptExistingOnly();
-        var typeOption = new CliOption<string>("-t", "--type") { DefaultValueFactory = _ => DefaultType, Description = "The type of input" };
-        var artistArgument = new CliArgument<string>("artist") { Description = "The artist" };
-        var songArgument = new CliArgument<string>("song") { Description = "The song" };
-
-        var rootCommand = new CliRootCommand
-        {
-            CreateListCommand(inputArgument, typeOption),
-            CreateComposerCommand(artistArgument, songArgument),
-            CreateLyricsCommand(artistArgument, songArgument),
-            CreateMediaInfoCommand(),
-            CreateUpdateCommand(inputArgument, typeOption),
-            CreateCheckCommand(inputArgument, typeOption),
-        };
-
-        var configuration = new CliConfiguration(rootCommand)
-            .UseHost(Host.CreateDefaultBuilder, configureHost => configureHost
-                .UseDefaultITunes()
-                .ConfigureServices(services =>
-                {
-                    _ = services.Configure<InvocationLifetimeOptions>(options => options.SuppressStatusMessages = true);
-                    _ = services.AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, NullConfigurator<ITunesLib.ITunesSongsProvider>>();
-                }));
-
-        return configuration
-            .InvokeAsync(args.Select(Environment.ExpandEnvironmentVariables).ToArray());
-
-        static CliOption<string> CreateProviderOption(string defaultValue)
-        {
-            return new("-p", "--provider") { DefaultValueFactory = _ => defaultValue, Description = "The type of provider" };
-        }
-
-        static CliCommand CreateListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
-        {
-            var propertiesOptions = new CliOption<string[]>("--property", "-") { Description = "A property to set on the input provider", Arity = ArgumentArity.ZeroOrMore };
-            var command = new CliCommand(listCommand, "Lists the files from the specified input")
-            {
-                inputArgument,
-                typeOption,
-                propertiesOptions,
-            };
-
-            command.SetAction((parseResult, cancellationToken) =>
-            {
-                var host = parseResult.GetHost();
-                var input = parseResult.GetValue(inputArgument)!;
-                var type = parseResult.GetValue(typeOption)!;
-                var properties = parseResult.GetValue(propertiesOptions);
-                return List(host, input, type, cancellationToken, properties);
-            });
-            return command;
-        }
-
-        static CliCommand CreateComposerCommand(CliArgument<string> artistArgument, CliArgument<string> songArgument)
-        {
-            var providerOption = CreateProviderOption(DefaultComposerProvider);
-            var command = new CliCommand(composerCommand, "Gets the composers for a specific song/artist")
-            {
-                artistArgument,
-                songArgument,
-                providerOption,
-            };
-
-            command.SetAction((parseResult, cancellationToken) => Composer(
-                parseResult.GetHost(),
-                parseResult.GetValue(artistArgument)!,
-                parseResult.GetValue(songArgument)!,
-                parseResult.GetValue(providerOption)!,
-                cancellationToken));
-
-            return command;
-        }
-
-        static CliCommand CreateLyricsCommand(CliArgument<string> artistArgument, CliArgument<string> songArgument)
-        {
-            var providerOption = CreateProviderOption(DefaultLyricProvider);
-            var command = new CliCommand(lyricsCommand, "Gets the lyrics for a specific song/artist")
-            {
-                artistArgument,
-                songArgument,
-                providerOption,
-            };
-
-            command.SetAction((parseResult, cancellationToken) => Lyrics(
-                parseResult.GetHost(),
-                parseResult.GetValue(artistArgument)!,
-                parseResult.GetValue(songArgument)!,
-                parseResult.GetValue(providerOption)!,
-                cancellationToken));
-
-            return command;
-        }
-
-        static CliCommand CreateMediaInfoCommand()
-        {
-            var fileArgument = new CliArgument<string>("file") { Description = "The file to get information for" };
-            var command = new CliCommand(nameof(Editor.MediaInfo).ToLower(System.Globalization.CultureInfo.CurrentCulture), "Gets the media info for a specific file")
-            {
-                fileArgument,
-            };
-
-            command.SetAction((parseResult, cancellationToken) => MediaInfo(
-                parseResult.GetHost(),
-                parseResult.GetValue(fileArgument)!,
-                cancellationToken));
-
-            return command;
-        }
-
-        static CliCommand CreateCheckCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
-        {
-            return new CliCommand(checkCommand, "Checks a specific file or list")
-            {
-                CreateCheckFileCommand(inputArgument),
-                CreateCheckListCommand(inputArgument, typeOption),
-            };
-
-            static CliCommand CreateCheckListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
-            {
-                var command = new CliCommand(listCommand, "Checks a specific list")
-                {
-                    inputArgument,
-                    typeOption,
-                };
-
-                command.SetAction((parseResult, cancellationToken) => CheckList(
-                    parseResult.GetHost(),
-                    parseResult.GetValue(inputArgument)!,
-                    parseResult.GetValue(typeOption)!,
-                    cancellationToken));
-
-                return command;
-            }
-
-            static CliCommand CreateCheckFileCommand(CliArgument<FileSystemInfo> inputArgument)
-            {
-                var command = new CliCommand(fileCommand, "Checks a specific file")
-                {
-                    inputArgument,
-                };
-
-                command.SetAction((parseResult, cancellationToken) => CheckFile(
-                    parseResult.GetHost(),
-                    parseResult.GetValue(inputArgument)!,
-                    cancellationToken));
-
-                return command;
-            }
-        }
-
-        static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
-        {
-            var forceOption = new CliOption<bool>("-f", "--force") { DefaultValueFactory = _ => DefaultForce, Description = "Whether to force the update" };
-            return new CliCommand(updateCommand, "Updates a specific file or list")
-            {
-                CreateUpdateFileCommand(forceOption),
-                CreateUpdateListCommand(inputArgument, typeOption, forceOption),
-            };
-
-            static CliCommand CreateUpdateFileCommand(CliOption<bool> forceOption)
-            {
-                var fileArgument = new CliArgument<FileInfo>("file") { Description = "The file" };
-                return new CliCommand(fileCommand, "Updates a specific file")
-                {
-                    CreateUpdateComposerFileCommand(fileArgument, forceOption),
-                    CreateUpdateLyricsFileCommand(fileArgument, forceOption),
-                    CreateUpdateTempoFileCommand(fileArgument, forceOption),
-                    CreateUpdateAllFileCommand(fileArgument, forceOption),
-                };
-
-                static CliCommand CreateUpdateComposerFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(composerCommand, "Updates the composer in the specific file")
-                    {
-                        fileArgument,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateComposerFile(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(fileArgument)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateLyricsFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(lyricsCommand, "Updates the lyrics in the specific file")
-                    {
-                        fileArgument,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateLyricsFile(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(fileArgument)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateTempoFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(tempoCommand, "Updates the tempo in the specific file")
-                    {
-                        fileArgument,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateTempoFile(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(fileArgument)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateAllFileCommand(CliArgument<FileInfo> fileArgument, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(allCommand, "Updates the specific file using all the updaters")
-                    {
-                        fileArgument,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateAllFile(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(fileArgument)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-            }
-
-            static CliCommand CreateUpdateListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
-            {
-                return new CliCommand(listCommand, "Updates a specific list")
-                {
-                    CreateUpdateComposerListCommand(inputArgument, typeOption, forceOption),
-                    CreateUpdateLyricsListCommand(inputArgument, typeOption, forceOption),
-                    CreateUpdateTempoListCommand(inputArgument, typeOption, forceOption),
-                    CreateUpdateAllListCommand(inputArgument, typeOption, forceOption),
-                };
-
-                static CliCommand CreateUpdateComposerListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(composerCommand, "Updates the composer in the specific list")
-                    {
-                        inputArgument,
-                        typeOption,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateComposerList(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(inputArgument)!,
-                        parseResult.GetValue(typeOption)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateLyricsListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(lyricsCommand, "Updates the lyrics in the specific list")
-                    {
-                        inputArgument,
-                        typeOption,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateLyricsList(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(inputArgument)!,
-                        parseResult.GetValue(typeOption)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateTempoListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(tempoCommand, "Updates the tempo in the specific list")
-                    {
-                        inputArgument,
-                        typeOption,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateTempoList(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(inputArgument)!,
-                        parseResult.GetValue(typeOption)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-
-                static CliCommand CreateUpdateAllListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption, CliOption<bool> forceOption)
-                {
-                    var command = new CliCommand(allCommand, "Updates the specific list using all the updaters")
-                    {
-                        inputArgument,
-                        typeOption,
-                        forceOption,
-                    };
-
-                    command.SetAction((parseResult, cancellationToken) => UpdateAllList(
-                        parseResult.GetHost(),
-                        parseResult.GetValue(inputArgument)!,
-                        parseResult.GetValue(typeOption)!,
-                        parseResult.GetValue(forceOption),
-                        cancellationToken));
-
-                    return command;
-                }
-            }
-        }
     }
 
     private static async Task List(IHost host, FileSystemInfo input, string type, CancellationToken cancellationToken, params string[]? property)
@@ -387,7 +383,7 @@ internal sealed class Program
         await foreach (var song in songsProvider.GetTagInformationAsync(cancellationToken).ConfigureAwait(false))
         {
             //// await stream.WriteLineAsync(song.Name).ConfigureAwait(false);
-            logger.LogInformation(Console.Properties.Resources.ListLog, song.Performers.ToJoinedString(), song.Title, song.Name, File.Exists(song.Name));
+            logger.LogInformation(ITunes.Editor.Console.Properties.Resources.ListLog, song.Performers.ToJoinedString(), song.Title, song.Name, File.Exists(song.Name));
         }
     }
 
@@ -406,7 +402,7 @@ internal sealed class Program
             .GetComposersAsync(songInformation, cancellationToken)
             .ConfigureAwait(false))
         {
-            logger.LogInformation(Console.Properties.Resources.ComposerLog, composer);
+            logger.LogInformation(ITunes.Editor.Console.Properties.Resources.ComposerLog, composer);
         }
     }
 
@@ -422,19 +418,19 @@ internal sealed class Program
         var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
            .GetLyricsAsync(songInformation, cancellationToken)
            .ConfigureAwait(false);
-        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.LyricsLog, lyrics);
+        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(ITunes.Editor.Console.Properties.Resources.LyricsLog, lyrics);
     }
 
     private static async Task MediaInfo(IHost host, string file, CancellationToken cancellationToken)
     {
-        var mediaInfoTagProvider = new MediaInfo.MediaInfoTagProvider { File = file };
+        var mediaInfoTagProvider = new ITunes.Editor.MediaInfo.MediaInfoTagProvider { File = file };
         var mediaInfo = await mediaInfoTagProvider.GetTagAsync(cancellationToken).ConfigureAwait(false);
         if (mediaInfo is null)
         {
             return;
         }
 
-        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
+        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(ITunes.Editor.Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
     }
 
     private static Task UpdateComposerFile(IHost host, FileInfo file, bool force, CancellationToken cancellationToken) =>
@@ -479,10 +475,10 @@ internal sealed class Program
             switch (mediaType)
             {
                 case MediaKind.Song:
-                    logger.LogInformation(Console.Properties.Resources.Processing, song);
+                    logger.LogInformation(ITunes.Editor.Console.Properties.Resources.Processing, song);
                     break;
                 default:
-                    logger.LogInformation(Console.Properties.Resources.Skipping, song, mediaType);
+                    logger.LogInformation(ITunes.Editor.Console.Properties.Resources.Skipping, song, mediaType);
                     continue;
             }
 
@@ -548,10 +544,10 @@ internal sealed class Program
         switch (mediaType)
         {
             case MediaKind.Song:
-                logger.LogInformation(Console.Properties.Resources.Processing, song);
+                logger.LogInformation(ITunes.Editor.Console.Properties.Resources.Processing, song);
                 break;
             default:
-                logger.LogInformation(Console.Properties.Resources.Skipping, song, mediaType);
+                logger.LogInformation(ITunes.Editor.Console.Properties.Resources.Skipping, song, mediaType);
                 return;
         }
 
