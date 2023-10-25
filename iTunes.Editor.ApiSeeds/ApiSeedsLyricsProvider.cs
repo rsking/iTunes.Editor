@@ -19,8 +19,9 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
 
     private readonly ILogger logger;
 
-    private readonly RestClient client = new RestClient(Uri)
-        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    private readonly RestClient client = new(
+        new RestClientOptions(Uri),
+        configureSerialization: s => s.UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiSeedsLyricsProvider" /> class.

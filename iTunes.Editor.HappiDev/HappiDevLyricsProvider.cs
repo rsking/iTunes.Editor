@@ -23,8 +23,9 @@ public class HappiDevLyricsProvider : ILyricsProvider
 
     private readonly HttpClient httpClient;
 
-    private readonly RestClient restClient = new RestClient(Uri)
-        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    private readonly RestClient restClient = new(
+        new RestClientOptions(Uri),
+        configureSerialization: s => s.UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HappiDevLyricsProvider" /> class.

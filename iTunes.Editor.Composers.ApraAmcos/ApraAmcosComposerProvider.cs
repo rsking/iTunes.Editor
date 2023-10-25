@@ -12,9 +12,9 @@ using RestSharp.Serializers.Json;
 /// </summary>
 public sealed class ApraAmcosComposerProvider : IComposerProvider
 {
-    private readonly RestClient client = new RestClient("https://www.apraamcos.com.au/api/")
-        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-        .UseQueryEncoder((value, encoding) => System.Web.HttpUtility.UrlEncode(value.ToLowerInvariant(), encoding));
+    private readonly RestClient client = new(
+        new RestClientOptions("https://www.apraamcos.com.au/api/") { EncodeQuery = (value, encoding) => System.Web.HttpUtility.UrlEncode(value.ToLowerInvariant(), encoding) },
+        configureSerialization: s => s.UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
 
     /// <inheritdoc />
     public IAsyncEnumerable<Name> GetComposersAsync(

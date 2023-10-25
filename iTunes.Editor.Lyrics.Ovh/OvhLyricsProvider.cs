@@ -17,8 +17,9 @@ public class OvhLyricsProvider : ILyricsProvider
 
     private readonly ILogger logger;
 
-    private readonly RestClient client = new RestClient(new RestClientOptions(Uri) { MaxTimeout = 3000 })
-        .UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    private readonly RestClient client = new(
+        new RestClientOptions(Uri) { MaxTimeout = 3000 },
+        configureSerialization: s => s.UseSystemTextJson(new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OvhLyricsProvider" /> class.
@@ -47,9 +48,18 @@ public class OvhLyricsProvider : ILyricsProvider
             return response.Data.Lyrics;
         }
 
-        if (!string.IsNullOrEmpty(response.ErrorMessage))
+        if (response.ErrorMessage is { Length: > 0 } errorMessage)
         {
-            this.logger.LogError("{Message}", response.ErrorMessage);
+            this.logger.LogError("{Message}", errorMessage);
+        }
+        else if (response.Data?.Error is { Length: > 0 } dataError)
+        {
+            this.logger.LogError("{Message}", dataError);
+        }
+        else if (response.ErrorException is { } exception)
+        {
+            this.logger.LogError(default, exception, "{Message}", exception.Message);
+
         }
 
         return default;
