@@ -24,7 +24,7 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration.</param>
     /// <returns>The return service collection.</returns>
     public static IServiceCollection AddApiSeeds(this IServiceCollection serviceCollection, Configuration.IConfiguration configuration) => serviceCollection
-        .Configure<ITunes.Editor.ApiSeeds.ApiSeedsOptions>(configuration?.GetSection(nameof(ITunes.Editor.ApiSeeds)))
+        .Configure<ITunes.Editor.ApiSeeds.ApiSeedsOptions>(configuration.GetSection(nameof(ITunes.Editor.ApiSeeds)))
         .AddTransient<ILyricsProvider, ITunes.Editor.ApiSeeds.ApiSeedsLyricsProvider>(GetLyricsProviderName(nameof(ITunes.Editor.ApiSeeds)));
 
     /// <summary>
@@ -224,21 +224,6 @@ public static class ServiceExtensions
         where TService : class
         where TImplementation : class, TService
     {
-        ServicesByNameBuilder<TService> GetOrAddByName()
-        {
-            foreach (var builder in ServiceByNameBuilders)
-            {
-                if (builder is ServicesByNameBuilder<TService> typedBuilder)
-                {
-                    return typedBuilder;
-                }
-            }
-
-            var serviceByNameBuilder = serviceCollection.AddByName<TService>();
-            _ = ServiceByNameBuilders.Add(serviceByNameBuilder);
-            return serviceByNameBuilder;
-        }
-
         _ = serviceCollection
             .AddTransient<TService, TImplementation>()
             .AddTransient<TImplementation>();
@@ -254,5 +239,20 @@ public static class ServiceExtensions
 
         builder.Build();
         return serviceCollection;
+
+        ServicesByNameBuilder<TService> GetOrAddByName()
+        {
+            foreach (var builder in ServiceByNameBuilders)
+            {
+                if (builder is ServicesByNameBuilder<TService> typedBuilder)
+                {
+                    return typedBuilder;
+                }
+            }
+
+            var serviceByNameBuilder = serviceCollection.AddByName<TService>();
+            _ = ServiceByNameBuilders.Add(serviceByNameBuilder);
+            return serviceByNameBuilder;
+        }
     }
 }

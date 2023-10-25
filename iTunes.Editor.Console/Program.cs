@@ -53,6 +53,23 @@ static CliOption<string> CreateProviderOption(string defaultValue)
     return new("-p", "--provider") { DefaultValueFactory = _ => defaultValue, Description = "The type of provider" };
 }
 
+static CliCommand CreateProviderListCommand<T>()
+{
+    var command = new CliCommand("list", "Lists the providers");
+    command.SetAction((parseResult, _) =>
+    {
+        var names = parseResult.GetHost().Services.GetRequiredService<Neleus.DependencyInjection.Extensions.IServiceByNameFactory<T>>().GetNames();
+        foreach (var name in names)
+        {
+            parseResult.Configuration.Output.WriteLine(name);
+        }
+
+        return Task.CompletedTask;
+    });
+
+    return command;
+}
+
 static CliCommand CreateListCommand(CliArgument<FileSystemInfo> inputArgument, CliOption<string> typeOption)
 {
     var propertiesOptions = new CliOption<string[]>("--property", "-") { Description = "A property to set on the input provider", Arity = ArgumentArity.ZeroOrMore };
@@ -69,7 +86,7 @@ static CliCommand CreateListCommand(CliArgument<FileSystemInfo> inputArgument, C
         var input = parseResult.GetValue(inputArgument)!;
         var type = parseResult.GetValue(typeOption)!;
         var properties = parseResult.GetValue(propertiesOptions);
-        return List(host, input, type, cancellationToken, properties);
+        return List(host.Services, input, type, cancellationToken, properties);
     });
     return command;
 }
@@ -85,7 +102,7 @@ static CliCommand CreateComposerCommand(CliArgument<string> artistArgument, CliA
     };
 
     command.SetAction((parseResult, cancellationToken) => Composer(
-        parseResult.GetHost(),
+        parseResult.GetHost().Services,
         parseResult.GetValue(artistArgument)!,
         parseResult.GetValue(songArgument)!,
         parseResult.GetValue(providerOption)!,
@@ -97,19 +114,27 @@ static CliCommand CreateComposerCommand(CliArgument<string> artistArgument, CliA
 static CliCommand CreateLyricsCommand(CliArgument<string> artistArgument, CliArgument<string> songArgument)
 {
     var providerOption = CreateProviderOption(DefaultLyricProvider);
+
     var command = new CliCommand(lyricsCommand, "Gets the lyrics for a specific song/artist")
     {
         artistArgument,
         songArgument,
         providerOption,
+        CreateProviderListCommand<ILyricsProvider>(),
     };
 
-    command.SetAction((parseResult, cancellationToken) => Lyrics(
-        parseResult.GetHost(),
-        parseResult.GetValue(artistArgument)!,
-        parseResult.GetValue(songArgument)!,
-        parseResult.GetValue(providerOption)!,
-        cancellationToken));
+    command.SetAction((parseResult, cancellationToken) =>
+    {
+        var host = parseResult.GetHost();
+        var serviceProvider = host.Services;
+
+        return Lyrics(
+            serviceProvider.GetRequiredService<ILyricsProvider>(parseResult.GetValue(providerOption)!),
+            parseResult.GetValue(artistArgument)!,
+            parseResult.GetValue(songArgument)!,
+            serviceProvider.GetRequiredService<ILogger<Program>>(),
+            cancellationToken);
+    });
 
     return command;
 }
@@ -123,7 +148,7 @@ static CliCommand CreateMediaInfoCommand()
     };
 
     command.SetAction((parseResult, cancellationToken) => MediaInfo(
-        parseResult.GetHost(),
+        parseResult.GetHost().Services,
         parseResult.GetValue(fileArgument)!,
         cancellationToken));
 
@@ -147,7 +172,7 @@ static CliCommand CreateCheckCommand(CliArgument<FileSystemInfo> inputArgument, 
         };
 
         command.SetAction((parseResult, cancellationToken) => CheckList(
-            parseResult.GetHost(),
+            parseResult.GetHost().Services,
             parseResult.GetValue(inputArgument)!,
             parseResult.GetValue(typeOption)!,
             cancellationToken));
@@ -163,7 +188,7 @@ static CliCommand CreateCheckCommand(CliArgument<FileSystemInfo> inputArgument, 
         };
 
         command.SetAction((parseResult, cancellationToken) => CheckFile(
-            parseResult.GetHost(),
+            parseResult.GetHost().Services,
             parseResult.GetValue(inputArgument)!,
             cancellationToken));
 
@@ -200,7 +225,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateComposerFile(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(fileArgument)!,
                 parseResult.GetValue(forceOption),
                 cancellationToken));
@@ -217,7 +242,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateLyricsFile(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(fileArgument)!,
                 parseResult.GetValue(forceOption),
                 cancellationToken));
@@ -234,7 +259,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateTempoFile(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(fileArgument)!,
                 parseResult.GetValue(forceOption),
                 cancellationToken));
@@ -251,7 +276,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateAllFile(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(fileArgument)!,
                 parseResult.GetValue(forceOption),
                 cancellationToken));
@@ -280,7 +305,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateComposerList(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(inputArgument)!,
                 parseResult.GetValue(typeOption)!,
                 parseResult.GetValue(forceOption),
@@ -299,7 +324,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateLyricsList(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(inputArgument)!,
                 parseResult.GetValue(typeOption)!,
                 parseResult.GetValue(forceOption),
@@ -318,7 +343,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateTempoList(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(inputArgument)!,
                 parseResult.GetValue(typeOption)!,
                 parseResult.GetValue(forceOption),
@@ -337,7 +362,7 @@ static CliCommand CreateUpdateCommand(CliArgument<FileSystemInfo> inputArgument,
             };
 
             command.SetAction((parseResult, cancellationToken) => UpdateAllList(
-                parseResult.GetHost(),
+                parseResult.GetHost().Services,
                 parseResult.GetValue(inputArgument)!,
                 parseResult.GetValue(typeOption)!,
                 parseResult.GetValue(forceOption),
@@ -365,16 +390,16 @@ internal sealed partial class Program
     {
     }
 
-    private static async Task List(IHost host, FileSystemInfo input, string type, CancellationToken cancellationToken, params string[]? property)
+    private static async Task List(IServiceProvider serviceProvider, FileSystemInfo input, string type, CancellationToken cancellationToken, params string[]? property)
     {
         //// var options = new System.IO.EnumerationOptions { AttributesToSkip = System.IO.FileAttributes.Hidden, RecurseSubdirectories = true };
         //// await System.IO.File.WriteAllLinesAsync("C:\\Temp\\folder.txt", System.IO.Directory.EnumerateFiles("D:\\Users\\rskin\\OneDrive\\Music\\iTunes\\iTunes Media", "*", options).OrderBy(file => file), System.Text.Encoding.Default).ConfigureAwait(false);
 
-        var songsProvider = host.Services
+        var songsProvider = serviceProvider
             .GetRequiredService<ISongsProvider>(type)
             .SetProperties(property)
             .SetPath(input);
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
         //// await System.IO.File.WriteAllLinesAsync("C:\\Temp\\itunes.txt", songsProvider.GetTagInformationAsync(cancellationToken).Where(song => song.Name?.Length > 0).OrderBy(song => song.Name).Select(song => song.Name).ToEnumerable()).ConfigureAwait(false);
         //// using var stream = new System.IO.StreamWriter("C:\\Temp\\itunes.txt");
@@ -385,10 +410,10 @@ internal sealed partial class Program
         }
     }
 
-    private static async Task Composer(IHost host, string artist, string song, string provider, CancellationToken cancellationToken)
+    private static async Task Composer(IServiceProvider serviceProvider, string artist, string song, string provider, CancellationToken cancellationToken)
     {
-        var composerProvider = host.Services.GetRequiredService<IComposerProvider>(provider);
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        var composerProvider = serviceProvider.GetRequiredService<IComposerProvider>(provider);
+        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
         var performers = artist.FromJoinedString().ToArray();
         var songInformation = new SongInformation(song)
         {
@@ -404,7 +429,7 @@ internal sealed partial class Program
         }
     }
 
-    private static async Task Lyrics(IHost host, string artist, string song, string provider, CancellationToken cancellationToken)
+    private static async Task Lyrics(ILyricsProvider lyricsProvider, string artist, string song, ILogger logger, CancellationToken cancellationToken)
     {
         var performers = artist.FromJoinedString().ToArray();
         var songInformation = new SongInformation(song)
@@ -413,13 +438,13 @@ internal sealed partial class Program
             SortPerformers = performers,
         };
 
-        var lyrics = await host.Services.GetRequiredService<ILyricsProvider>(provider)
+        var lyrics = await lyricsProvider
            .GetLyricsAsync(songInformation, cancellationToken)
            .ConfigureAwait(false);
-        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(ITunes.Editor.Console.Properties.Resources.LyricsLog, lyrics);
+        logger.LogInformation(ITunes.Editor.Console.Properties.Resources.LyricsLog, lyrics);
     }
 
-    private static async Task MediaInfo(IHost host, string file, CancellationToken cancellationToken)
+    private static async Task MediaInfo(IServiceProvider serviceProvider, string file, CancellationToken cancellationToken)
     {
         var mediaInfoTagProvider = new ITunes.Editor.MediaInfo.MediaInfoTagProvider { File = file };
         var mediaInfo = await mediaInfoTagProvider.GetTagAsync(cancellationToken).ConfigureAwait(false);
@@ -428,40 +453,40 @@ internal sealed partial class Program
             return;
         }
 
-        host.Services.GetRequiredService<ILogger<Program>>().LogInformation(ITunes.Editor.Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
+        serviceProvider.GetRequiredService<ILogger<Program>>().LogInformation(ITunes.Editor.Console.Properties.Resources.MediaInfoLog, mediaInfo.JoinedPerformers, mediaInfo.Title);
     }
 
-    private static Task UpdateComposerFile(IHost host, FileInfo file, bool force, CancellationToken cancellationToken) =>
-        UpdateFile<IUpdateComposerService>(host, file, force, cancellationToken);
+    private static Task UpdateComposerFile(IServiceProvider serviceProvider, FileInfo file, bool force, CancellationToken cancellationToken) =>
+        UpdateFile<IUpdateComposerService>(serviceProvider, file, force, cancellationToken);
 
-    private static Task UpdateLyricsFile(IHost host, FileInfo file, bool force, CancellationToken cancellationToken) =>
-        UpdateFile<IUpdateLyricsService>(host, file, force, cancellationToken);
+    private static Task UpdateLyricsFile(IServiceProvider serviceProvider, FileInfo file, bool force, CancellationToken cancellationToken) =>
+        UpdateFile<IUpdateLyricsService>(serviceProvider, file, force, cancellationToken);
 
-    private static Task UpdateTempoFile(IHost host, FileInfo file, bool force, CancellationToken cancellationToken) =>
-        UpdateFile<IUpdateTempoService>(host, file, force, cancellationToken);
+    private static Task UpdateTempoFile(IServiceProvider serviceProvider, FileInfo file, bool force, CancellationToken cancellationToken) =>
+        UpdateFile<IUpdateTempoService>(serviceProvider, file, force, cancellationToken);
 
-    private static async Task UpdateAllFile(IHost host, FileInfo file, bool force, CancellationToken cancellationToken)
+    private static async Task UpdateAllFile(IServiceProvider serviceProvider, FileInfo file, bool force, CancellationToken cancellationToken)
     {
         var songInformation = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
-        _ = await host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
-        _ = await host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+        _ = await serviceProvider.GetRequiredService<IUpdateComposerService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
+        _ = await serviceProvider.GetRequiredService<IUpdateLyricsService>().UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task UpdateFile<T>(IHost host, FileInfo file, bool force, CancellationToken cancellationToken)
+    private static async Task UpdateFile<T>(IServiceProvider serviceProvider, FileInfo file, bool force, CancellationToken cancellationToken)
         where T : IUpdateService
     {
-        var service = host.Services.GetRequiredService<T>();
+        var service = serviceProvider.GetRequiredService<T>();
         var song = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
         _ = await service.UpdateAsync(song, force, cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task UpdateList(IHost host, FileSystemInfo input, string type, bool force, Func<SongInformation, bool, CancellationToken, ValueTask<SongInformation>> updateFunction, CancellationToken cancellationToken)
+    private static async Task UpdateList(IServiceProvider serviceProvider, FileSystemInfo input, string type, bool force, Func<SongInformation, bool, CancellationToken, ValueTask<SongInformation>> updateFunction, CancellationToken cancellationToken)
     {
-        var songsProvider = host.Services
+        var songsProvider = serviceProvider
             .GetRequiredService<ISongsProvider>(type)
             .SetPath(input);
 
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
         await foreach (var song in songsProvider
             .GetTagInformationAsync(cancellationToken)
@@ -484,18 +509,18 @@ internal sealed partial class Program
         }
     }
 
-    private static Task UpdateComposerList(IHost host, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateComposerService>().UpdateAsync, cancellationToken);
+    private static Task UpdateComposerList(IServiceProvider serviceProvider, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(serviceProvider, input, type, force, serviceProvider.GetRequiredService<IUpdateComposerService>().UpdateAsync, cancellationToken);
 
-    private static Task UpdateLyricsList(IHost host, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateLyricsService>().UpdateAsync, cancellationToken);
+    private static Task UpdateLyricsList(IServiceProvider serviceProvider, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(serviceProvider, input, type, force, serviceProvider.GetRequiredService<IUpdateLyricsService>().UpdateAsync, cancellationToken);
 
-    private static Task UpdateTempoList(IHost host, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(host, input, type, force, host.Services.GetRequiredService<IUpdateTempoService>().UpdateAsync, cancellationToken);
+    private static Task UpdateTempoList(IServiceProvider serviceProvider, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken) => UpdateList(serviceProvider, input, type, force, serviceProvider.GetRequiredService<IUpdateTempoService>().UpdateAsync, cancellationToken);
 
-    private static Task UpdateAllList(IHost host, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken)
+    private static Task UpdateAllList(IServiceProvider serviceProvider, FileSystemInfo input, string type, bool force, CancellationToken cancellationToken)
     {
         var composerService = default(IUpdateComposerService);
         var lyricsService = default(IUpdateLyricsService);
         return UpdateList(
-            host,
+            serviceProvider,
             input,
             type,
             force,
@@ -504,21 +529,21 @@ internal sealed partial class Program
 
         async ValueTask<SongInformation> Update(SongInformation songInformation, bool force, CancellationToken cancellationToken)
         {
-            composerService ??= host.Services.GetRequiredService<IUpdateComposerService>();
-            lyricsService ??= host.Services.GetRequiredService<IUpdateLyricsService>();
+            composerService ??= serviceProvider.GetRequiredService<IUpdateComposerService>();
+            lyricsService ??= serviceProvider.GetRequiredService<IUpdateLyricsService>();
 
             songInformation = await composerService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
             return await lyricsService.UpdateAsync(songInformation, force, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private static async Task CheckList(IHost host, FileSystemInfo input, string type, CancellationToken cancellationToken = default)
+    private static async Task CheckList(IServiceProvider serviceProvider, FileSystemInfo input, string type, CancellationToken cancellationToken = default)
     {
-        var songsProvider = host.Services
+        var songsProvider = serviceProvider
             .GetRequiredService<ISongsProvider>(type)
             .SetPath(input);
 
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
         await foreach (var song in songsProvider
             .GetTagInformationAsync(cancellationToken)
@@ -529,10 +554,10 @@ internal sealed partial class Program
         }
     }
 
-    private static async Task CheckFile(IHost host, FileSystemInfo file, CancellationToken cancellationToken = default)
+    private static async Task CheckFile(IServiceProvider serviceProvider, FileSystemInfo file, CancellationToken cancellationToken = default)
     {
         var songInformation = await SongInformation.FromFileAsync(file.FullName, cancellationToken).ConfigureAwait(false);
-        CheckFileImpl(host.Services.GetRequiredService<ILogger<Program>>(), songInformation);
+        CheckFileImpl(serviceProvider.GetRequiredService<ILogger<Program>>(), songInformation);
     }
 
     private static void CheckFileImpl(ILogger logger, SongInformation song)

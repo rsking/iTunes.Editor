@@ -28,7 +28,6 @@ public static class HostBuilderExtensions
                 .AddAZ()
                 .AddGenius()
                 .AddChartLyrics()
-                .AddHappiDev(hostingContext.Configuration)
                 .AddOvh()
                 .AddPurgoMalum();
 
