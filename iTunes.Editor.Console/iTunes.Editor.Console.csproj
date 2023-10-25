@@ -18,7 +18,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="RestSharp" />
     <PackageReference Include="System.CommandLine.Hosting" />
-    <PackageReference Include="System.CommandLine.Rendering" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>

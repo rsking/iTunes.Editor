@@ -24,8 +24,7 @@
     <PackageVersion Include="Neleus.DependencyInjection.Extensions" Version="1.0.6" />
     <PackageVersion Include="RestSharp" Version="108.0.3" />
     <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />
-    <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.23302.1" />
-    <PackageVersion Include="System.CommandLine.Rendering" Version="0.4.0-alpha.23302.1" />
+    <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.23407.1" />
     <PackageVersion Include="System.ServiceModel.Http" Version="6.1.0" />
     <PackageVersion Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>

@@ -6,8 +6,6 @@
 
 using System.CommandLine;
 using System.CommandLine.Hosting;
-using System.CommandLine.Parsing;
-using System.CommandLine.Rendering;
 using ITunes.Editor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
