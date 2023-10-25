@@ -37,12 +37,12 @@ internal static class DialogExtensions
             return windows.FirstOrDefault(x => x.Parent is not null && window.Equals(x.Parent)) ?? window;
         }
 
-        static global::Avalonia.Controls.Window? GetWindowFromControl(global::Avalonia.Controls.IControl control)
+        static global::Avalonia.Controls.Window? GetWindowFromControl(global::Avalonia.StyledElement? styledElement)
         {
-            return control switch
+            return styledElement switch
             {
                 global::Avalonia.Controls.Window window => window,
-                not null when control.Parent is not null => GetWindowFromControl(control.Parent),
+                not null when styledElement.Parent is not null => GetWindowFromControl(styledElement.Parent),
                 _ => default,
             };
         }
@@ -53,14 +53,14 @@ internal static class DialogExtensions
     /// </summary>
     /// <param name="filterCollection">The filter collection.</param>
     /// <param name="filter">The filter to add.</param>
-    internal static void Add(this IList<global::Avalonia.Controls.FileDialogFilter> filterCollection, string filter) => filterCollection.Add(ToFileDialogFilter(filter));
+    internal static void Add(this IList<global::Avalonia.Platform.Storage.FilePickerFileType> filterCollection, string filter) => filterCollection.Add(ToFilePickerFileType(filter));
 
     /// <summary>
-    /// Converts the specified string filter to a <see cref="global::Avalonia.Controls.FileDialogFilter"/>.
+    /// Converts the specified string filter to a <see cref="global::Avalonia.Platform.Storage.FilePickerFileType"/>.
     /// </summary>
     /// <param name="filter">The filter.</param>
-    /// <returns>The <see cref="global::Avalonia.Controls.FileDialogFilter"/> instance.</returns>
-    internal static global::Avalonia.Controls.FileDialogFilter ToFileDialogFilter(string filter)
+    /// <returns>The <see cref="global::Avalonia.Platform.Storage.FilePickerFileType"/> instance.</returns>
+    internal static global::Avalonia.Platform.Storage.FilePickerFileType ToFilePickerFileType(string filter)
     {
         var split = filter.Split('|');
         var displayName = split[0];
@@ -75,17 +75,14 @@ internal static class DialogExtensions
 #endif
         }
 
-        var dialogFilter = new global::Avalonia.Controls.FileDialogFilter { Name = displayName };
+        var fileType = new global::Avalonia.Platform.Storage.FilePickerFileType(displayName);
 
         // get the extensions
         if (split.Length > 1)
         {
-            dialogFilter.Extensions.AddRange(split[1]
-                .Split(';')
-                .Select(value => Path.GetExtension(value)?.TrimStart('.'))
-                .WhereNotNull());
+            fileType.Patterns = split[1].Split(';');
         }
 
-        return dialogFilter;
+        return fileType;
     }
 }

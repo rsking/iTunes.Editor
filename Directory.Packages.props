@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Avalonia" Version="0.10.18" />
-    <PackageVersion Include="Avalonia.Desktop" Version="0.10.18" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="0.10.18" />
-    <PackageVersion Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.0.5" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.0.5" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.0.5" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageVersion Include="DotNetProjects.Extended.Wpf.Toolkit" Version="5.0.103" />
     <PackageVersion Include="Formatters.PList" Version="1.0.0" />
@@ -20,7 +20,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
-    <PackageVersion Include="Movere" Version="0.2.0-build.346" />
+    <PackageVersion Include="Movere" Version="0.2.0-build.352" />
     <PackageVersion Include="Neleus.DependencyInjection.Extensions" Version="1.0.6" />
     <PackageVersion Include="RestSharp" Version="110.2.0" />
     <PackageVersion Include="System.Collections.Immutable" Version="7.0.0" />

@@ -15,7 +15,7 @@ public class ProgressRing : global::Avalonia.Controls.Primitives.TemplatedContro
     /// The <see cref="IsActive"/> <see cref="AvaloniaProperty"/>.
     /// </summary>
     public static readonly StyledProperty<bool> IsActiveProperty =
-        AvaloniaProperty.Register<ProgressRing, bool>(nameof(IsActive), defaultValue: true, notifying: OnIsActiveChanged);
+        AvaloniaProperty.Register<ProgressRing, bool>(nameof(IsActive), defaultValue: true, coerce: OnIsActiveChanged);
 
     /// <summary>
     /// The <see cref="MaxSideLength"/> <see cref="AvaloniaProperty"/>.
@@ -111,12 +111,14 @@ public class ProgressRing : global::Avalonia.Controls.Primitives.TemplatedContro
         this.UpdateVisualStates();
     }
 
-    private static void OnIsActiveChanged(IAvaloniaObject obj, bool arg2)
+    private static bool OnIsActiveChanged(AvaloniaObject obj, bool arg1)
     {
         if (obj is ProgressRing progressRing)
         {
             progressRing.UpdateVisualStates();
         }
+
+        return arg1;
     }
 
     private void UpdateVisualStates()

@@ -11,7 +11,7 @@ using ReactiveUI;
 /// <summary>
 /// The load view.
 /// </summary>
-public class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.LoadRoutableViewModel>
+public partial class LoadView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.LoadRoutableViewModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LoadView"/> class.

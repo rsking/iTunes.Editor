@@ -1,15 +1,14 @@
 <UserControl x:Class="ITunes.Editor.Views.LoadView"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core"
+             xmlns:models="using:ITunes.Editor.Models"
+             xmlns:core="using:ITunes.Editor"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DataContext="{d:DesignInstance Type={x:Type models:ILoad},
-                                              IsDesignTimeCreatable=False}"
              d:DesignHeight="450"
              d:DesignWidth="800" 
              mc:Ignorable="d" >
-  <ItemsControl Items="{Binding Providers}">
+  <ItemsControl ItemsSource="{Binding Providers}">
     <ItemsControl.ItemsPanel>
       <ItemsPanelTemplate>
         <WrapPanel />

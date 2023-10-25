@@ -10,10 +10,10 @@ namespace ITunes.Editor.Services;
 internal sealed class CustomContentViewResolver : global::Avalonia.Controls.Templates.IDataTemplate
 {
     /// <inheritdoc/>
-    public bool Match(object data) => data is Models.IConfigure;
+    public bool Match(object? data) => data is Models.IConfigure;
 
     /// <inheritdoc/>
-    public global::Avalonia.Controls.IControl Build(object param) =>
+    public global::Avalonia.Controls.Control? Build(object? param) =>
         param switch
         {
             ViewModels.ITunesConfigureViewModel _ => new Views.ITunesConfigureView(),

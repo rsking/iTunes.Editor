@@ -27,11 +27,27 @@ public class SelectFolderDialog : Contracts.ISelectFolder
     /// </summary>
     /// <param name="path">The initial path.</param>
     /// <returns>The selected path; otherwise <see langword="null"/>.</returns>
-    public ValueTask<string?> GetSelectedPathAsync(string? path = default)
+    public async ValueTask<string?> GetSelectedPathAsync(string? path = default)
     {
-        var dialog = new global::Avalonia.Controls.OpenFolderDialog { Directory = path };
-        var application = global::Avalonia.Application.Current!;
-        var window = application.GetActiveWindow();
-        return new(dialog.ShowAsync(window!));
+        if (global::Avalonia.Application.Current?.GetActiveWindow() is { } window)
+        {
+            var storageProvider = window.StorageProvider;
+            var options = new global::Avalonia.Platform.Storage.FolderPickerOpenOptions();
+            if (path is not null && Directory.Exists(path))
+            {
+                var builder = new UriBuilder
+                {
+                    Path = path,
+                    Scheme = "file://",
+                };
+
+                options.SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(builder.Uri).ConfigureAwait(false);
+            }
+
+            var values = await window.StorageProvider.OpenFolderPickerAsync(options).ConfigureAwait(false);
+            return values?.Select(v => v.Path.LocalPath).FirstOrDefault();
+        }
+
+        return default;
     }
 }

@@ -18,7 +18,7 @@
       </Grid.ColumnDefinitions>
         <TextBlock Text="Select Playlist" />
         <ComboBox Grid.Column="1"
-                  Items="{Binding Playlists}"
+                  ItemsSource="{Binding Playlists}"
                   SelectedItem="{Binding SelectedPlaylist}" />
     </Grid>
     <CheckBox IsChecked="{Binding UpdateMetadata}">Update Metadata</CheckBox>

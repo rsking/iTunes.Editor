@@ -62,21 +62,28 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
     /// <returns>The list of file names.</returns>
     private async ValueTask<IEnumerable<string>> GetFileNamesImpl(string? path, bool multiselect)
     {
-        var dialog = new global::Avalonia.Controls.OpenFileDialog
-        {
-            InitialFileName = path,
-            Title = this.Title,
-            AllowMultiple = multiselect,
-            Filters = this.Filters.Select(DialogExtensions.ToFileDialogFilter).ToList(),
-        };
-
         var activeWindow = global::Avalonia.Application.Current?.GetActiveWindow()
             ?? throw new InvalidOperationException("Failed to find active window");
+        var options = new global::Avalonia.Platform.Storage.FilePickerOpenOptions
+        {
+            AllowMultiple = multiselect,
+            FileTypeFilter = this.Filters.Select(DialogExtensions.ToFilePickerFileType).ToArray(),
+        };
 
-        var values = await dialog
-            .ShowAsync(activeWindow)
-            .ConfigureAwait(false);
+        var storageProvider = activeWindow.StorageProvider;
+        if (path is not null && File.Exists(path))
+        {
+            var builder = new UriBuilder
+            {
+                Scheme = "file:///",
+                Path = Path.GetDirectoryName(path),
+            };
 
-        return values ?? Enumerable.Empty<string>();
+            options.SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(builder.Uri).ConfigureAwait(false);
+        }
+ 
+        var values = await storageProvider.OpenFilePickerAsync(options).ConfigureAwait(false);
+
+        return values?.Select(v => v.Path.LocalPath) ?? Enumerable.Empty<string>();
     }
 }

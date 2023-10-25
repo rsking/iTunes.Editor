@@ -10,7 +10,7 @@ using ReactiveUI;
 /// <summary>
 /// The songs view.
 /// </summary>
-public class SongsView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.SongsRoutableViewModel>
+public partial class SongsView : global::Avalonia.ReactiveUI.ReactiveUserControl<ViewModels.SongsRoutableViewModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SongsView"/> class.

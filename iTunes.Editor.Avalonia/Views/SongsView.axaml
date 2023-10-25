@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:ITunes.Editor.Controls"
+             xmlns:controls="using:ITunes.Editor.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -17,7 +17,7 @@
     </Grid.RowDefinitions>
     <TreeView Grid.RowSpan="2"
               Grid.Column="0"
-              Items="{Binding Artists}">
+              ItemsSource="{Binding Artists}">
       <TreeView.Styles>
         <Style Selector="TreeViewItem">
           <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />

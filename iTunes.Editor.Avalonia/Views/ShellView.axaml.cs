@@ -10,7 +10,7 @@ using global::Avalonia.Markup.Xaml;
 /// <summary>
 /// Interaction logic for <c>ShellView.axaml</c>.
 /// </summary>
-public class ShellView : global::Avalonia.ReactiveUI.ReactiveWindow<ViewModels.ShellViewModel>
+public partial class ShellView : global::Avalonia.ReactiveUI.ReactiveWindow<ViewModels.ShellViewModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellView"/> class.

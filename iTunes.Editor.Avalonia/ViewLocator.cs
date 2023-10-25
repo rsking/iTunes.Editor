@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 public class ViewLocator : IDataTemplate
 {
     /// <inheritdoc/>
-    public IControl Build(object param)
+    public Control? Build(object? param)
     {
         if (param is null)
         {
@@ -25,9 +25,9 @@ public class ViewLocator : IDataTemplate
 
         var name = param.GetType().FullName?
 #if NETCOREAPP
-                .Replace("ViewModel", "View", StringComparison.Ordinal);
+            .Replace("ViewModel", "View", StringComparison.Ordinal);
 #else
-                .Replace("ViewModel", "View");
+            .Replace("ViewModel", "View");
 #endif
 
         return name switch
@@ -38,5 +38,5 @@ public class ViewLocator : IDataTemplate
     }
 
     /// <inheritdoc/>
-    public bool Match(object data) => data is CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
+    public bool Match(object? data) => data is CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 }

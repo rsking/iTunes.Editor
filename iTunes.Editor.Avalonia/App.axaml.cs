@@ -51,7 +51,7 @@ public class App : Application
                         ? desktop.MainWindow
                         : services.GetRequiredService<Views.ShellView>();
 
-                    return new Movere.Services.ContentDialogService<T, Movere.Models.DialogResult>(owner, new Services.CustomContentViewResolver());
+                    return new Movere.Services.ContentDialogService<T, Movere.Models.DialogResult>(owner ?? throw new InvalidCastException(), new Services.CustomContentViewResolver());
                 }
             })
             .Build();
