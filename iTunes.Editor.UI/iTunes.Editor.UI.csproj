@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="System.Reactive" />
+    <PackageReference Include="System.Reactive" VersionOverride="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
