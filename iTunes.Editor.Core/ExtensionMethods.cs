@@ -77,6 +77,17 @@ public static class ExtensionMethods
             }
         }
 
+        IEnumerable<string> musicDirectories =
+        [
+            Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
+        ];
+
+        if (musicDirectories.Any(path.StartsWith))
+        {
+            return MediaKind.Song;
+        }
+
         return MediaKind.Unknown;
     }
 
