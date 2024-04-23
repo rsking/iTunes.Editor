@@ -23,6 +23,7 @@ public static class ExtensionMethods
     private static readonly TagLib.ByteVector ExplicitRatingData = new((byte)0x04);
     private static readonly TagLib.ByteVector CleanRatingData = new((byte)0x02);
     private static readonly TagLib.ByteVector UnratedRatingData = new((byte)0x00);
+    private static readonly string[] Separator = ["; "];
 
     /// <summary>
     /// Only returns values that are not null.
@@ -339,7 +340,7 @@ public static class ExtensionMethods
     /// </summary>
     /// <param name="source">The string to split.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> collection of type <see cref="string"/> whose elements contain the substrings from this instance.</returns>
-    public static IEnumerable<string> FromJoinedString(this string? source) => source?.Split(';').Select(_ => _.Trim()) ?? Enumerable.Empty<string>();
+    public static IEnumerable<string> FromJoinedString(this string? source) => source?.Split(';').Select(_ => _.Trim()) ?? [];
 
     /// <summary>
     /// Concatenates the members of the <see cref="IEnumerable{T}"/> collection of type <see cref="string"/>, using the specified separator between each member.
@@ -476,7 +477,7 @@ public static class ExtensionMethods
     {
         if (tags.IsNotNullAndContains(tag))
         {
-            var grouping = tags.Split(new[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            var grouping = tags.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
             var index = -1;
 
             // See if the tag is already in there

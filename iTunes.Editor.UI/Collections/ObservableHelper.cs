@@ -61,5 +61,5 @@ public static class ObservableHelper
         ? throw new ArgumentException("Type must be a generic collection and implement INotifyCollectionChanged", nameof(listType))
         : (type => (IList)Activator.CreateInstance(listType.MakeGenericType(type)));
 
-    private static bool HasInterface(Type type, Type interfaceType) => type.GetInterfaces().Any(t => string.Equals(t.Name, interfaceType.Name, StringComparison.Ordinal));
+    private static bool HasInterface(Type type, Type interfaceType) => Array.Exists(type.GetInterfaces(), t => string.Equals(t.Name, interfaceType.Name, StringComparison.Ordinal));
 }

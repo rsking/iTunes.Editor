@@ -480,7 +480,7 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
                     changesMade = true;
                 }
 
-                this.OnRangeReplaced(i, newCluster!, oldCluster!);
+                this.OnRangeReplaced(i, newCluster!, oldCluster);
 
                 // exceeding position
                 if (count != addedCount)

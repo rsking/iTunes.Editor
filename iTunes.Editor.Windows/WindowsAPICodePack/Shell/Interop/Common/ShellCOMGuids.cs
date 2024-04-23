@@ -3,6 +3,7 @@
 // </copyright>
 
 namespace Microsoft.WindowsAPICodePack.Shell;
+
 #pragma warning disable MA0048, S101, SA1600, SA1649
 internal static class ShellIIDGuid
 {
@@ -15,3 +16,4 @@ internal static class ShellIIDGuid
     internal const string IShellItem = "43826D1E-E718-42EE-BC55-A1E261C37BFE";
     internal const string IShellItem2 = "7E9FB0D3-919F-4307-AB2E-9B1860310C93";
 }
+#pragma warning restore MA0048, S101, SA1600, SA1649

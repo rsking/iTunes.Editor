@@ -74,7 +74,7 @@ public class UpdateLyricsService : IUpdateLyricsService
 
     private sealed class Updater : IDisposable
     {
-        private static readonly string[] InvalidLyrics = new string[] { "Not found", "We haven't lyrics" };
+        private static readonly string[] InvalidLyrics = ["Not found", "We haven't lyrics"];
 
         private readonly ILogger logger;
 
@@ -115,7 +115,7 @@ public class UpdateLyricsService : IUpdateLyricsService
             lyrics ??= this.appleTag.Lyrics;
             lyrics = lyrics.SafeReplace("\r\n", NewLine);
 
-            if (string.IsNullOrEmpty(lyrics) || InvalidLyrics.Any(temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
+            if (string.IsNullOrEmpty(lyrics) || Array.Exists(InvalidLyrics, temp => lyrics!.StartsWith(temp, StringComparison.CurrentCultureIgnoreCase)))
             {
                 this.logger.LogDebug(Properties.Resources.NoLyricsFound, this.songInformation);
 

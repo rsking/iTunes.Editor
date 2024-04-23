@@ -30,7 +30,7 @@ public class FolderSongsProvider : ISongsProvider, IFolderProvider
 
         // get all the files
         foreach (var fileInfo in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-            .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == None || (fileInfo.Attributes & FileAttributes.System) == 0))
+            .Where(fileInfo => (fileInfo.Attributes & FileAttributes.Hidden) == None || (fileInfo.Attributes & FileAttributes.System) == None))
         {
             SongInformation? songInformation = null;
             try
