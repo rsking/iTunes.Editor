@@ -59,7 +59,6 @@ public class OvhLyricsProvider : ILyricsProvider
         else if (response.ErrorException is { } exception)
         {
             this.logger.LogError(default, exception, "{Message}", exception.Message);
-
         }
 
         return default;

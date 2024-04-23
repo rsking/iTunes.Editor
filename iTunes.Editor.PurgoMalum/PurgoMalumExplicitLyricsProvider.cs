@@ -18,9 +18,9 @@ public class PurgoMalumExplicitLyricsProvider : IExplicitLyricsProvider
     /// <inheritdoc/>
     public async ValueTask<bool?> IsExplicitAsync(string lyrics, CancellationToken cancellationToken) => ParseResponse(await this.client.ExecuteAsync<string?>(GetRequest(lyrics), cancellationToken).ConfigureAwait(false));
 
-    private static IRestRequest GetRequest(string lyrics) => new RestRequest("containsprofanity", Method.GET)
+    private static RestRequest GetRequest(string lyrics) => new RestRequest("containsprofanity", Method.Get)
         .AddHeader("Accept", "text/html, application/xhtml+xml, application/xml, text/plain")
         .AddParameter("text", lyrics);
 
-    private static bool? ParseResponse(IRestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : null;
+    private static bool? ParseResponse(RestResponse<string?> response) => bool.TryParse(response.Content, out var boolValue) ? boolValue : null;
 }
