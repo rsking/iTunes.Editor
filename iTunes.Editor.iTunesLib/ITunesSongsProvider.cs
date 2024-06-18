@@ -9,17 +9,13 @@ namespace ITunes.Editor.ITunesLib;
 /// <summary>
 /// The iTunes song loader.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ITunesSongsProvider"/> class.
+/// </remarks>
+/// <param name="configurator">The configurator.</param>
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "This is for iTunes")]
-public class ITunesSongsProvider : ISongsProvider
+public class ITunesSongsProvider(IConfigurator<ITunesSongsProvider> configurator) : ISongsProvider
 {
-    private readonly IConfigurator<ITunesSongsProvider> configurator;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ITunesSongsProvider"/> class.
-    /// </summary>
-    /// <param name="configurator">The configurator.</param>
-    public ITunesSongsProvider(IConfigurator<ITunesSongsProvider> configurator) => this.configurator = configurator;
-
     /// <inheritdoc />
     public string Name => Properties.Resources.ITunesName;
 
@@ -73,7 +69,7 @@ public class ITunesSongsProvider : ISongsProvider
         }
 
         this.Playlists = playlists;
-        var configured = await this.configurator.ConfigureAsync(this).ConfigureAwait(false);
+        var configured = await configurator.ConfigureAsync(this).ConfigureAwait(false);
         if (!configured)
         {
             yield break;
@@ -143,6 +139,7 @@ public class ITunesSongsProvider : ISongsProvider
                         var original = track.Comment;
                         var comment = original switch
                         {
+                            null => default,
                             _ when original.StartsWith(By, StringComparison.Ordinal) => LowerPrefix(original, By),
                             _ when original.StartsWith(From, StringComparison.Ordinal) => LowerPrefix(original, From),
                             _ when original.StartsWith(Produced, StringComparison.Ordinal) => LowerPrefix(original, Produced),
@@ -151,7 +148,7 @@ public class ITunesSongsProvider : ISongsProvider
 
                         if (!string.Equals(comment, original, StringComparison.Ordinal))
                         {
-                            track.Comment = comment ?? string.Empty;
+                            track.Comment = comment;
                         }
 
                         static string LowerPrefix(string original, string prefix)
