@@ -12,7 +12,7 @@
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageVersion Include="DotNetProjects.Extended.Wpf.Toolkit" Version="5.0.115" />
     <PackageVersion Include="Formatters.PList" Version="1.2.0" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.11.54" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="MahApps.Metro" Version="2.4.10" />
     <PackageVersion Include="MediaInfo" Version="19.04.0" />
