@@ -58,6 +58,21 @@ public record SongInformation
     public string? Name { get; init; }
 
     /// <summary>
+    /// Gets the number.
+    /// </summary>
+    public int? Number { get; init; }
+
+    /// <summary>
+    /// Gets the total.
+    /// </summary>
+    public int? Total { get; init; }
+
+    /// <summary>
+    /// Gets the disk.
+    /// </summary>
+    public int? Disc { get; init; }
+
+    /// <summary>
     /// Gets the rating.
     /// </summary>
     public int? Rating { get; init; }
@@ -76,20 +91,30 @@ public record SongInformation
     /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
     /// </summary>
     /// <param name="file">The file to convert.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0015:Specify the parameter name in ArgumentException", Justification = "This is the parameter name.")]
-    public static explicit operator SongInformation(TagLib.File file) => file is null
-        ? throw new ArgumentNullException(nameof(file))
-        : new SongInformation(file.Tag.Title)
+    public static explicit operator SongInformation(TagLib.File file)
+    {
+        return file is null
+            ? throw new ArgumentNullException(nameof(file))
+            : new SongInformation(file.Tag.Title)
+            {
+                Performers = file.Tag.Performers,
+                SortPerformers = file.Tag.PerformersSort ?? file.Tag.Performers,
+                AlbumPerformer = file.Tag.AlbumArtists.ToJoinedString(),
+                SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
+                Album = file.Tag.Album,
+                Name = file.Name,
+                Genre = file.Tag.Genres.ToJoinedString(),
+                HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
+                Number = GetValue(file.Tag.Track),
+                Total = GetValue(file.Tag.TrackCount),
+                Disc = GetValue(file.Tag.Disc),
+            };
+
+        static int? GetValue(uint value)
         {
-            Performers = file.Tag.Performers,
-            SortPerformers = file.Tag.PerformersSort ?? file.Tag.Performers,
-            AlbumPerformer = file.Tag.AlbumArtists.ToJoinedString(),
-            SortAlbumPerformer = file.Tag.AlbumArtistsSort.ToJoinedString(),
-            Album = file.Tag.Album,
-            Name = file.Name,
-            Genre = file.Tag.Genres.ToJoinedString(),
-            HasLyrics = !string.IsNullOrEmpty(file.Tag.Lyrics),
-        };
+            return value is 0U ? null : (int)value;
+        }
+    }
 
     /// <summary>
     /// Creates a new <see cref="SongInformation" /> from a file.

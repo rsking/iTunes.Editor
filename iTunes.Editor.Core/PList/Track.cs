@@ -227,6 +227,9 @@ internal sealed class Track(IDictionary<string, object?> dict)
             Genre = track.Genre,
             Rating = track.Rating,
             HasLyrics = !track.Album.HasNoLyrics(),
+            Number = track.Number,
+            Total = track.Count,
+            Disc = track.Disc,
         };
     }
 }

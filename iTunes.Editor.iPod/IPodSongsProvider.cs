@@ -56,6 +56,9 @@ public class IPodSongsProvider : ISongsProvider, IFolderProvider
                 Genre = track.Genre,
                 Rating = (int)track.Rating,
                 HasLyrics = !track.Grouping.HasNoLyrics(),
+                Number = track.TrackNumber is 0 ? null : track.TrackNumber,
+                Total = track.TotalTracks is 0 ? null : track.TotalTracks,
+                Disc = track.DiscNumber is 0 ? null : track.DiscNumber,
             };
         }
     }

@@ -52,6 +52,8 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
                 var sortAlbumPerformers = shellObject.Properties.GetProperty<string>(SystemProperties.System.Music.AlbumArtistSortOverride);
                 var album = shellObject.Properties.GetProperty<string>(SystemProperties.System.Music.AlbumTitle);
                 var genres = shellObject.Properties.GetProperty<string[]>(SystemProperties.System.Music.Genre);
+                var number = shellObject.Properties.GetProperty<int>(SystemProperties.System.Music.TrackNumber);
+                var disc = shellObject.Properties.GetProperty<int>(SystemProperties.System.Music.DiscNumber);
 
                 var performersValue = performers.Value ?? Enumerable.Empty<string>();
                 var albumPerformersValue = albumPerformers.Value ?? default;
@@ -67,6 +69,8 @@ public class ShellSongsProvider : ISongsProvider, IFolderProvider
                         Album = album.Value,
                         Name = fullName,
                         Genre = genres.Value?.ToJoinedString(),
+                        Number = number?.Value,
+                        Disc = disc?.Value,
                     };
                 }
             }

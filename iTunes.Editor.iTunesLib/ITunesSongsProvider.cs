@@ -175,6 +175,9 @@ public class ITunesSongsProvider(IConfigurator<ITunesSongsProvider> configurator
                         Genre = track.Genre,
                         Rating = track.Rating,
                         HasLyrics = hasLyrics,
+                        Total = track.TrackCount is 0 ? null : track.TrackCount,
+                        Number = track.TrackNumber is 0 ? null : track.TrackNumber,
+                        Disc = track.DiscNumber is 0 ? null : track.DiscNumber,
                     };
                 }
                 catch (System.Runtime.InteropServices.COMException exception) when (exception.Message
