@@ -19,7 +19,13 @@ public static class ExtensionMethods
 
     private const string HasLyrics = "Has Lyrics";
 
-    private static readonly TagLib.ByteVector Rating = new(0x72, 0x74, 0x6E, 0x67);
+    private static readonly TagLib.ByteVector Rating =
+#if NETSTANDARD2_1_OR_GREATER
+        new("rtng"u8.ToArray());
+#else
+        new(0x72, 0x74, 0x6E, 0x67);
+#endif
+
     private static readonly TagLib.ByteVector ExplicitRatingData = new((byte)0x04);
     private static readonly TagLib.ByteVector CleanRatingData = new((byte)0x02);
     private static readonly TagLib.ByteVector UnratedRatingData = new((byte)0x00);
@@ -78,18 +84,21 @@ public static class ExtensionMethods
             }
         }
 
-        IEnumerable<string> musicDirectories =
-        [
-            Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
-        ];
-
-        if (musicDirectories.Any(path.StartsWith))
+        if (Contains(path, "Music"))
         {
             return MediaKind.Song;
         }
 
         return MediaKind.Unknown;
+
+        static bool Contains(string first, string second)
+        {
+#if NETSTANDARD2_1_OR_GREATER
+            return first.Contains(second, StringComparison.Ordinal);
+#else
+            return first.Contains(second);
+#endif
+        }
     }
 
     /// <summary>
@@ -589,7 +598,9 @@ public static class ExtensionMethods
                 case '\r':
                     if (i + 1 < lyrics.Length && lyrics[i + 1] == '\n')
                     {
+#pragma warning disable S127 // "for" loop stop conditions should be invariant
                         i++;
+#pragma warning restore S127 // "for" loop stop conditions should be invariant
                     }
 
                     yield return returnString.ToString();
