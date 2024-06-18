@@ -577,7 +577,7 @@ internal sealed partial class Program
         (var genre, _) = GetGenre(song.Genre);
         if (genre is null)
         {
-            logger.LogWarning("Failed to match {genre} to an approvied genre", song.Genre);
+            logger.LogWarning("Failed to match {Genre} to an approvied genre", song.Genre);
         }
 
         static (Genre? Genre, int Level) GetGenre(string? genre)
