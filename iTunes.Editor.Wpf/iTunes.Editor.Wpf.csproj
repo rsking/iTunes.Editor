@@ -9,20 +9,21 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" />
+    <PackageReference Include="Formatters.PList" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="MahApps.Metro" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="RestSharp" />
     <PackageReference Include="TagLibSharp" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
 
