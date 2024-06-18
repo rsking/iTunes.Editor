@@ -30,12 +30,12 @@ public record SongInformation
     /// <summary>
     /// Gets the performers.
     /// </summary>
-    public IEnumerable<string> Performers { get; init; } = Enumerable.Empty<string>();
+    public IEnumerable<string> Performers { get; init; } = [];
 
     /// <summary>
     /// Gets the sort performers.
     /// </summary>
-    public IEnumerable<string> SortPerformers { get; init; } = Enumerable.Empty<string>();
+    public IEnumerable<string> SortPerformers { get; init; } = [];
 
     /// <summary>
     /// Gets the album performers.

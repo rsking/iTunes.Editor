@@ -197,9 +197,9 @@ public static class ServiceExtensions
     public static object GetRequiredService(this IServiceProvider provider, Type serviceType, string key)
     {
         var type = typeof(ServiceExtensions);
-        var method = type.GetMethod(nameof(GetRequiredService), new[] { typeof(IServiceProvider), typeof(string) }) ?? throw new ArgumentException("Could not get method", nameof(provider));
+        var method = type.GetMethod(nameof(GetRequiredService), [typeof(IServiceProvider), typeof(string)]) ?? throw new ArgumentException("Could not get method", nameof(provider));
         var genericMethod = method.MakeGenericMethod(serviceType);
-        return genericMethod.Invoke(null, new object[] { provider, key }) ?? throw new KeyNotFoundException();
+        return genericMethod.Invoke(null, [provider, key]) ?? throw new KeyNotFoundException();
     }
 
     private static string GetLyricsProviderName(string name) => GetProviderName(name, nameof(ITunes.Editor.Lyrics));

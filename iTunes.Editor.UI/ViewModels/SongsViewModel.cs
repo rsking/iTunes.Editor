@@ -246,7 +246,7 @@ public partial class SongsViewModel : CommunityToolkit.Mvvm.ComponentModel.Obser
 
         protected SelectableViewModel(Models.ISelectable? parent) => this.Parent = parent;
 
-        public IEnumerable<Models.ISelectable> Children { get; protected internal set; } = Enumerable.Empty<Models.ISelectable>();
+        public IEnumerable<Models.ISelectable> Children { get; protected internal set; } = [];
 
         public Models.ISelectable? Parent { get; }
     }

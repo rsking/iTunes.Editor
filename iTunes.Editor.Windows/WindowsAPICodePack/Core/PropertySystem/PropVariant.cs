@@ -672,7 +672,7 @@ public sealed class PropVariant : IDisposable
             {
                 // iterates through all constructors
                 var constructor = typeof(PropVariant)
-                    .GetConstructor(new Type[] { type });
+                    .GetConstructor([type]);
 
                 if (constructor is null)
                 {

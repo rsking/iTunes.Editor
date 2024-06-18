@@ -59,7 +59,7 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
         var returnValue = openFileDialog.ShowDialog();
         if (!returnValue.HasValue || !returnValue.Value)
         {
-            return Enumerable.Empty<string>();
+            return [];
         }
 
         this.SelectedFilter = openFileDialog.FilterIndex - 1;

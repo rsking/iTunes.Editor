@@ -114,7 +114,7 @@ internal static class ShellPropertyFactory
 
         if (!StoreCache.TryGetValue(hash, out var ctor))
         {
-            Type[] argTypes = { typeof(PropertyKey), typeof(ShellPropertyDescription), thirdType };
+            Type[] argTypes = [typeof(PropertyKey), typeof(ShellPropertyDescription), thirdType];
             ctor = ExpressConstructor(type, argTypes);
             StoreCache.Add(hash, ctor);
         }

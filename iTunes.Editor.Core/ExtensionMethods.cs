@@ -511,7 +511,7 @@ public static class ExtensionMethods
             return false;
         }
 
-        appleTag.SetData(Rating, new[] { new TagLib.Mpeg4.AppleDataBox(rating, (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData) });
+        appleTag.SetData(Rating, [new TagLib.Mpeg4.AppleDataBox(rating, (uint)TagLib.Mpeg4.AppleDataBox.FlagType.ContainsData)]);
         return true;
     }
 

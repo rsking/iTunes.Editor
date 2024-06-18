@@ -167,7 +167,7 @@ public class MediaInfoTag : Tag
     private string[] GetStringArray(string category, string key)
     {
         var stringValue = this.GetString(category, key);
-        return string.IsNullOrEmpty(stringValue) ? Array.Empty<string>() : stringValue!.Split(';').Select(_ => _.Trim()).ToArray();
+        return string.IsNullOrEmpty(stringValue) ? [] : stringValue!.Split(';').Select(_ => _.Trim()).ToArray();
     }
 
     private void SetStringArray(string category, string key, string[] value) => this.SetString(category, key, value is null ? null : string.Join("; ", value));

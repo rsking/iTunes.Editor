@@ -26,7 +26,7 @@ public class ITunesSongsProvider : ISongsProvider
     /// <summary>
     /// Gets the playlists.
     /// </summary>
-    public IEnumerable<string> Playlists { get; private set; } = Enumerable.Empty<string>();
+    public IEnumerable<string> Playlists { get; private set; } = [];
 
     /// <summary>
     /// Gets or sets the selected playlist.

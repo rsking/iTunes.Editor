@@ -84,6 +84,6 @@ public class OpenFileDialog : SelectFile, Contracts.IOpenFile
  
         var values = await storageProvider.OpenFilePickerAsync(options).ConfigureAwait(false);
 
-        return values?.Select(v => v.Path.LocalPath) ?? Enumerable.Empty<string>();
+        return values?.Select(v => v.Path.LocalPath) ?? [];
     }
 }
