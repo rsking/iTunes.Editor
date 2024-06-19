@@ -197,6 +197,11 @@ internal sealed class Track(IDictionary<string, object?> dict)
     public int? Disc => dict.GetNullableInt32("Disc Number");
 
     /// <summary>
+    /// Gets a value indicating whether this is part of a compilation.
+    /// </summary>
+    public bool? Compilation => dict.GetNullableBoolean("Compilation");
+
+    /// <summary>
     /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
     /// </summary>
     /// <param name="track">The track to convert.</param>
@@ -230,6 +235,7 @@ internal sealed class Track(IDictionary<string, object?> dict)
             Number = track.Number,
             Total = track.Count,
             Disc = track.Disc,
+            IsCompilation = track.Compilation,
         };
     }
 }

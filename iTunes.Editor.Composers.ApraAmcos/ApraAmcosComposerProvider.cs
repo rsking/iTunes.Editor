@@ -34,7 +34,7 @@ public sealed class ApraAmcosComposerProvider : IComposerProvider
 
             var title = tagInformation.Title;
             var writer = string.Empty;
-            var performer = tagInformation.Performers.FirstOrDefault() ?? string.Empty;
+            var performer = tagInformation.GetPerformer();
 
             var request = new RestRequest("/works");
             request.AddQueryParameter("works", bool.TrueString);

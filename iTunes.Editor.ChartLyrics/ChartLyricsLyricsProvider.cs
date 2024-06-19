@@ -42,7 +42,7 @@ public sealed class ChartLyricsLyricsProvider : ILyricsProvider, IDisposable
         }
 
         this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
-        var artist = string.Join("; ", tagInformation.Performers);
+        var artist = tagInformation.GetPerformer();
         var songTitle = tagInformation.Title;
         SearchLyricDirectResponse searchLyricDirectResponse;
         try

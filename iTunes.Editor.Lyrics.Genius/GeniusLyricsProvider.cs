@@ -34,7 +34,7 @@ public sealed class GeniusLyricsProvider : ILyricsProvider, IDisposable
             return new string(value.Where(chr => char.IsLetterOrDigit(chr) || char.IsWhiteSpace(chr)).ToArray());
         }
 
-        var artist = RemoveNonAlphaNumeric(Escape(string.Join(" & ", tagInformation.Performers))).Transform(To.LowerCase).Replace(' ', '-');
+        var artist = RemoveNonAlphaNumeric(Escape(tagInformation.GetPerformer())).Transform(To.LowerCase).Replace(' ', '-');
         var songTitle = RemoveNonAlphaNumeric(Escape(tagInformation.Title)).Transform(To.LowerCase).Replace(' ', '-');
 
         var query = $"{artist}-{songTitle}".Transform(To.SentenceCase);

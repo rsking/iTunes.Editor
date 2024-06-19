@@ -37,7 +37,7 @@ public class OvhLyricsProvider : ILyricsProvider
 
         this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
         var request = new RestRequest("{artist}/{title}", Method.Get) { Timeout = 3000 }
-            .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
+            .AddUrlSegment("artist", tagInformation.GetPerformer())
             .AddUrlSegment("title", tagInformation.Title);
 
         var response = await this.client

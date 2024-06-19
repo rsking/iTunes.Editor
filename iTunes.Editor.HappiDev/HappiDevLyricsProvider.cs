@@ -98,7 +98,7 @@ public class HappiDevLyricsProvider : ILyricsProvider
         async Task<string?> GetLyricsAddressAsync(SongInformation tagInformation, CancellationToken cancellationToken)
         {
             var title = tagInformation.Title;
-            var artist = tagInformation.Performers.ToJoinedString();
+            var artist = tagInformation.GetPerformer();
             var request = new RestRequest()
                 .AddQueryParameter("q", $"{artist} {title}")
                 .AddQueryParameter("lyrics", "1")

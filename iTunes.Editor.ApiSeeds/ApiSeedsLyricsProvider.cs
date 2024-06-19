@@ -57,7 +57,7 @@ public class ApiSeedsLyricsProvider : ILyricsProvider
 
         this.logger.LogTrace(Properties.Resources.GettingLyrics, tagInformation);
         var request = new RestRequest("{artist}/{track}", Method.Get)
-            .AddUrlSegment("artist", tagInformation.Performers.ToJoinedString())
+            .AddUrlSegment("artist", tagInformation.GetPerformer())
             .AddUrlSegment("track", tagInformation.Title);
         var response = await this.client.ExecuteGetAsync<GetLyricsResponse>(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessful)

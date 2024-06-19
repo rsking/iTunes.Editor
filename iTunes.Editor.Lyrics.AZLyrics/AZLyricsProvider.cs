@@ -34,7 +34,7 @@ public sealed class AZLyricsProvider : ILyricsProvider, IDisposable
             return new string(value.Where(chr => char.IsLetterOrDigit(chr)).ToArray());
         }
 
-        var artist = RemoveNonAlphaNumeric(Escape(string.Join(" & ", tagInformation.Performers))).Transform(To.LowerCase);
+        var artist = RemoveNonAlphaNumeric(Escape(tagInformation.GetPerformer())).Transform(To.LowerCase);
         var songTitle = RemoveNonAlphaNumeric(Escape(tagInformation.Title)).Transform(To.LowerCase);
 
         var webAddress = $"https://www.azlyrics.com/lyrics/{artist}/{songTitle}.html";

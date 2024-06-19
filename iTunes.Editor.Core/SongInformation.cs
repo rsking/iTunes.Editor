@@ -88,6 +88,11 @@ public record SongInformation
     public bool? HasLyrics { get; init; }
 
     /// <summary>
+    /// Gets a value indicating whether this instance is part of a compilation.
+    /// </summary>
+    public bool? IsCompilation { get; init; }
+
+    /// <summary>
     /// Converts a <see cref="TagLib.File"/> to a <see cref="SongInformation"/>.
     /// </summary>
     /// <param name="file">The file to convert.</param>
@@ -108,11 +113,22 @@ public record SongInformation
                 Number = GetValue(file.Tag.Track),
                 Total = GetValue(file.Tag.TrackCount),
                 Disc = GetValue(file.Tag.Disc),
+                IsCompilation = GetIsCompilation(file),
             };
 
         static int? GetValue(uint value)
         {
             return value is 0U ? null : (int)value;
+        }
+
+        static bool? GetIsCompilation(TagLib.File file)
+        {
+            if (file.GetTag(TagLib.TagTypes.Apple, create: false) is TagLib.Mpeg4.AppleTag appleTag)
+            {
+                return appleTag.IsCompilation;
+            }
+
+            return default;
         }
     }
 
@@ -134,15 +150,14 @@ public record SongInformation
     /// <param name="path">The path.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The song information.</returns>
-    public static Task<SongInformation> FromFileAsync(string path, CancellationToken cancellationToken = default) =>
-        Task.Run(
-            () => FromFile(path),
-            cancellationToken);
+    public static Task<SongInformation> FromFileAsync(string path, CancellationToken cancellationToken = default) => Task.Run(() => FromFile(path), cancellationToken);
 
     /// <inheritdoc/>
-    public override string ToString()
-    {
-        var performers = this.Performers?.ToJoinedString();
-        return $"{performers}|{this.Album}|{this.Title}";
-    }
+    public override string ToString() => $"{this.GetPerformer()}|{this.Album}|{this.Title}";
+
+    /// <summary>
+    /// Gets the performer.
+    /// </summary>
+    /// <returns>The performer.</returns>
+    public string GetPerformer() => this.IsCompilation is not true && this.AlbumPerformer is { } albumPerformer ? albumPerformer : this.Performers.ToJoinedString();
 }
