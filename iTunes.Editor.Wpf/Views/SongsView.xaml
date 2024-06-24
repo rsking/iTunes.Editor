@@ -59,7 +59,7 @@
                            Grid.Column="1"
                            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                            SelectedObject="{Binding SelectedTag}" />
-        <TextBlock Grid.Row="2" Text="{Binding Progress, Mode=OneWay}" />
+        <TextBlock Grid.Row="2" Text="{Binding Progress, Mode=OneWay}" Foreground="White" />
         <ProgressBar Grid.Row="2"
                      Grid.Column="1"
                      Value="{Binding Percentage, Mode=OneWay}" />
