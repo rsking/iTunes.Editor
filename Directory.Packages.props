@@ -10,27 +10,24 @@
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.0.10" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="11.0.10" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageVersion Include="DotNetProjects.Extended.Wpf.Toolkit" Version="5.0.115" />
     <PackageVersion Include="Formatters.PList" Version="1.2.0" />
     <PackageVersion Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
-    <PackageVersion Include="MahApps.Metro" Version="2.4.10" />
     <PackageVersion Include="MediaInfo" Version="19.04.0" />
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageVersion Include="Movere" Version="0.2.0-build.352" />
     <PackageVersion Include="Neleus.DependencyInjection.Extensions" Version="1.0.6" />
-    <PackageVersion Include="RestSharp" Version="110.2.0" />
-    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageVersion Include="PropertyTools.Wpf" Version="3.1.0" />
+    <PackageVersion Include="RestSharp" Version="112.1.0" />
     <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.24209.3" />
-    <PackageVersion Include="System.ServiceModel.Http" Version="8.0.0" />
+    <PackageVersion Include="System.ServiceModel.Http" Version="8.1.0" />
     <PackageVersion Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <GlobalPackageReference Include="PolySharp" Version="1.14.1" />
+    <GlobalPackageReference Include="PolySharp" Version="1.15.0" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
@@ -42,9 +39,9 @@
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.158" />
-    <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.12.4" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347" />
+    <GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.179" />
+    <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.12.9" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" />
     <GlobalPackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556" />
   </ItemGroup>
 

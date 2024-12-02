@@ -14,22 +14,24 @@ using ITunes.Editor.Controls.Dialogs;
 public class ConfiguratorDialog<TModel, TViewModel> : Configurator<TModel, TViewModel>
     where TViewModel : Models.IConfigure
 {
-    private readonly MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ConfiguratorDialog{TModel, TViewModel}"/> class.
     /// </summary>
-    /// <param name="dialogCoordinator">The dialog coordinator.</param>
     /// <param name="viewModelCreator">The view model creator.</param>
-    public ConfiguratorDialog(
-        MahApps.Metro.Controls.Dialogs.IDialogCoordinator dialogCoordinator,
-        Func<TModel, TViewModel> viewModelCreator)
-        : base(viewModelCreator) => this.dialogCoordinator = dialogCoordinator;
+    public ConfiguratorDialog(Func<TModel, TViewModel> viewModelCreator)
+        : base(viewModelCreator)
+    {
+    }
 
     /// <inheritdoc/>
     protected override ValueTask<bool> ConfigureViewModelAsync(TViewModel source) =>
-        new(System.Windows.Application.Current.Dispatcher.Invoke(async () =>
-            await this.dialogCoordinator
-                .ShowConfigureAsync(source)
-                .ConfigureAwait(true)));
+        new(System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                // create the view
+                var dialog = new ConfigureDialog();
+                dialog.Owner = System.Windows.Application.Current.MainWindow;
+                dialog.DataContext = source;
+
+                return dialog.ShowDialog() is true;
+            }));
 }

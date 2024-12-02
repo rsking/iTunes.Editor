@@ -3,12 +3,13 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:core="clr-namespace:ITunes.Editor;assembly=iTunes.Editor.Core"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:local="clr-namespace:ITunes.Editor.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:pt="http://propertytools.org/wpf"
       xmlns:vm="clr-namespace:ITunes.Editor.ViewModels;assembly=iTunes.Editor.UI"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-      d:DataContext="{d:DesignInstance Type={x:Type vm:SongsViewModel},
-                                       IsDesignTimeCreatable=False}"
+      d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False,
+                                       Type={x:Type vm:SongsViewModel}}"
       d:DesignHeight="480"
       d:DesignWidth="640"
       ShowsNavigationUI="False"
@@ -24,21 +25,16 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="Auto" MaxWidth="200" />
+            <ColumnDefinition Width="5px" />
+            <ColumnDefinition Width="Auto" MinWidth="300" />
         </Grid.ColumnDefinitions>
         <TreeView Grid.RowSpan="2"
                   Grid.Column="0"
                   ItemsSource="{Binding Artists}">
             <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
+                <Style BasedOn="{StaticResource {x:Type TreeViewItem}}" TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <Setter Property="FontWeight" Value="Normal" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                    </Style.Triggers>
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
@@ -47,7 +43,10 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <StackPanel Grid.Column="1">
+        <GridSplitter Grid.RowSpan="3"
+                      Grid.Column="1"
+                      HorizontalAlignment="Stretch" />
+        <StackPanel Grid.Column="2">
             <Button Command="{Binding UpdateLyricsCommand}" Content="Update Lyrics" />
             <CheckBox Content="Force Lyrics Search" IsChecked="{Binding ForceLyricsSearch}" />
             <CheckBox Content="Force Lyrics Update" IsChecked="{Binding ForceLyricsUpdate}" />
@@ -55,27 +54,22 @@
             <CheckBox Content="Force Composers Search" IsChecked="{Binding ForceComposersSearch}" />
             <Button Command="{Binding UpdateTempoCommand}" Content="Update Tempo" />
         </StackPanel>
-        <xctk:PropertyGrid Grid.Row="1"
-                           Grid.Column="1"
-                           Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                           SelectedObject="{Binding SelectedTag}" />
-        <TextBlock Grid.Row="2" Text="{Binding Progress, Mode=OneWay}" Foreground="White" />
+        <pt:PropertyGrid Grid.Row="1"
+                         Grid.Column="2"
+                         SelectedObject="{Binding SelectedTag}" />
+        <TextBlock Grid.Row="2" Text="{Binding Progress, Mode=OneWay}" />
         <ProgressBar Grid.Row="2"
-                     Grid.Column="1"
+                     Grid.Column="2"
                      Value="{Binding Percentage, Mode=OneWay}" />
         <Grid Grid.RowSpan="3"
               Grid.ColumnSpan="2"
-              Background="#44CCCCCC"
-              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-              d:Visibility="Hidden">
+              d:Visibility="Hidden"
+              Background="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+              OpacityMask="#44000000"
+              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
-                <mah:ProgressRing Width="80"
-                                  Height="80"
-                                  Margin="10"
-                                  Foreground="WhiteSmoke"
-                                  IsActive="{Binding IsLoading, Mode=OneWay}" />
                 <TextBlock Margin="10"
                            FontSize="96"
                            Text="Loading" />

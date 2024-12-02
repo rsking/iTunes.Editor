@@ -2,7 +2,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="NavigationWindow.xaml" />
-        <ResourceDictionary Source="PropertyGrid.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

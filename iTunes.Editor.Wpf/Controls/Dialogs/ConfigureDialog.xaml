@@ -1,11 +1,13 @@
-﻿<dialogs:BaseMetroDialog x:Class="ITunes.Editor.Controls.Dialogs.ConfigureDialog"
-                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-                         xmlns:local="clr-namespace:ITunes.Editor.Controls.Dialogs"
-                         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                         xmlns:vm="clr-namespace:ITunes.Editor.ViewModels;assembly=iTunes.Editor.UI.Configure"
-                         dialogs:DialogParticipation.Register="{Binding}">
+﻿<Window x:Class="ITunes.Editor.Controls.Dialogs.ConfigureDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ITunes.Editor.Controls.Dialogs"
+        xmlns:vm="clr-namespace:ITunes.Editor.ViewModels;assembly=iTunes.Editor.UI.Configure"
+        MinWidth="400"
+        ResizeMode="CanResizeWithGrip"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner">
     <Grid Margin="0,10,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -14,10 +16,10 @@
 
         <ContentControl x:Name="PART_Content"
                         Grid.Row="0"
-                        Margin="0,5,0,0"
+                        Margin="5,5,5,5"
                         Content="{Binding}"
-                        FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type dialogs:BaseMetroDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type dialogs:BaseMetroDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}">
+                        FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type vm:ITunesConfigureViewModel}">
                     <StackPanel>
@@ -47,13 +49,13 @@
             <Button x:Name="PART_AffirmativeButton"
                     Margin="0,0,5,0"
                     Content="{Binding AffirmativeButtonText, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ConfigureDialog}}}"
-                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType={x:Type dialogs:BaseMetroDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
+                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    IsDefault="True" />
             <Button x:Name="PART_NegativeButton"
                     Margin="5,0,5,0"
                     Content="{Binding NegativeButtonText, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ConfigureDialog}}}"
-                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType={x:Type dialogs:BaseMetroDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{DynamicResource MahApps.Styles.Button.Dialogs}" />
+                    FontSize="{Binding DialogButtonFontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    IsCancel="True" />
         </StackPanel>
     </Grid>
-</dialogs:BaseMetroDialog>
+</Window>

@@ -33,7 +33,6 @@ public partial class App : Application
                 services
                     .AddTransient<IConfigurator<ITunesLib.ITunesSongsProvider>, Services.ConfiguratorDialog<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>()
                     .AddSingleton<Func<ITunesLib.ITunesSongsProvider, ViewModels.ITunesConfigureViewModel>>(model => new ViewModels.ITunesConfigureViewModel(model));
-                services.AddSingleton(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance);
 
                 // view models
                 services.AddSingleton<Models.ILoad, ViewModels.LoadViewModel>();
